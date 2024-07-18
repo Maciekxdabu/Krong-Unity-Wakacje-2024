@@ -17,4 +17,4 @@ Contact Merloj and krąg-unity for more details.
 
 ## Technical documentation
 
-see [Technical documentation](./doc/technical.md)
+see [Technical documentation](./Doc/technical.md)
