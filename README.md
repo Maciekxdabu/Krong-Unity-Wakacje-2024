@@ -13,7 +13,8 @@ Contact Merloj and krąg-unity for more details.
 ## Tech
 
 - Unity version 2022.3.37f1
+- Main scene: Assets/Scenes/MainScene.Unity
 
-## Technical doc
+## Technical documentation
 
-see [Technical dofc](./doc/technical.md)
+see [Technical documentation](./doc/technical.md)
