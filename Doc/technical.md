@@ -1,6 +1,6 @@
 # Technical Documentation
 
-## keep code readable
+## Keep code readable
 
 Follow basic unity style guides
 - https://unity.com/how-to/naming-and-code-style-tips-c-scripting-unity
