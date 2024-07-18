@@ -6,6 +6,9 @@ Game is inspired by Pickmin and similar titles e.g. Overlord.
 
 Player controls a commander that gives order to minions that do most work.
 
+Project is intended to be finished by the end of summer 2024.
+
+Contact Merloj and krąg-unity for more details.
 
 ## Tech
 
@@ -13,3 +16,4 @@ Player controls a commander that gives order to minions that do most work.
 
 ## Technical doc
 
+see [Technical dofc](./doc/technical.md)
