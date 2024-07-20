@@ -1,4 +1,5 @@
-﻿ using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -74,6 +75,11 @@ namespace StarterAssets
 
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
+
+        public System.Action<Vector3> OnMove;
+        public System.Action<Vector3> OnJumpEnd;
+
+        private bool _hasJumpEnded;
 
         // cinemachine
         private float _cinemachineTargetYaw;
@@ -154,8 +160,6 @@ namespace StarterAssets
 
         private void Update()
         {
-            _hasAnimator = TryGetComponent(out _animator);
-
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -262,6 +266,8 @@ namespace StarterAssets
 
                 // rotate to face input direction relative to camera position
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+
+                OnMove?.Invoke(transform.localPosition);
             }
 
 
@@ -315,6 +321,12 @@ namespace StarterAssets
                 // jump timeout
                 if (_jumpTimeoutDelta >= 0.0f)
                 {
+                    if (!_hasJumpEnded)
+                    {
+                        OnJumpEnd?.Invoke(transform.localPosition);
+                        _hasJumpEnded = true;
+                    }
+
                     _jumpTimeoutDelta -= Time.deltaTime;
                 }
             }
@@ -326,6 +338,7 @@ namespace StarterAssets
                 // fall timeout
                 if (_fallTimeoutDelta >= 0.0f)
                 {
+                    _hasJumpEnded = false;
                     _fallTimeoutDelta -= Time.deltaTime;
                 }
                 else
