@@ -8,7 +8,6 @@ namespace Assets.Scripts.Runtime.Npc
         [SerializeField] private UnityEngine.AI.NavMeshAgent localNavMeshAgent;
         [SerializeField] private float minimumDistanceToStartFollowTheCharacterPlayer;
 
-        public System.Action<Minion> OnFishedCommand;
         private Vector3 m_newPosition;
         private bool _isGoingAlready;
 

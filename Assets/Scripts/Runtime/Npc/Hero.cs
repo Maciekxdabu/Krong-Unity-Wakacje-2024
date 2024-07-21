@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Npc
 {
-    public class Character : Creature
+    public class Hero : Creature
     {
         [SerializeField] private List<Minion> minions;
         [SerializeField] private ThirdPersonController localThirdPersonController;
