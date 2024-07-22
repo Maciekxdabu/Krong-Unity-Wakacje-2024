@@ -1,3 +1,4 @@
+using Assets.Scripts.Runtime.Order;
 using System.Collections;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace Assets.Scripts.Runtime.Npc
         [SerializeField] private UnityEngine.AI.NavMeshAgent localNavMeshAgent;
         [SerializeField] private float minimumDistanceToStartFollowTheCharacterPlayer;
 
-        private Vector3 m_newPosition;
+        public System.Action<Minion> OnFishedOrder;
+        [SerializeField] private Vector3 m_newPosition;
         private bool _isGoingAlready;
 
         private void Awake()
@@ -31,6 +33,17 @@ namespace Assets.Scripts.Runtime.Npc
             }
         }
 
+        public void GiveOrder(AbstractOrder newOrder)
+        {
+            newOrder.Execute();
+        }
+
+        public void GoToPostion(Vector3 newPosition)
+        {
+            updateTarget(newPosition);
+            StartCoroutine(goSendOrder());
+        }
+
         private IEnumerator go()
         {
             _isGoingAlready = true;
@@ -41,6 +54,25 @@ namespace Assets.Scripts.Runtime.Npc
 
             stop();
             _isGoingAlready = false;
+        }
+
+        private IEnumerator goSendOrder()
+        {
+            localNavMeshAgent.SetDestination(m_newPosition);
+            _isGoingAlready = true;
+
+            while (localNavMeshAgent.pathPending)
+            {
+                yield return null;
+            }
+            
+            while (localNavMeshAgent.remainingDistance > 0.5f)
+            {
+                yield return null;
+            }
+
+            _isGoingAlready = false;
+            OnFishedOrder?.Invoke(this);
         }
 
         private bool isPlayerCharacterOutOfRange()

@@ -267,7 +267,7 @@ namespace StarterAssets
                 // rotate to face input direction relative to camera position
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
 
-                OnMove?.Invoke(transform.localPosition);
+                InvokeOnMove();
             }
 
 
@@ -283,6 +283,11 @@ namespace StarterAssets
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
+        }
+
+        public void InvokeOnMove()
+        {
+            OnMove?.Invoke(transform.localPosition);
         }
 
         private void JumpAndGravity()
