@@ -13,8 +13,8 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
         [SerializeField] private Transform frontTransform;
 
-        private SendOrder _sendOrder;
-        private List<Minion> m_minionsThatAreNotExecutingAnOrder;
+        private IOrder _sendOrder;
+        private List<Minion> _minionsThatAreNotExecutingAnOrder;
 
         public Transform GetFrontTransform { get { return frontTransform; } }
 
@@ -22,9 +22,15 @@ namespace Assets.Scripts.Runtime.Character
         {
             _sendOrder = new SendOrder(sendOrderData);
             initializeForMinions();
-            m_minionsThatAreNotExecutingAnOrder = new List<Minion>(minions);
+            _minionsThatAreNotExecutingAnOrder = new List<Minion>(minions);
             localThirdPersonController.OnStop += enableNavMeshObstacle;
             localThirdPersonController.OnStartMove += disableNavMeshObstacle;
+        }
+
+        internal void ReleaseMinionInFavourOfAnOrder(Minion minion)
+        {
+            stopFollowTheCharacter(minion);
+            removeMinionFromTheListThatAreNotExecutingAnOrder(minion);
         }
 
         public void OnSendOrder()
@@ -34,7 +40,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private void giveSendOrderToRandomlyMinion()
         {
-            bool _areThereAnyMinionWithNoOrder = m_minionsThatAreNotExecutingAnOrder.Count > 0;
+            bool _areThereAnyMinionWithNoOrder = _minionsThatAreNotExecutingAnOrder.Count > 0;
             if (_areThereAnyMinionWithNoOrder)
             {
                 var _randomMinion = randomMinion();
@@ -52,30 +58,24 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
-        private void removeMinion(Minion randomMinion)
+        private void removeMinionFromTheListThatAreNotExecutingAnOrder(Minion minion)
         {
-            m_minionsThatAreNotExecutingAnOrder.Remove(randomMinion);
+            _minionsThatAreNotExecutingAnOrder.Remove(minion);
         }
 
-        private void stopFollowTheCharacter(Minion randomMinion)
+        private void stopFollowTheCharacter(Minion minion)
         {
-            localThirdPersonController.OnMove -= randomMinion.FollowHero;
+            localThirdPersonController.OnMove -= minion.FollowHero;
         }
 
-        private void giveOrder(Minion randomMinion)
+        private void giveOrder(Minion minion)
         {
-            initializeOrder(randomMinion);
-            if (_sendOrder.isThisMinFreeSpaceToExecuteTheOrder)
-            {
-                randomMinion.GiveOrder(_sendOrder);
-                stopFollowTheCharacter(randomMinion);
-                removeMinion(randomMinion);
-            }
+            initializeOrder(minion);
         }
 
-        private void initializeOrder(Minion randomMinion)
+        private void initializeOrder(Minion minion)
         {
-            _sendOrder.Initialize(randomMinion, this);
+            _sendOrder.Initialize(minion, this);
         }
 
         private void enableNavMeshObstacle()
@@ -90,9 +90,9 @@ namespace Assets.Scripts.Runtime.Character
 
         private Minion randomMinion()
         {
-            var _randomIndex = Random.Range(0, m_minionsThatAreNotExecutingAnOrder.Count);
+            var _randomIndex = Random.Range(0, _minionsThatAreNotExecutingAnOrder.Count);
 
-            return m_minionsThatAreNotExecutingAnOrder[_randomIndex];
+            return _minionsThatAreNotExecutingAnOrder[_randomIndex];
         }
 
         private void reactivatePassiveFollowHero(Minion minion)
@@ -100,7 +100,7 @@ namespace Assets.Scripts.Runtime.Character
             localThirdPersonController.OnMove += minion.FollowHero;
             sendPostionToMinion();
 
-            if (!m_minionsThatAreNotExecutingAnOrder.Contains(minion))
+            if (!_minionsThatAreNotExecutingAnOrder.Contains(minion))
             {
                 returnMinionThatAreNotExecutingAnOrder(minion);
             }
@@ -108,7 +108,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private void returnMinionThatAreNotExecutingAnOrder(Minion minion)
         {
-            m_minionsThatAreNotExecutingAnOrder.Add(minion);
+            _minionsThatAreNotExecutingAnOrder.Add(minion);
         }
 
         private void sendPostionToMinion()

@@ -11,13 +11,13 @@ namespace Assets.Scripts.Runtime.Character
 
         public System.Action<Minion> OnFishedOrder;
 
-        private Vector3 m_newPosition;
+        private Vector3 _newPosition;
         private bool _isGoingAlready;
         private const float STOPPING_DISTANCE = 0.5f;
 
         private void Awake()
         {
-            m_newPosition = new Vector3();
+            _newPosition = new Vector3();
             localNavMeshAgent.speed = speed;
         }
 
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Runtime.Character
 
             if (isPlayerCharacterOutOfRange())
             {
-                localNavMeshAgent.SetDestination(m_newPosition);
+                localNavMeshAgent.SetDestination(_newPosition);
                 if (!_isGoingAlready)
                 {
                     StartCoroutine(go());
@@ -35,7 +35,7 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
-        public void GiveOrder(AbstractOrder newOrder)
+        public void GiveOrder(IOrder newOrder)
         {
             newOrder.Execute();
         }
@@ -60,7 +60,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private IEnumerator executeSendOrder()
         {
-            localNavMeshAgent.SetDestination(m_newPosition);
+            localNavMeshAgent.SetDestination(_newPosition);
             _isGoingAlready = true;
 
             while (localNavMeshAgent.pathPending)
@@ -79,7 +79,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private bool isPlayerCharacterOutOfRange()
         {
-            return Vector3.Distance(transform.localPosition, m_newPosition) > minDistanceToStartFollowTheCharacterPlayer;
+            return Vector3.Distance(transform.localPosition, _newPosition) > minDistanceToStartFollowTheCharacterPlayer;
         }
 
         private void stop()
@@ -95,7 +95,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private void updateTarget(Vector3 newPosition)
         {
-            m_newPosition = newPosition;
+            _newPosition = newPosition;
         }
     }
 }

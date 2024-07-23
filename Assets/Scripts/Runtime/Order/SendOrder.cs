@@ -15,11 +15,17 @@ namespace Assets.Scripts.Runtime.Order
             _maxDistance = orderData.GetMaxDistance;
         }
 
-        public void Initialize(Minion minion, Hero hero)
+        public override void Initialize(Minion minion, Hero hero)
         {
             _minion = minion;
             _transformOfMinion = _minion.transform;
             calculateTheDestinationPointForwardFromCharacter(hero);
+
+            if (isThisMinFreeSpaceToExecuteTheOrder)
+            {
+                _minion.GiveOrder(this);
+                hero.ReleaseMinionInFavourOfAnOrder(_minion);
+            }
         }
 
         public override void Execute()
