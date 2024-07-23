@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts.Runtime.Npc
+namespace Assets.Scripts.Runtime.Character
 {
     public abstract class Creature : MonoBehaviour
     {

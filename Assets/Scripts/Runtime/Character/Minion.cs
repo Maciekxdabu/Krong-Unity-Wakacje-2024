@@ -2,16 +2,18 @@ using Assets.Scripts.Runtime.Order;
 using System.Collections;
 using UnityEngine;
 
-namespace Assets.Scripts.Runtime.Npc
+namespace Assets.Scripts.Runtime.Character
 {
     public class Minion : Creature
     {
         [SerializeField] private UnityEngine.AI.NavMeshAgent localNavMeshAgent;
-        [SerializeField] private float minimumDistanceToStartFollowTheCharacterPlayer;
+        [SerializeField] private float minDistanceToStartFollowTheCharacterPlayer;
 
         public System.Action<Minion> OnFishedOrder;
-        [SerializeField] private Vector3 m_newPosition;
+
+        private Vector3 m_newPosition;
         private bool _isGoingAlready;
+        private const float STOPPING_DISTANCE = 0.5f;
 
         private void Awake()
         {
@@ -19,7 +21,7 @@ namespace Assets.Scripts.Runtime.Npc
             localNavMeshAgent.speed = speed;
         }
 
-        public void FollowTheCharacterPlayer(Vector3 newPosition)
+        public void FollowHero(Vector3 newPosition)
         {
             updateTarget(newPosition);
 
@@ -41,7 +43,7 @@ namespace Assets.Scripts.Runtime.Npc
         public void GoToPostion(Vector3 newPosition)
         {
             updateTarget(newPosition);
-            StartCoroutine(goSendOrder());
+            StartCoroutine(executeSendOrder());
         }
 
         private IEnumerator go()
@@ -56,7 +58,7 @@ namespace Assets.Scripts.Runtime.Npc
             _isGoingAlready = false;
         }
 
-        private IEnumerator goSendOrder()
+        private IEnumerator executeSendOrder()
         {
             localNavMeshAgent.SetDestination(m_newPosition);
             _isGoingAlready = true;
@@ -65,8 +67,8 @@ namespace Assets.Scripts.Runtime.Npc
             {
                 yield return null;
             }
-            
-            while (localNavMeshAgent.remainingDistance > 0.5f)
+
+            while (localNavMeshAgent.remainingDistance > STOPPING_DISTANCE)
             {
                 yield return null;
             }
@@ -77,7 +79,7 @@ namespace Assets.Scripts.Runtime.Npc
 
         private bool isPlayerCharacterOutOfRange()
         {
-            return Vector3.Distance(transform.localPosition, m_newPosition) > minimumDistanceToStartFollowTheCharacterPlayer;
+            return Vector3.Distance(transform.localPosition, m_newPosition) > minDistanceToStartFollowTheCharacterPlayer;
         }
 
         private void stop()
