@@ -9,11 +9,12 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private UnityEngine.AI.NavMeshAgent localNavMeshAgent;
         [SerializeField] private float minDistanceToStartFollowTheCharacterPlayer;
 
+        private const float STOPPING_DISTANCE = 0.5f;
+
         public System.Action<Minion> OnFishedOrder;
 
         private Vector3 _newPosition;
         private bool _isGoingAlready;
-        private const float STOPPING_DISTANCE = 0.5f;
 
         private void Awake()
         {
