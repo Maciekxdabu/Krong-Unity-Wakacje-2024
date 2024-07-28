@@ -68,6 +68,7 @@ namespace Assets.Scripts.Runtime.Character
         }
 
         private Spawner getClosestSpawner() {
+            // FIXME: inefficient
             var spawners = FindObjectsByType<Spawner>(FindObjectsSortMode.None);
             var closestSpawner = spawners
                 .OrderBy(distanceToSpawnerSq)
