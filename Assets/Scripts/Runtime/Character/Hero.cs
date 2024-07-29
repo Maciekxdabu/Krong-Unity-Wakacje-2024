@@ -1,6 +1,7 @@
 using Assets.Scripts.Runtime.Order;
 using StarterAssets;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Character
@@ -13,8 +14,12 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
         [SerializeField] private Transform frontTransform;
 
+        private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
+        private const int MAX_MINIONS = 10;
+
         private IOrder _sendOrder;
         private List<Minion> _minionsThatAreNotExecutingAnOrder;
+        private Spawner _currentSpawner;
 
         public Transform GetFrontTransform { get { return frontTransform; } }
 
@@ -38,6 +43,52 @@ namespace Assets.Scripts.Runtime.Character
             giveSendOrderToRandomlyMinion();
         }
 
+        public void OnInteract()
+        {
+            if (_currentSpawner != null)
+            {
+                _currentSpawner.Interact(this);
+            }
+        }
+
+        public void FixedUpdate()
+        {
+            var closestSpawner = getClosestSpawner();
+            if (closestSpawner == _currentSpawner)
+            {
+                return;
+            }
+            else
+            {
+                if (_currentSpawner != null) { _currentSpawner.SetSelected(false); }
+                if (closestSpawner != null) { closestSpawner.SetSelected(true); }
+
+                _currentSpawner = closestSpawner;
+            }
+        }
+
+        private Spawner getClosestSpawner() {
+            // FIXME: inefficient
+            var spawners = FindObjectsByType<Spawner>(FindObjectsSortMode.None);
+            var closestSpawner = spawners
+                .OrderBy(distanceToSpawnerSq)
+                .FirstOrDefault();
+            if (closestSpawner == null)
+            {
+                return null;
+            }
+            if (distanceToSpawnerSq(closestSpawner) > MAX_INTERACTION_DISTANCE_SQUARED)
+            {
+                return null;
+            }
+            return closestSpawner;
+        }
+
+        private float distanceToSpawnerSq(Spawner s)
+        {
+            return (s.transform.position - transform.position).sqrMagnitude;
+        }
+
         private void giveSendOrderToRandomlyMinion()
         {
             bool _areThereAnyMinionWithNoOrder = _minionsThatAreNotExecutingAnOrder.Count > 0;
@@ -56,6 +107,21 @@ namespace Assets.Scripts.Runtime.Character
                 localThirdPersonController.OnMove += minions[i].FollowHero;
                 minions[i].OnFishedOrder += reactivatePassiveFollowHero;
             }
+        }
+
+        internal void addMinion(Minion m)
+        {
+            minions.Add(m);
+            _minionsThatAreNotExecutingAnOrder.Add(m);
+            
+            localThirdPersonController.OnJumpEnd += m.FollowHero;
+            localThirdPersonController.OnMove += m.FollowHero;
+            m.OnFishedOrder += reactivatePassiveFollowHero;
+        }
+
+        public bool canGetAnotherMinion(){
+            Debug.Log($"Minions count {minions.Count}");
+            return minions.Count < MAX_MINIONS;
         }
 
         private void removeMinionFromTheListThatAreNotExecutingAnOrder(Minion minion)
@@ -115,5 +181,6 @@ namespace Assets.Scripts.Runtime.Character
         {
             localThirdPersonController.InvokeOnMove();
         }
+
     }
 }
