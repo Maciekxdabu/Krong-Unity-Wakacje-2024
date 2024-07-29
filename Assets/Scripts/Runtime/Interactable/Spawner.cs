@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] public Minion minionPrefab;
-    [SerializeField] public MeshRenderer litMesh;
-    [SerializeField] public Material notLitMaterial;
-    [SerializeField] public Material litMaterial;
+    [SerializeField] private Minion         minionPrefab;
+    [SerializeField] private MeshRenderer   litMesh;
+    [SerializeField] private Material       notLitMaterial;
+    [SerializeField] private Material       litMaterial;
 
-    static Mesh capsuleMesh;
+    private static Mesh capsuleMesh;
 
     public void Interact(Hero h)
     {

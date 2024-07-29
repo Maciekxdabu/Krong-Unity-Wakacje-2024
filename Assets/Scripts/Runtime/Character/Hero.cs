@@ -14,8 +14,8 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
         [SerializeField] private Transform frontTransform;
 
-        const float MAX_INTERACTION_DISTANCE = 3;
-
+        private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
+        private const int MAX_MINIONS = 10;
 
         private IOrder _sendOrder;
         private List<Minion> _minionsThatAreNotExecutingAnOrder;
@@ -54,9 +54,11 @@ namespace Assets.Scripts.Runtime.Character
         public void FixedUpdate()
         {
             var closestSpawner = getClosestSpawner();
-            if (closestSpawner == _currentSpawner) {
+            if (closestSpawner == _currentSpawner)
+            {
                 return;
-            } else
+            }
+            else
             {
                 if (_currentSpawner != null) { _currentSpawner.SetSelected(false); }
                 if (closestSpawner != null) { closestSpawner.SetSelected(true); }
@@ -67,15 +69,23 @@ namespace Assets.Scripts.Runtime.Character
 
         private Spawner getClosestSpawner() {
             var spawners = FindObjectsByType<Spawner>(FindObjectsSortMode.None);
-            var closestSpawner = spawners.OrderBy(spawner => (spawner.transform.position - transform.position).sqrMagnitude).Take(1).FirstOrDefault();
-
-            var distanceSq = (closestSpawner.transform.position - transform.position).sqrMagnitude;
-            if (distanceSq > MAX_INTERACTION_DISTANCE * MAX_INTERACTION_DISTANCE)
+            var closestSpawner = spawners
+                .OrderBy(distanceToSpawnerSq)
+                .FirstOrDefault();
+            if (closestSpawner == null)
+            {
+                return null;
+            }
+            if (distanceToSpawnerSq(closestSpawner) > MAX_INTERACTION_DISTANCE_SQUARED)
             {
                 return null;
             }
             return closestSpawner;
+        }
 
+        private float distanceToSpawnerSq(Spawner s)
+        {
+            return (s.transform.position - transform.position).sqrMagnitude;
         }
 
         private void giveSendOrderToRandomlyMinion()
@@ -110,7 +120,7 @@ namespace Assets.Scripts.Runtime.Character
 
         public bool canGetAnotherMinion(){
             Debug.Log($"Minions count {minions.Count}");
-            return minions.Count < 10;
+            return minions.Count < MAX_MINIONS;
         }
 
         private void removeMinionFromTheListThatAreNotExecutingAnOrder(Minion minion)
