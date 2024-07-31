@@ -1039,6 +1039,7 @@ GameObject:
   - component: {fileID: 4416926081852918493}
   - component: {fileID: 6125599460643261298}
   - component: {fileID: 9146925144411576384}
+  - component: {fileID: 4117198755359362059}
   m_Layer: 3
   m_Name: Hero
   m_TagString: Player
@@ -1327,6 +1328,23 @@ MonoBehaviour:
   sendOrderData: {fileID: 11400000, guid: 1004887919341c14abf3f84976913a6a, type: 2}
   navMeshObstacle: {fileID: 6125599460643261298}
   frontTransform: {fileID: 5428826364353581863}
+--- !u!114 &4117198755359362059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926081852918481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58f5364d0cf826647a3c41089511db94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealthPoints: 100
+  onHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
+  _playerInput: {fileID: 4416926081852918493}
 --- !u!1 &4523139366846529165
 GameObject:
   m_ObjectHideFlags: 0

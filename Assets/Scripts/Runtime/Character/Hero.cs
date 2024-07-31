@@ -18,6 +18,8 @@ namespace Assets.Scripts.Runtime.Character
 
         public Transform GetFrontTransform { get { return frontTransform; } }
 
+        public ThirdPersonController GetThirdPersonController { get {  return localThirdPersonController; } }
+
         private void Awake()
         {
             _sendOrder = new SendOrder(sendOrderData);
