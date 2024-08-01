@@ -115,8 +115,8 @@ namespace Assets.Scripts.Runtime.Character
             bool _areThereAnyMinionWithOrder = _minionsThatAreExecutingAnOrder.Count > 0;
             if (_areThereAnyMinionWithOrder)
             {
-                var _localListOfminionsThatAreExecutingAnOrder = _minionsThatAreExecutingAnOrder.ToList();
-                foreach (Minion minion in _localListOfminionsThatAreExecutingAnOrder)
+                var localListOfminionsThatAreExecutingAnOrder = _minionsThatAreExecutingAnOrder.ToList();
+                foreach (Minion minion in localListOfminionsThatAreExecutingAnOrder)
                 {
                     giveOrder(minion, _allToMeOrder);
                 }
