@@ -14,12 +14,19 @@ namespace Assets.Scripts.Runtime.Character
         public System.Action<Minion> OnFishedOrder;
 
         private Vector3 _newPosition;
-        private bool _isGoingAlready;
+        private bool _isGoingToNewPositionAlready;
+        private Coroutine _currentRuns;
 
         private void Awake()
         {
             _newPosition = new Vector3();
             localNavMeshAgent.speed = speed;
+        }
+
+        public void InterruptCurrentOrder()
+        {
+            StopCoroutine(_currentRuns);
+            OnFishedOrder?.Invoke(this);
         }
 
         public void FollowHero(Vector3 newPosition)
@@ -29,9 +36,9 @@ namespace Assets.Scripts.Runtime.Character
             if (isPlayerCharacterOutOfRange())
             {
                 localNavMeshAgent.SetDestination(_newPosition);
-                if (!_isGoingAlready)
+                if (!_isGoingToNewPositionAlready)
                 {
-                    StartCoroutine(go());
+                    StartCoroutine(goToHero());
                 }
             }
         }
@@ -44,25 +51,25 @@ namespace Assets.Scripts.Runtime.Character
         public void GoToPostion(Vector3 newPosition)
         {
             updateTarget(newPosition);
-            StartCoroutine(executeSendOrder());
+            _currentRuns = StartCoroutine(goToPosition());
         }
 
-        private IEnumerator go()
+        private IEnumerator goToHero()
         {
-            _isGoingAlready = true;
+            _isGoingToNewPositionAlready = true;
             while (isPlayerCharacterOutOfRange())
             {
                 yield return null;
             }
 
             stop();
-            _isGoingAlready = false;
+            _isGoingToNewPositionAlready = false;
         }
 
-        private IEnumerator executeSendOrder()
+        private IEnumerator goToPosition()
         {
             localNavMeshAgent.SetDestination(_newPosition);
-            _isGoingAlready = true;
+            _isGoingToNewPositionAlready = true;
 
             while (localNavMeshAgent.pathPending)
             {
@@ -74,7 +81,7 @@ namespace Assets.Scripts.Runtime.Character
                 yield return null;
             }
 
-            _isGoingAlready = false;
+            _isGoingToNewPositionAlready = false;
             OnFishedOrder?.Invoke(this);
         }
 

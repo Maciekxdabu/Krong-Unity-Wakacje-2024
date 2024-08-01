@@ -18,6 +18,8 @@ namespace Assets.Scripts.Runtime.Character
         private const int MAX_MINIONS = 10;
 
         private IOrder _sendOrder;
+        private IOrder _allToMeOrder;
+        private List<Minion> _minionsThatAreExecutingAnOrder;
         private List<Minion> _minionsThatAreNotExecutingAnOrder;
         private Spawner _currentSpawner;
 
@@ -26,7 +28,10 @@ namespace Assets.Scripts.Runtime.Character
         private void Awake()
         {
             _sendOrder = new SendOrder(sendOrderData);
+            _allToMeOrder = new AllToMeOrder();
+
             initializeForMinions();
+            _minionsThatAreExecutingAnOrder = new List<Minion>();
             _minionsThatAreNotExecutingAnOrder = new List<Minion>(minions);
             localThirdPersonController.OnStop += enableNavMeshObstacle;
             localThirdPersonController.OnStartMove += disableNavMeshObstacle;
@@ -41,6 +46,11 @@ namespace Assets.Scripts.Runtime.Character
         public void OnSendOrder()
         {
             giveSendOrderToRandomlyMinion();
+        }
+
+        public void OnToMeAllOrder()
+        {
+            allMinionsToMe();
         }
 
         public void OnInteract()
@@ -95,7 +105,23 @@ namespace Assets.Scripts.Runtime.Character
             if (_areThereAnyMinionWithNoOrder)
             {
                 var _randomMinion = randomMinion();
-                giveOrder(_randomMinion);
+                giveOrder(_randomMinion, _sendOrder);
+                tryAddMinionWithAnOrder(_randomMinion);
+            }
+        }
+
+        private void allMinionsToMe()
+        {
+            bool _areThereAnyMinionWithOrder = _minionsThatAreExecutingAnOrder.Count > 0;
+            if (_areThereAnyMinionWithOrder)
+            {
+                var localListOfminionsThatAreExecutingAnOrder = _minionsThatAreExecutingAnOrder.ToList();
+                foreach (Minion minion in localListOfminionsThatAreExecutingAnOrder)
+                {
+                    giveOrder(minion, _allToMeOrder);
+                }
+
+                _minionsThatAreExecutingAnOrder.Clear();
             }
         }
 
@@ -134,14 +160,18 @@ namespace Assets.Scripts.Runtime.Character
             localThirdPersonController.OnMove -= minion.FollowHero;
         }
 
-        private void giveOrder(Minion minion)
+        private void giveOrder(Minion minion, IOrder newOrder)
         {
-            initializeOrder(minion);
+            newOrder.Initialize(minion, this);
+            newOrder.Execute();
         }
 
-        private void initializeOrder(Minion minion)
+        private void tryAddMinionWithAnOrder(Minion minion)
         {
-            _sendOrder.Initialize(minion, this);
+            if (!_minionsThatAreExecutingAnOrder.Contains(minion))
+            {
+                _minionsThatAreExecutingAnOrder.Add(minion);
+            }
         }
 
         private void enableNavMeshObstacle()
@@ -169,6 +199,7 @@ namespace Assets.Scripts.Runtime.Character
             if (!_minionsThatAreNotExecutingAnOrder.Contains(minion))
             {
                 returnMinionThatAreNotExecutingAnOrder(minion);
+                _minionsThatAreExecutingAnOrder.Remove(minion);
             }
         }
 

@@ -8,7 +8,7 @@ namespace Assets.Scripts.Runtime.Order
     {
         private Vector3 _destinationPosition;
         private float _maxDistance;
-        public bool isThisMinFreeSpaceToExecuteTheOrder { get { return Vector3.Distance(_transformOfMinion.localPosition, _destinationPosition) > 1f; } }
+        public bool IsThisMinFreeSpaceToExecuteTheOrder { get { return Vector3.Distance(_transformOfMinion.localPosition, _destinationPosition) > 1f; } }
 
         public SendOrder(OrderData orderData)
         {
@@ -17,13 +17,12 @@ namespace Assets.Scripts.Runtime.Order
 
         public override void Initialize(Minion minion, Hero hero)
         {
-            _minion = minion;
-            _transformOfMinion = _minion.transform;
+            base.Initialize(minion, hero);
+
             calculateTheDestinationPointForwardFromCharacter(hero);
 
-            if (isThisMinFreeSpaceToExecuteTheOrder)
+            if (IsThisMinFreeSpaceToExecuteTheOrder)
             {
-                _minion.GiveOrder(this);
                 hero.ReleaseMinionInFavourOfAnOrder(_minion);
             }
         }

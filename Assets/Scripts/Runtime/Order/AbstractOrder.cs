@@ -10,7 +10,8 @@ namespace Assets.Scripts.Runtime.Order
 
         public virtual void Initialize(Minion minion, Hero hero)
         {
-
+            _minion = minion;
+            _transformOfMinion = _minion.transform;
         }
 
         public virtual void Execute()
