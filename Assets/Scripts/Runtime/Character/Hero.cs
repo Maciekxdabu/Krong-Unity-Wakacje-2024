@@ -19,7 +19,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private IOrder _sendOrder;
         private IOrder _allToMeOrder;
-        [SerializeField] private List<Minion> _minionsThatAreExecutingAnOrder;
+        private List<Minion> _minionsThatAreExecutingAnOrder;
         private List<Minion> _minionsThatAreNotExecutingAnOrder;
         private Spawner _currentSpawner;
 
@@ -112,12 +112,13 @@ namespace Assets.Scripts.Runtime.Character
 
         private void allMinionsToMe()
         {
-            bool _areThereAnyMinionWithNoOrder = _minionsThatAreExecutingAnOrder.Count > 0;
-            if (_areThereAnyMinionWithNoOrder)
+            bool _areThereAnyMinionWithOrder = _minionsThatAreExecutingAnOrder.Count > 0;
+            if (_areThereAnyMinionWithOrder)
             {
-                for (int i = _minionsThatAreExecutingAnOrder.Count - 1; i >= 0; i--)
+                var _localListOfminionsThatAreExecutingAnOrder = _minionsThatAreExecutingAnOrder.ToList();
+                foreach (Minion minion in _localListOfminionsThatAreExecutingAnOrder)
                 {
-                    giveOrder(_minionsThatAreExecutingAnOrder[i], _allToMeOrder);
+                    giveOrder(minion, _allToMeOrder);
                 }
 
                 _minionsThatAreExecutingAnOrder.Clear();
