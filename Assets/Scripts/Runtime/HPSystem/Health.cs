@@ -11,6 +11,7 @@ public class Health : MonoBehaviour
     private float _healthPoints;
     protected Boolean isAlive => _healthPoints > 0;
     public UnityEvent onHealthChange = new UnityEvent();
+
     public float HealthPoints
     {
         get { return _healthPoints; }
@@ -26,11 +27,13 @@ public class Health : MonoBehaviour
     {
         get { return _maxHealthPoints; }
     }
+    
     private void Awake()
     {
         _healthPoints = _maxHealthPoints;
+        onHealthChange.AddListener(OnDeath);
     }
-
+    protected virtual void OnDeath() { }
     public void TakeDamage(float value)
     {
         _healthPoints -= value;
@@ -43,10 +46,10 @@ public class Health : MonoBehaviour
     }
     public void TakeHealing(float value)
     {
-        _healthPoints -= value;
-        if (_healthPoints < 0)
+        _healthPoints += value;
+        if (_healthPoints > _maxHealthPoints)
         {
-            _healthPoints = 0;
+            _healthPoints = _maxHealthPoints;
         }
         onHealthChange.Invoke();
         Debug.Log(_healthPoints);
