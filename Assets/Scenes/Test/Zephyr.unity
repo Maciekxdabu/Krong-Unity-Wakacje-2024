@@ -296,7 +296,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
         type: 3}
+      propertyPath: _task_minions_needed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
+      propertyPath: _task_finish_time_seconds
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
+      propertyPath: _taskDoneCallback.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
       propertyPath: _actionDoneCallback.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
+      propertyPath: _taskDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
@@ -306,9 +326,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
         type: 3}
+      propertyPath: _taskDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1551724189}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
       propertyPath: _actionDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1551724189}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
+      propertyPath: _taskDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
+      propertyPath: _taskDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DestroyMe
+      objectReference: {fileID: 0}
     - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
         type: 3}
       propertyPath: _actionDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -321,6 +356,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
         type: 3}
+      propertyPath: _taskDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Debris, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
       propertyPath: _actionDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Debris, Assembly-CSharp
       objectReference: {fileID: 0}
@@ -328,6 +368,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _actionDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
+        type: 3}
+      propertyPath: _taskDoneCallback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2979525866390062738, guid: 8a89332054f597742811b68ed17bf7cf,
         type: 3}

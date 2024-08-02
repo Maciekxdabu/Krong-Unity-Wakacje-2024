@@ -1,5 +1,6 @@
 using Assets.Scripts.Runtime.Order;
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Character
@@ -11,6 +12,8 @@ namespace Assets.Scripts.Runtime.Character
 
         private const float STOPPING_DISTANCE = 0.5f;
 
+        private static int s_count = 1;
+
         public System.Action<Minion> OnFishedOrder;
 
         private Vector3 _newPosition;
@@ -21,6 +24,25 @@ namespace Assets.Scripts.Runtime.Character
         {
             _newPosition = new Vector3();
             localNavMeshAgent.speed = speed;
+            name = "Minion_" + s_count;
+            ++s_count;
+        }
+
+
+        private void OnTriggerEnter(Collider collider)
+        {
+            if (collider.gameObject && collider.gameObject.TryGetComponent<Interactable>(out var interactable))
+            {
+                interactable.StartInteractionWithMinion(this);
+            }
+        }
+
+        private void OnTriggerExit(Collider collider)
+        {
+            if (collider.gameObject && collider.gameObject.TryGetComponent<Interactable>(out var interactable))
+            {
+                interactable.EndInteractionWithMinion(this);
+            }
         }
 
         public void InterruptCurrentOrder()
