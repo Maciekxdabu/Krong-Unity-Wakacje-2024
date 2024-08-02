@@ -9,7 +9,7 @@ public class Interactable : MonoBehaviour
     // SETUP
     [SerializeField] private float _task_finish_time_seconds = 3.0f;
     [SerializeField] private float _task_minions_needed = 10;
-    [SerializeField] private UnityEvent _taskDoneCallback;
+    public UnityEvent<Interactable> TaskDoneCallback;
 
     // Interface visuals
     [SerializeField] private GameObject _doneCube;
@@ -37,7 +37,7 @@ public class Interactable : MonoBehaviour
         _current_progress_seconds += Time.deltaTime;
         if (_current_progress_seconds > _task_finish_time_seconds)
         {
-            _taskDoneCallback.Invoke();
+            TaskDoneCallback.Invoke(this);
             _current_progress_seconds = 0;
             gameObject.SetActive(false);
         }
