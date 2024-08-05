@@ -10,6 +10,8 @@ public class Health : MonoBehaviour
     protected Boolean isAlive => _healthPoints > 0;
     public UnityEvent onHealthChange = new UnityEvent();
 
+    public Boolean GetIsAlive() { return isAlive; }
+
     public float HealthPoints
     {
         get { return _healthPoints; }

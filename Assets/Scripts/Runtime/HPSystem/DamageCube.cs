@@ -5,7 +5,7 @@ public class DamageCube : MonoBehaviour
 {
     [SerializeField] private float dmgPerTick;
     [SerializeField] private float timeBetweenTicks;
-    private List<GameObject> objectsInside = new List<GameObject>();
+    private List<Health> objectsHealth = new List<Health>();
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +15,7 @@ public class DamageCube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(objectsInside.Count > 0)
+        if(objectsHealth.Count > 0)
         {
             DamageAllInside();
         }
@@ -23,11 +23,11 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        objectsInside.Add(other.gameObject);
+        objectsHealth.Add(other.gameObject.GetComponent<Health>());
     }
     private void OnTriggerExit(Collider other)
     {
-        objectsInside.Remove(other.gameObject);
+        objectsHealth.Remove(other.gameObject.GetComponent<Health>());
         
     }
     private void DamageAllInside()
@@ -44,10 +44,9 @@ public class DamageCube : MonoBehaviour
         }
         else
         {
-            foreach (GameObject @object in objectsInside)
+            foreach (Health health in objectsHealth)
             {
-                Health health = @object.GetComponent<Health>();
-                if (health != null)
+                if (health != null && health.GetIsAlive())
                 {
                     health.TakeDamage(dmgPerTick);
                 }
