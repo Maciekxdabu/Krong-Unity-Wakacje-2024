@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +5,7 @@ public class DamageCube : MonoBehaviour
 {
     [SerializeField] private float dmgPerTick;
     [SerializeField] private float timeBetweenTicks;
-    private List<Health> objectsInsideHps = new List<Health>();
+    private List<GameObject> objectsInside = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +15,7 @@ public class DamageCube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(objectsInsideHps.Count > 0)
+        if(objectsInside.Count > 0)
         {
             DamageAllInside();
         }
@@ -24,19 +23,11 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Health otherHealth = other.gameObject.GetComponent<Health>();
-        if (!objectsInsideHps.Contains(otherHealth))
-        {
-            objectsInsideHps.Add(otherHealth);
-        }
+        objectsInside.Add(other.gameObject);
     }
     private void OnTriggerExit(Collider other)
     {
-        Health otherHealth = other.gameObject.GetComponent<Health>();
-        if (objectsInsideHps.Contains(otherHealth) )
-        {
-            objectsInsideHps.Remove(otherHealth);
-        }
+        objectsInside.Remove(other.gameObject);
         
     }
     private void DamageAllInside()
@@ -53,8 +44,9 @@ public class DamageCube : MonoBehaviour
         }
         else
         {
-            foreach (Health health in objectsInsideHps)
+            foreach (GameObject @object in objectsInside)
             {
+                Health health = @object.GetComponent<Health>();
                 if (health != null)
                 {
                     health.TakeDamage(dmgPerTick);

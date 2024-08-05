@@ -1,10 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Runtime.Character;
+using StarterAssets;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class MinionHealth : Health
 {
+    private GameObject _player;
+    [SerializeField] private Minion _minion;
+    private Hero _playerHero;
+    private ThirdPersonController _controller;
+
+    private void Awake()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player");
+        HealthPoints = _maxHealthPoints;
+        onHealthChange.AddListener(OnDeath);
+        _playerHero = _player.GetComponent<Hero>();
+        _controller = _playerHero.GetComponent<ThirdPersonController>();
+    }
+
     [ContextMenu("Kill minion")]
     private void KillMinion()
     {
@@ -20,11 +33,16 @@ public class MinionHealth : Health
     {
         if (!isAlive)
         {
-            Destroy(gameObject);
+            MinionDeathBehaviour();
         }
     }
-    private void OnRespawn()
+    
+    private void MinionDeathBehaviour()
     {
-        
+        _controller.OnJumpEnd -= _minion.FollowHero;
+        _controller.OnMove -= _minion.FollowHero;
+        _controller.OnMove -= _minion.FollowHero;
+        _playerHero.GetMinions.Remove(_minion);
+        Destroy(gameObject);
     }
 }

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,7 +17,7 @@ public class Health : MonoBehaviour
             if (value != _healthPoints)
             {
                 _healthPoints = value;
-                
+                onHealthChange.Invoke();
             } 
         }
     }
@@ -30,28 +28,29 @@ public class Health : MonoBehaviour
     
     private void Awake()
     {
-        _healthPoints = _maxHealthPoints;
+        HealthPoints = _maxHealthPoints;
         onHealthChange.AddListener(OnDeath);
     }
     protected virtual void OnDeath() { }
+    protected virtual void OnRespawn() { }
     public void TakeDamage(float value)
     {
-        _healthPoints -= value;
-        if(_healthPoints < 0)
+        HealthPoints -= value;
+        if(HealthPoints < 0)
         {
-            _healthPoints = 0;
+            HealthPoints = 0;
         }
-        onHealthChange.Invoke();
-        Debug.Log(_healthPoints);
+        
+        Debug.Log(HealthPoints);
     }
     public void TakeHealing(float value)
     {
-        _healthPoints += value;
-        if (_healthPoints > _maxHealthPoints)
+        HealthPoints += value;
+        if (HealthPoints > _maxHealthPoints)
         {
-            _healthPoints = _maxHealthPoints;
+            HealthPoints = _maxHealthPoints;
         }
-        onHealthChange.Invoke();
-        Debug.Log(_healthPoints);
+        
+        Debug.Log(HealthPoints);
     }
 }

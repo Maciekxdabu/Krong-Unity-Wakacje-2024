@@ -13,8 +13,12 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
         [SerializeField] private Transform frontTransform;
 
+        
+
         private IOrder _sendOrder;
         private List<Minion> _minionsThatAreNotExecutingAnOrder;
+
+        public List<Minion> GetMinions { get { return minions; } }
 
         public Transform GetFrontTransform { get { return frontTransform; } }
 

@@ -1345,7 +1345,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _playerInput: {fileID: 7799975580376011842}
-  _respawnPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4523139366846529165
 GameObject:
   m_ObjectHideFlags: 0
