@@ -1039,6 +1039,7 @@ GameObject:
   - component: {fileID: 4416926081852918493}
   - component: {fileID: 6125599460643261298}
   - component: {fileID: 9146925144411576384}
+  - component: {fileID: 4349362971466610041}
   m_Layer: 3
   m_Name: Hero
   m_TagString: Player
@@ -1327,6 +1328,34 @@ MonoBehaviour:
   sendOrderData: {fileID: 11400000, guid: 1004887919341c14abf3f84976913a6a, type: 2}
   navMeshObstacle: {fileID: 6125599460643261298}
   frontTransform: {fileID: 5428826364353581863}
+  _minionsThatAreExecutingAnOrder: []
+--- !u!54 &4349362971466610041
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926081852918481}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &4523139366846529165
 GameObject:
   m_ObjectHideFlags: 0
