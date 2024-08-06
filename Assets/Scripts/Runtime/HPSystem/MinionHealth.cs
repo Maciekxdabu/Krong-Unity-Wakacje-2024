@@ -1,6 +1,7 @@
 using Assets.Scripts.Runtime.Character;
 using StarterAssets;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MinionHealth : Health
 {
@@ -15,7 +16,8 @@ public class MinionHealth : Health
         HealthPoints = _maxHealthPoints;
         onHealthChange.AddListener(OnDeath);
         _playerHero = _player.GetComponent<Hero>();
-        _controller = _playerHero.GetComponent<ThirdPersonController>();
+        _controller = _playerHero.GetThirdPersonController;
+        
     }
 
     [ContextMenu("Kill minion")]
@@ -43,6 +45,8 @@ public class MinionHealth : Health
         _controller.OnMove -= _minion.FollowHero;
         _controller.OnMove -= _minion.FollowHero;
         _playerHero.GetMinions.Remove(_minion);
+        _playerHero.GetNotActiveMinions.Remove(_minion);
         Destroy(gameObject);
     }
+
 }

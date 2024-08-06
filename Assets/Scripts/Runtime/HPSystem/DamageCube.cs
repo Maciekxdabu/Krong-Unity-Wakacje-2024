@@ -6,13 +6,7 @@ public class DamageCube : MonoBehaviour
     [SerializeField] private float dmgPerTick;
     [SerializeField] private float timeBetweenTicks;
     private List<Health> objectsHealth = new List<Health>();
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         if(objectsHealth.Count > 0)

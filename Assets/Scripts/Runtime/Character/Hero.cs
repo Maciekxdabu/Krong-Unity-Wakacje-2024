@@ -2,6 +2,7 @@ using Assets.Scripts.Runtime.Order;
 using StarterAssets;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Runtime.Character
 {
@@ -13,12 +14,11 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
         [SerializeField] private Transform frontTransform;
 
-        
-
         private IOrder _sendOrder;
         private List<Minion> _minionsThatAreNotExecutingAnOrder;
 
         public List<Minion> GetMinions { get { return minions; } }
+        public List<Minion> GetNotActiveMinions { get { return _minionsThatAreNotExecutingAnOrder; } }
 
         public Transform GetFrontTransform { get { return frontTransform; } }
 
