@@ -1845,6 +1845,16 @@ PrefabInstance:
       propertyPath: GroundLayers.m_Bits
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6125599460643261298, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6125599460643261298, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: m_CarveOnlyStationary
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9146925144411576384, guid: 64dce48905ffd9b4293e595fa6941544,
         type: 3}
       propertyPath: minions.Array.size
