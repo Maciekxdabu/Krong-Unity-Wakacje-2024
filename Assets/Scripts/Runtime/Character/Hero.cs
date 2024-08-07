@@ -18,8 +18,8 @@ namespace Assets.Scripts.Runtime.Character
         private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
         private const int MAX_MINIONS = 10;
 
-        [SerializeField]  private List<Minion> _minionsThatAreExecutingAnOrder;
-        [SerializeField]  private List<Minion> _minionsThatAreNotExecutingAnOrder;
+        private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
+        private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
         private Spawner _currentSpawner;
 
         public Transform GetFrontTransform { get { return frontTransform; } }
@@ -28,8 +28,9 @@ namespace Assets.Scripts.Runtime.Character
         {
             initializeMinionsOnAwake();
 
-            localThirdPersonController.OnStop += enableNavMeshObstacle;
-            localThirdPersonController.OnStartMove += disableNavMeshObstacle;
+            //enableNavMeshObstacle();
+            //localThirdPersonController.OnStop += enableNavMeshObstacle;
+            //localThirdPersonController.OnStartMove += disableNavMeshObstacle;
         }
 
 
@@ -102,20 +103,18 @@ namespace Assets.Scripts.Runtime.Character
         {
             foreach (var mininon in minions)
             {
-                mininon.Init(this, localThirdPersonController);
-                mininon.OnFishedOrder += minionOrderFinished;
+                addMinion(mininon, alreadyInMinions:true);
             }
-
-            _minionsThatAreExecutingAnOrder = new List<Minion>();
-            _minionsThatAreNotExecutingAnOrder = new List<Minion>(minions);
         }
 
-        internal void addMinion(Minion m)
+        public void addMinion(Minion m, bool alreadyInMinions = false)
         {
             m.Init(this, localThirdPersonController);
             m.OnFishedOrder += minionOrderFinished;
 
-            minions.Add(m);
+            if (!alreadyInMinions){
+                minions.Add(m);
+            }
             _minionsThatAreNotExecutingAnOrder.Add(m);
         }
 
@@ -154,15 +153,15 @@ namespace Assets.Scripts.Runtime.Character
         }
 
 
-        private void enableNavMeshObstacle()
-        {
-            navMeshObstacle.enabled = true;
-        }
+        //private void enableNavMeshObstacle()
+        //{
+        //    navMeshObstacle.enabled = true;
+        //}
 
-        private void disableNavMeshObstacle()
-        {
-            navMeshObstacle.enabled = false;
-        }
+        //private void disableNavMeshObstacle()
+        //{
+        //    navMeshObstacle.enabled = false;
+        //}
 
     }
 }

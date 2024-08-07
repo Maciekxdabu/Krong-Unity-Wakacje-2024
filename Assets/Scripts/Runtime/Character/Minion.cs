@@ -117,7 +117,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private void InteractableEncountered(Interactable interactable)
         {
-            Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
+            //Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
 
             if (_interactState.SetupInteraction(interactable)) {
                 if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT){
@@ -137,18 +137,11 @@ namespace Assets.Scripts.Runtime.Character
 
         private void InteractableLeftArea(Interactable interactable)
         {
-            Debug.Log($"{name} - {nameof(InteractableLeftArea)} - {interactable}");
+            //Debug.Log($"{name} - {nameof(InteractableLeftArea)} - {interactable}");
 
             if (_currentStateEnum != StateSlot.STATE_INTERACT) return;
 
             _interactState.InteractableLost(interactable);
-        }
-
-        private void InteractableTaskFinished(Interactable interactable) {
-            Debug.Log($"{name} - {nameof(InteractableTaskFinished)} - {interactable}");
-
-            //interactable.EndInteractionWithMinion(this);
-            //_currentInteractable = null;
         }
 
     }
