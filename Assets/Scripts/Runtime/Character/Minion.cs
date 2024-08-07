@@ -21,6 +21,7 @@ namespace Assets.Scripts.Runtime.Character
         private StateSlot _currentStateEnum;
         private Dictionary<StateSlot, IMinionState> _allStates = new Dictionary<StateSlot, IMinionState>();
 
+        private MinionStateFollowPlayer _followPlayerState;
         private MinionStateGoForward _goForwardState;
         private MinionStateInteract _interactState;
 
@@ -35,16 +36,16 @@ namespace Assets.Scripts.Runtime.Character
 
         internal void Init(Hero hero, ThirdPersonController localThirdPersonController)
         {
+            _followPlayerState = new MinionStateFollowPlayer(this, hero, localThirdPersonController, localNavMeshAgent);
             _goForwardState = new MinionStateGoForward(this, hero, localThirdPersonController, localNavMeshAgent);
             _interactState = new MinionStateInteract(this, hero, localThirdPersonController, localNavMeshAgent);
 
-            _allStates[StateSlot.STATE_FOLLOW_HERO] = new MinionStateFollowPlayer(this, hero, localThirdPersonController, localNavMeshAgent);
+            _allStates[StateSlot.STATE_FOLLOW_HERO] = _followPlayerState;
             _allStates[StateSlot.STATE_MOVE_TO_POINT] = _goForwardState;
             _allStates[StateSlot.STATE_INTERACT] = _interactState;
 
             _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
             _currentState = _allStates[_currentStateEnum];
-
             _currentState.StateEnter();
         }
 
