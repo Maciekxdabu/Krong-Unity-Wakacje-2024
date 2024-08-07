@@ -1,10 +1,12 @@
 using Assets.Scripts.Runtime.Order;
 using Assets.Scripts.Runtime.Order.MinionStates;
 using StarterAssets;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Assertions;
 
 namespace Assets.Scripts.Runtime.Character
 {
@@ -19,6 +21,8 @@ namespace Assets.Scripts.Runtime.Character
         private StateSlot _currentStateEnum;
         private Dictionary<StateSlot, IMinionState> _allStates = new Dictionary<StateSlot, IMinionState>();
 
+        private MinionStateGoForward _goForwardState;
+
         public System.Action<Minion> OnFishedOrder;
 
         private void Awake()
@@ -30,7 +34,10 @@ namespace Assets.Scripts.Runtime.Character
 
         internal void Init(Hero hero, ThirdPersonController localThirdPersonController)
         {
+            _goForwardState = new MinionStateGoForward(this, hero, localThirdPersonController, localNavMeshAgent);
+
             _allStates[StateSlot.STATE_FOLLOW_HERO] = new MinionStateFollowPlayer(this, hero, localThirdPersonController, localNavMeshAgent);
+            _allStates[StateSlot.STATE_MOVE_TO_POINT] = _goForwardState;
 
             _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
             _currentState = _allStates[_currentStateEnum];
@@ -41,6 +48,32 @@ namespace Assets.Scripts.Runtime.Character
         private void Update()
         {
             _currentState?.Update();
+        }
+
+
+        public void SendForward()
+        {
+            if (_currentStateEnum != StateSlot.STATE_FOLLOW_HERO){
+                return;
+            }
+            _currentState.StateEnd();
+
+            _currentStateEnum = StateSlot.STATE_MOVE_TO_POINT;
+            _currentState = _allStates[_currentStateEnum];
+            _currentState.StateEnter();
+        }
+
+        public void DestinationReached()
+        {
+            Assert.AreEqual(_currentStateEnum, StateSlot.STATE_MOVE_TO_POINT, "DestinationReached outside STATE_MOVE_TO_POINT");
+
+            _currentState.StateEnd();
+
+            _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
+            _currentState = _allStates[_currentStateEnum];
+            _currentState.StateEnter();
+
+            OnFishedOrder.Invoke(this);
         }
 
 

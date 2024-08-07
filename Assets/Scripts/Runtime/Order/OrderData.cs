@@ -6,6 +6,6 @@ namespace Assets.Scripts.Runtime.Order
     public class OrderData : ScriptableObject
     {
         [SerializeField] protected float maksimumDistance;
-        public float GetMaxDistance { get { return maksimumDistance; } }
+        public float MaxDistance { get { return maksimumDistance; } }
     }
 }

@@ -12,7 +12,7 @@ namespace Assets.Scripts.Runtime.Order
 
         public SendOrder(OrderData orderData)
         {
-            _maxDistance = orderData.GetMaxDistance;
+            _maxDistance = orderData.MaxDistance;
         }
 
         public override void Initialize(Minion minion, Hero hero)
@@ -20,11 +20,6 @@ namespace Assets.Scripts.Runtime.Order
             base.Initialize(minion, hero);
 
             calculateTheDestinationPointForwardFromCharacter(hero);
-
-            if (IsThisMinFreeSpaceToExecuteTheOrder)
-            {
-                hero.ReleaseMinionInFavourOfAnOrder(_minion);
-            }
         }
 
         public override void Execute()
