@@ -30,7 +30,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             _minionNavmeshAgent = minionNavmeshAgent;
         }
 
-        public string GetStateName()
+        public string GetDebugStateString()
         {
             return "GoForward";
         }
@@ -69,11 +69,15 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
 
             var result = heroTransform.position + (heroTransform.forward * maxDistance);
 
+            var ray = new Ray(heroTransform.position, heroTransform.forward);
+            var layerMask = Physics.DefaultRaycastLayers;
             bool wallDetected = Physics.Raycast(
-                heroTransform.position,
-                heroTransform.forward * maxDistance,
-                out var wallHit,
-                maxDistance);
+                    ray,
+                    out var wallHit,
+                    maxDistance,
+                    layerMask,
+                    QueryTriggerInteraction.Ignore
+                );
 
             if (wallDetected)
             {

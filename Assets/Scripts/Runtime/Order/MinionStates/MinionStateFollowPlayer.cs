@@ -36,7 +36,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             localThirdPersonController.OnMove += UpdateHeroLocation;
         }
 
-        public string GetStateName()
+        public string GetDebugStateString()
         {
             return "PlayerFollow";
         }
