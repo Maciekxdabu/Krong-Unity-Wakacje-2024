@@ -4,6 +4,7 @@ using StarterAssets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
@@ -76,6 +77,19 @@ namespace Assets.Scripts.Runtime.Character
             OnFishedOrder.Invoke(this);
         }
 
+        public void InterruptCurrentOrder()
+        {
+            if (_currentStateEnum == StateSlot.STATE_FOLLOW_HERO) return;
+
+            _currentState.StateEnd();
+
+            _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
+            _currentState = _allStates[_currentStateEnum];
+            _currentState.StateEnter();
+
+            OnFishedOrder.Invoke(this);
+        }
+
 
         private void OnTriggerEnter(Collider collider)
         {
@@ -100,6 +114,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(localNavMeshAgent.destination, 0.3f);
+            Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetStateName()??"");
         }
 
         private void InteractableEncountered(Interactable interactable)
@@ -136,14 +151,6 @@ namespace Assets.Scripts.Runtime.Character
             //_currentInteractable = null;
         }
 
-
-        public void InterruptCurrentOrder()
-        {
-        //    StopCoroutine(_currentRuns);
-        //    _currentRuns = null;
-        //    Debug.Log($"{name} - {nameof(InterruptCurrentOrder)} - OnFishedOrder");
-        //    OnFishedOrder?.Invoke(this);
-        }
 
         public void FollowHero(Vector3 newPosition)
         {

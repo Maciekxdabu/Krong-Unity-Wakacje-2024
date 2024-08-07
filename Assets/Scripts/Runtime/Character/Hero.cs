@@ -43,10 +43,13 @@ namespace Assets.Scripts.Runtime.Character
 
         }
 
-
         public void OnToMeAllOrder()
         {
-            
+            // duplicate as minions will be removed during foreach
+            var busyMinions = _minionsThatAreExecutingAnOrder.ToList();
+            foreach (var minion in busyMinions){
+                minion.InterruptCurrentOrder();
+            }
         }
 
         public void OnInteract()
