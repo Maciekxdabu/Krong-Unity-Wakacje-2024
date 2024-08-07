@@ -2,6 +2,7 @@ using Assets.Scripts.Runtime.Order;
 using StarterAssets;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.UI;
 using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Character
@@ -127,22 +128,20 @@ namespace Assets.Scripts.Runtime.Character
 
         private void initializeForMinions()
         {
-            for (int i = minions.Count - 1; i >= 0; i--)
+            foreach (var mininon in minions)
             {
-                localThirdPersonController.OnJumpEnd += minions[i].FollowHero;
-                localThirdPersonController.OnMove += minions[i].FollowHero;
-                minions[i].OnFishedOrder += reactivatePassiveFollowHero;
+                mininon.Init(this, localThirdPersonController);
+                mininon.OnFishedOrder += reactivatePassiveFollowHero;
             }
         }
 
         internal void addMinion(Minion m)
         {
-            minions.Add(m);
-            _minionsThatAreNotExecutingAnOrder.Add(m);
-            
-            localThirdPersonController.OnJumpEnd += m.FollowHero;
-            localThirdPersonController.OnMove += m.FollowHero;
+            m.Init(this, localThirdPersonController);
             m.OnFishedOrder += reactivatePassiveFollowHero;
+
+            minions.Add(m);
+            _minionsThatAreNotExecutingAnOrder.Add(m);            
         }
 
         public bool canGetAnotherMinion(){
