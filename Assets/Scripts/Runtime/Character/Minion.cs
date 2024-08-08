@@ -145,5 +145,13 @@ namespace Assets.Scripts.Runtime.Character
             _interactState.InteractableLost(interactable);
         }
 
+        internal void Died()
+        {
+            foreach(var (_,state) in _allStates)
+            {
+                state.MinionDied();
+            }
+        }
+
     }
 }

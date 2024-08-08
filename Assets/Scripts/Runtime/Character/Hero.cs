@@ -154,6 +154,26 @@ namespace Assets.Scripts.Runtime.Character
             _minionsThatAreExecutingAnOrder.Remove(minion);
         }
 
+        internal void Respawn(Vector3 position)
+        {
+            if (!localThirdPersonController.enabled)
+            {
+                localThirdPersonController.enabled = true;
+            }
+            foreach (Minion minion in minions)
+            {
+                minion.gameObject.transform.position = position;
+            }
+            
+        }
+
+        internal void MinionDied(Minion minion)
+        {
+            minions.Remove(minion);
+            _minionsThatAreExecutingAnOrder.Remove(minion);
+            _minionsThatAreNotExecutingAnOrder.Remove(minion);
+        }
+
 
         //private void enableNavMeshObstacle()
         //{

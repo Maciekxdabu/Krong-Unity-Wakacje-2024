@@ -15,7 +15,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         private readonly NavMeshAgent _minionNavmeshAgent;
         
         private readonly Hero _player;
-
+        private readonly ThirdPersonController localThirdPersonController;
         private Vector3 _lastHeroLocation;
 
         private const float STOPPING_DISTANCE = 1.5f;
@@ -29,6 +29,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         {
             _minion = minion;
             _player = player;
+            this.localThirdPersonController = localThirdPersonController;
             _minionNavmeshAgent = minionNavmeshAgent;
 
 
@@ -66,5 +67,10 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             }
         }
 
+        public void MinionDied()
+        {
+            localThirdPersonController.OnJumpEnd -= UpdateHeroLocation;
+            localThirdPersonController.OnMove -= UpdateHeroLocation;
+        }
     }
 }

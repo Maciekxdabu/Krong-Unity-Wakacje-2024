@@ -39,10 +39,10 @@ public class MinionHealth : Health
     
     private void MinionDeathBehaviour()
     {
-        _controller.OnJumpEnd -= _minion.FollowHero;
-        _controller.OnMove -= _minion.FollowHero;
-        _playerHero.GetNotActiveMinions.Remove(_minion);
-        _playerHero.GetMinions.Remove(_minion);
+        _playerHero.MinionDied(_minion);
+        _minion.Died();
+        
+        
         Destroy(gameObject);
     }
 }

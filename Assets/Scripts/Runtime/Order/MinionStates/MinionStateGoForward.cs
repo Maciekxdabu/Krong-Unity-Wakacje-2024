@@ -95,6 +95,9 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             return result;
         }
 
+        public void MinionDied()
+        {
 
+        }
     }
 }

@@ -21,19 +21,7 @@ public class PlayerHealth : Health
     {
         transform.position = _respawnPosition;
         Physics.SyncTransforms();
-        if (!playerThirdPersonController.enabled)
-        {
-            playerThirdPersonController.enabled = true;
-        }
-        if (_hero.GetMinions.Count > 0)
-        {
-            foreach (Minion minion in _hero.GetMinions)
-            {
-                minion.gameObject.transform.position = _respawnPosition;
-                minion.GoToPostion(_respawnPosition);
-                minion.StopAllCoroutines();
-            }
-        }
+        _hero.Respawn(_respawnPosition);
     }
     
     public void OnRespawn(InputValue inputValue)
