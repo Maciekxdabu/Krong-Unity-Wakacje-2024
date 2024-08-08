@@ -1040,6 +1040,7 @@ GameObject:
   - component: {fileID: 6125599460643261298}
   - component: {fileID: 9146925144411576384}
   - component: {fileID: 4349362971466610041}
+  - component: {fileID: 4117198755359362059}
   m_Layer: 3
   m_Name: Hero
   m_TagString: Player
@@ -1355,6 +1356,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4117198755359362059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4416926081852918481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58f5364d0cf826647a3c41089511db94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealthPoints: 100
+  onHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
+  playerThirdPersonController: {fileID: 7799975580376011842}
+  _respawnPosition: {x: 0, y: 0, z: 0}
+  _hero: {fileID: 9146925144411576384}
+  input: {fileID: 4416926081852918493}
 --- !u!1 &4523139366846529165
 GameObject:
   m_ObjectHideFlags: 0

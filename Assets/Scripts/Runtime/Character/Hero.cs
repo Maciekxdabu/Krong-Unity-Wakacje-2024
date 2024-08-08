@@ -24,6 +24,8 @@ namespace Assets.Scripts.Runtime.Character
 
         public Transform GetFrontTransform { get { return frontTransform; } }
 
+        public ThirdPersonController GetThirdPersonController { get {  return localThirdPersonController; } }
+
         private void Awake()
         {
             initializeMinionsOnAwake();
@@ -150,6 +152,26 @@ namespace Assets.Scripts.Runtime.Character
 
             _minionsThatAreNotExecutingAnOrder.Add(minion);
             _minionsThatAreExecutingAnOrder.Remove(minion);
+        }
+
+        internal void Respawn(Vector3 position)
+        {
+            if (!localThirdPersonController.enabled)
+            {
+                localThirdPersonController.enabled = true;
+            }
+            foreach (Minion minion in minions)
+            {
+                minion.gameObject.transform.position = position;
+            }
+            
+        }
+
+        internal void MinionDied(Minion minion)
+        {
+            minions.Remove(minion);
+            _minionsThatAreExecutingAnOrder.Remove(minion);
+            _minionsThatAreNotExecutingAnOrder.Remove(minion);
         }
 
 

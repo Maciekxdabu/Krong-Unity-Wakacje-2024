@@ -81,5 +81,12 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             _stateActive = false;
         }
 
+        public void MinionDied()
+        {
+            if(_interactable != null && _stateActive)
+            {
+                StateEnd();
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@
         void StateEnter();
         void Update();
         void StateEnd();
+        void MinionDied();
     }
 
     enum StateSlot {
