@@ -44,12 +44,6 @@ public class Health : MonoBehaviour
     }
     public void TakeHealing(float value)
     {
-        HealthPoints += value;
-        if (HealthPoints > _maxHealthPoints)
-        {
-            HealthPoints = _maxHealthPoints;
-        }
-        
-        Debug.Log(HealthPoints);
+        TakeDamage(-value);
     }
 }
