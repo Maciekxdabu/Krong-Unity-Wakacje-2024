@@ -1,32 +1,93 @@
 using Assets.Scripts.Runtime.Order;
+using Assets.Scripts.Runtime.Order.MinionStates;
+using StarterAssets;
+using System;
 using System.Collections;
-using System.Threading;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Assertions;
 
 namespace Assets.Scripts.Runtime.Character
 {
     public class Minion : Creature
     {
-        [SerializeField] private UnityEngine.AI.NavMeshAgent localNavMeshAgent;
-        [SerializeField] private float minDistanceToStartFollowTheCharacterPlayer;
-
-        private const float STOPPING_DISTANCE = 0.5f;
+        [SerializeField] private NavMeshAgent localNavMeshAgent;
 
         private static int s_spawned_count = 1;
 
-        public System.Action<Minion> OnFishedOrder;
+        private IMinionState _currentState;
+        private StateSlot _currentStateEnum;
+        private Dictionary<StateSlot, IMinionState> _allStates = new Dictionary<StateSlot, IMinionState>();
 
-        private Vector3 _newPosition;
-        private bool _isGoingToNewPositionAlready;
-        private Coroutine _currentRuns;
-        private Interactable _currentInteractable;
+        private MinionStateFollowPlayer _followPlayerState;
+        private MinionStateGoForward _goForwardState;
+        private MinionStateInteract _interactState;
+
+        public Action<Minion> OnFishedOrder;
 
         private void Awake()
         {
-            _newPosition = new Vector3();
             localNavMeshAgent.speed = speed;
             name = "Minion_" + s_spawned_count;
             ++s_spawned_count;
+        }
+
+        internal void Init(Hero hero, ThirdPersonController localThirdPersonController)
+        {
+            _followPlayerState = new MinionStateFollowPlayer(this, hero, localThirdPersonController, localNavMeshAgent);
+            _goForwardState = new MinionStateGoForward(this, hero, localThirdPersonController, localNavMeshAgent);
+            _interactState = new MinionStateInteract(this, hero, localThirdPersonController, localNavMeshAgent);
+
+            _allStates[StateSlot.STATE_FOLLOW_HERO] = _followPlayerState;
+            _allStates[StateSlot.STATE_MOVE_TO_POINT] = _goForwardState;
+            _allStates[StateSlot.STATE_INTERACT] = _interactState;
+
+            _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
+            _currentState = _allStates[_currentStateEnum];
+            _currentState.StateEnter();
+        }
+
+        private void Update()
+        {
+            _currentState?.Update();
+        }
+
+        private void GoToState(StateSlot newState) {
+            Assert.AreNotEqual(_currentStateEnum, newState);
+
+            _currentState.StateEnd();
+
+            _currentStateEnum = newState;
+            _currentState = _allStates[_currentStateEnum];
+            _currentState.StateEnter();
+        }
+
+
+        public void SendForward()
+        {
+            Assert.AreEqual(_currentStateEnum, StateSlot.STATE_FOLLOW_HERO, "SendForward outside STATE_FOLLOW_HERO");
+
+            GoToState(StateSlot.STATE_MOVE_TO_POINT);
+        }
+
+        public void DestinationReached()
+        {
+            Assert.AreEqual(_currentStateEnum, StateSlot.STATE_MOVE_TO_POINT, "DestinationReached outside STATE_MOVE_TO_POINT");
+
+            GoToState(StateSlot.STATE_FOLLOW_HERO);
+
+            OnFishedOrder.Invoke(this);
+        }
+
+        public void InterruptCurrentOrder()
+        {
+            if (_currentStateEnum == StateSlot.STATE_FOLLOW_HERO) return; // nothing to interrupt
+
+            GoToState(StateSlot.STATE_FOLLOW_HERO);
+
+            OnFishedOrder.Invoke(this);
         }
 
 
@@ -48,151 +109,41 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(localNavMeshAgent.destination, 0.3f);
+            Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
         }
 
         private void InteractableEncountered(Interactable interactable)
         {
-            Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
+            //Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
 
-            if (_currentInteractable != null) {
-                return; // ignore others when interacting already
-                        // TODO: interactable priorities
-            }
-            if (_currentRuns == null)
-            {
-                return; // only interact during move order
-            }
-            interactable.StartInteractionWithMinion(this);
-            _currentInteractable = interactable;
-            updateTarget(_currentInteractable.transform.position);
-            _currentInteractable.TaskDoneCallback.AddListener(InteractableTaskFinished);
-        }
-        
-        private void InteractableLeftArea(Interactable interactable)
-        {
-            Debug.Log($"{name} - {nameof(InteractableLeftArea)} - {interactable}");
-
-            interactable.EndInteractionWithMinion(this);
-            _currentInteractable = null;
-            _currentInteractable.TaskDoneCallback.RemoveListener(InteractableTaskFinished);
-        }
-
-        private void InteractableTaskFinished(Interactable interactable) {
-            Debug.Log($"{name} - {nameof(InteractableTaskFinished)} - {interactable}");
-
-            interactable.EndInteractionWithMinion(this);
-            _currentInteractable = null;
-        }
-
-
-        public void InterruptCurrentOrder()
-        {
-            StopCoroutine(_currentRuns);
-            _currentRuns = null;
-            Debug.Log($"{name} - {nameof(InterruptCurrentOrder)} - OnFishedOrder");
-            OnFishedOrder?.Invoke(this);
-        }
-
-        public void FollowHero(Vector3 newPosition)
-        {
-            updateTarget(newPosition);
-
-            if (isPlayerCharacterOutOfRange())
-            {
-                localNavMeshAgent.SetDestination(_newPosition);
-                if (!_isGoingToNewPositionAlready)
-                {
-                    StartCoroutine(goToHero());
+            if (_interactState.SetupInteraction(interactable)) {
+                if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT){
+                    GoToState(StateSlot.STATE_INTERACT);
                 }
             }
         }
 
-        public void GiveOrder(IOrder newOrder)
+        public void InteractionTaskFinished()
         {
-            newOrder.Execute();
+            Assert.AreEqual(_currentStateEnum, StateSlot.STATE_INTERACT, "InteractionTaskFinished outside STATE_INTERACT");
+
+            GoToState(StateSlot.STATE_FOLLOW_HERO);
+
+            OnFishedOrder.Invoke(this);
         }
 
-        public Coroutine GoToPostion(Vector3 newPosition)
+        private void InteractableLeftArea(Interactable interactable)
         {
-            Debug.Log($"{name} - go to position - {newPosition}");
-            updateTarget(newPosition);
-            _currentRuns = StartCoroutine(goToPosition());
-            return _currentRuns;
+            //Debug.Log($"{name} - {nameof(InteractableLeftArea)} - {interactable}");
+
+            if (_currentStateEnum != StateSlot.STATE_INTERACT) return;
+
+            _interactState.InteractableLost(interactable);
         }
 
-        private IEnumerator goToHero()
-        {
-            Debug.Log($"{name} - {nameof(goToHero)} coroutine start");
-            _isGoingToNewPositionAlready = true;
-            while (isPlayerCharacterOutOfRange())
-            {
-                yield return null;
-            }
-
-            stop();
-            _isGoingToNewPositionAlready = false;
-            Debug.Log($"{name} - {nameof(goToHero)} coroutine end");
-        }
-
-        private IEnumerator goToPosition()
-        {
-            Debug.Log($"{name} - {nameof(goToPosition)} coroutine start");
-
-            localNavMeshAgent.SetDestination(_newPosition);
-            _isGoingToNewPositionAlready = true;
-
-            while (localNavMeshAgent.pathPending)
-            {
-                yield return null;
-            }
-
-            while (localNavMeshAgent.remainingDistance > STOPPING_DISTANCE)
-            {
-                yield return null;
-            }
-
-            _isGoingToNewPositionAlready = false;
-
-            Debug.Log($"{name} - {nameof(goToPosition)} target reached. Interactable {_currentInteractable}");
-
-            while (_currentInteractable != null) {
-                // wait for interactable task to finish
-                yield return null;
-            }
-            Debug.Log($"{name} - {nameof(goToPosition)} - OnFishedOrder");
-
-            OnFishedOrder?.Invoke(this);
-            _currentRuns = null;
-
-            Debug.Log($"{name} - {nameof(goToPosition)} coroutine end");
-
-        }
-
-        private bool isPlayerCharacterOutOfRange()
-        {
-            return Vector3.Distance(transform.localPosition, _newPosition) > minDistanceToStartFollowTheCharacterPlayer;
-        }
-
-        private void stop()
-        {
-            setCurrentTargetToLocalPosition();
-            localNavMeshAgent.SetDestination(transform.localPosition);
-        }
-
-        private void setCurrentTargetToLocalPosition()
-        {
-            updateTarget(transform.localPosition);
-        }
-
-        private void updateTarget(Vector3 newPosition)
-        {
-            _newPosition = newPosition;
-            localNavMeshAgent.SetDestination(_newPosition);
-        }
     }
 }
