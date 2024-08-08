@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Readme
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: 44a17a5b205fcd349a24700e6f5615bd, type: 3}
-  title: Welcome to Starter Assets!
+  title: KUPA - Krong Unity Poly Assignment
   sections:
-  - heading: Starter Assets Readme
-    text: 
+  - heading:
+    text: Summer 2024 Project for Krong Unity in Polygon.
+      Small game based on Pickmin/Overlord core gameplay.
     linkText: 
     url: 
-  - heading: 
+  - heading: Starter Assets Readme
     text: 'Starter Assets include First and Third Person Character controllers built
       in a modular way as a solid foundation for any game genre. '
     linkText: Starter Assets - First Person Character Controller
@@ -56,4 +57,20 @@ MonoBehaviour:
     text: 
     linkText: Click here to let us know what you think about this package.
     url: https://unitysoftware.co1.qualtrics.com/jfe/form/SV_5cg7IkyOprbHqia?packagename=starterassets
+  - heading: Welcome to the Universal Render Pipeline
+    text: This template includes the settings and assets you need to start creating with the Universal Render Pipeline.
+    linkText: 
+    url:
+  - heading: URP Documentation
+    text:
+    linkText: Read more about URP
+    url: https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@latest
+  - heading: Forums
+    text:
+    linkText: Get answers and support
+    url: https://forum.unity.com/forums/universal-render-pipeline.383/
+  - heading: Report bugs
+    text:
+    linkText: Submit a report
+    url: https://unity3d.com/unity/qa/bug-reporting
   loadedLayout: 1
