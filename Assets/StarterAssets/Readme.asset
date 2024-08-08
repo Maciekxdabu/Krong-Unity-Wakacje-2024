@@ -57,7 +57,7 @@ MonoBehaviour:
     text: 
     linkText: Click here to let us know what you think about this package.
     url: https://unitysoftware.co1.qualtrics.com/jfe/form/SV_5cg7IkyOprbHqia?packagename=starterassets
-- heading: Welcome to the Universal Render Pipeline
+  - heading: Welcome to the Universal Render Pipeline
     text: This template includes the settings and assets you need to start creating with the Universal Render Pipeline.
     linkText: 
     url:
