@@ -1,5 +1,6 @@
 using Assets.Scripts.Runtime.Character;
 using StarterAssets;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,9 +18,10 @@ public class PlayerHealth : Health
         }
     }
     
-    protected override void OnRespawn()
+    protected override void Respawning()
     {
-        transform.position = _respawnPosition;
+        gameObject.transform.position = _respawnPosition;
+        Physics.SyncTransforms();
         if (!playerThirdPersonController.enabled)
         {
             playerThirdPersonController.enabled = true;
@@ -33,14 +35,11 @@ public class PlayerHealth : Health
             }
         }
     }
-
-    public void Respawning(InputValue inputValue)
+    
+    public void OnRespawn(InputValue inputValue)
     {
-        if (inputValue.isPressed)
-        {
-            RespawnPlayer();
-        }
-
+        TakeHealing(_maxHealthPoints);
+        Respawning();
     }
 
     [ContextMenu("Kill player")]
@@ -52,6 +51,6 @@ public class PlayerHealth : Health
     private void RespawnPlayer()
     {
         TakeHealing(_maxHealthPoints);
-        OnRespawn();
+        Respawning();
     }
 }

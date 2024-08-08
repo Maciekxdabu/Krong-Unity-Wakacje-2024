@@ -34,7 +34,7 @@ public class Health : MonoBehaviour
         onHealthChange.AddListener(OnDeath);
     }
     protected virtual void OnDeath() { }
-    protected virtual void OnRespawn() { }
+    protected virtual void Respawning() { }
     public void TakeDamage(float value)
     {
         HealthPoints -= value;
