@@ -1,6 +1,5 @@
 using Assets.Scripts.Runtime.Character;
 using StarterAssets;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,7 +19,7 @@ public class PlayerHealth : Health
     
     protected override void Respawning()
     {
-        gameObject.transform.position = _respawnPosition;
+        transform.position = _respawnPosition;
         Physics.SyncTransforms();
         if (!playerThirdPersonController.enabled)
         {
@@ -32,6 +31,7 @@ public class PlayerHealth : Health
             {
                 minion.gameObject.transform.position = _respawnPosition;
                 minion.GoToPostion(_respawnPosition);
+                minion.StopAllCoroutines();
             }
         }
     }
