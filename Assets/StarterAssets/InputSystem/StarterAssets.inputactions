@@ -51,6 +51,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ToMeAllOrder",
+                    "type": "Button",
+                    "id": "293dd3ea-4284-4804-8551-f9f040b67ac2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "76220ed8-009c-4e38-b9b8-dfe61b0f8a78",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Respawn",
                     "type": "Button",
                     "id": "e88dbc94-07c5-4027-aaba-f5dfa234cd67",
@@ -245,6 +263,28 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "SendOrder",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cd881309-73f6-4b30-addd-0ba1150943ad",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0438c853-7380-445e-b881-309f442ff685",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "ToMeAllOrder",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

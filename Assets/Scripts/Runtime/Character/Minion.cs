@@ -1,102 +1,149 @@
 using Assets.Scripts.Runtime.Order;
+using Assets.Scripts.Runtime.Order.MinionStates;
+using StarterAssets;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Assertions;
 
 namespace Assets.Scripts.Runtime.Character
 {
     public class Minion : Creature
     {
-        [SerializeField] private UnityEngine.AI.NavMeshAgent localNavMeshAgent;
-        [SerializeField] private float minDistanceToStartFollowTheCharacterPlayer;
+        [SerializeField] private NavMeshAgent localNavMeshAgent;
 
-        private const float STOPPING_DISTANCE = 0.5f;
+        private static int s_spawned_count = 1;
 
-        public System.Action<Minion> OnFishedOrder;
+        private IMinionState _currentState;
+        private StateSlot _currentStateEnum;
+        private Dictionary<StateSlot, IMinionState> _allStates = new Dictionary<StateSlot, IMinionState>();
 
-        private Vector3 _newPosition;
-        private bool _isGoingAlready;
+        private MinionStateFollowPlayer _followPlayerState;
+        private MinionStateGoForward _goForwardState;
+        private MinionStateInteract _interactState;
+
+        public Action<Minion> OnFishedOrder;
 
         private void Awake()
         {
-            _newPosition = new Vector3();
             localNavMeshAgent.speed = speed;
+            name = "Minion_" + s_spawned_count;
+            ++s_spawned_count;
         }
 
-        public void FollowHero(Vector3 newPosition)
+        internal void Init(Hero hero, ThirdPersonController localThirdPersonController)
         {
-            updateTarget(newPosition);
+            _followPlayerState = new MinionStateFollowPlayer(this, hero, localThirdPersonController, localNavMeshAgent);
+            _goForwardState = new MinionStateGoForward(this, hero, localThirdPersonController, localNavMeshAgent);
+            _interactState = new MinionStateInteract(this, hero, localThirdPersonController, localNavMeshAgent);
 
-            if (isPlayerCharacterOutOfRange())
+            _allStates[StateSlot.STATE_FOLLOW_HERO] = _followPlayerState;
+            _allStates[StateSlot.STATE_MOVE_TO_POINT] = _goForwardState;
+            _allStates[StateSlot.STATE_INTERACT] = _interactState;
+
+            _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
+            _currentState = _allStates[_currentStateEnum];
+            _currentState.StateEnter();
+        }
+
+        private void Update()
+        {
+            _currentState?.Update();
+        }
+
+        private void GoToState(StateSlot newState) {
+            Assert.AreNotEqual(_currentStateEnum, newState);
+
+            _currentState.StateEnd();
+
+            _currentStateEnum = newState;
+            _currentState = _allStates[_currentStateEnum];
+            _currentState.StateEnter();
+        }
+
+
+        public void SendForward()
+        {
+            Assert.AreEqual(_currentStateEnum, StateSlot.STATE_FOLLOW_HERO, "SendForward outside STATE_FOLLOW_HERO");
+
+            GoToState(StateSlot.STATE_MOVE_TO_POINT);
+        }
+
+        public void DestinationReached()
+        {
+            Assert.AreEqual(_currentStateEnum, StateSlot.STATE_MOVE_TO_POINT, "DestinationReached outside STATE_MOVE_TO_POINT");
+
+            GoToState(StateSlot.STATE_FOLLOW_HERO);
+
+            OnFishedOrder.Invoke(this);
+        }
+
+        public void InterruptCurrentOrder()
+        {
+            if (_currentStateEnum == StateSlot.STATE_FOLLOW_HERO) return; // nothing to interrupt
+
+            GoToState(StateSlot.STATE_FOLLOW_HERO);
+
+            OnFishedOrder.Invoke(this);
+        }
+
+
+        private void OnTriggerEnter(Collider collider)
+        {
+            if (collider.gameObject && collider.gameObject.TryGetComponent<Interactable>(out var interactable))
             {
-                localNavMeshAgent.SetDestination(_newPosition);
-                if (!_isGoingAlready)
-                {
-                    StartCoroutine(go());
+                // FIXME: Why is this called twice?
+                InteractableEncountered(interactable);
+            }
+        }
+
+        private void OnTriggerExit(Collider collider)
+        {
+            if (collider.gameObject && collider.gameObject.TryGetComponent<Interactable>(out var interactable))
+            {
+                // FIXME: Why is this called twice?
+                InteractableLeftArea(interactable);
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(localNavMeshAgent.destination, 0.3f);
+            Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
+        }
+
+        private void InteractableEncountered(Interactable interactable)
+        {
+            //Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
+
+            if (_interactState.SetupInteraction(interactable)) {
+                if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT){
+                    GoToState(StateSlot.STATE_INTERACT);
                 }
             }
         }
 
-        public void GiveOrder(IOrder newOrder)
+        public void InteractionTaskFinished()
         {
-            newOrder.Execute();
+            Assert.AreEqual(_currentStateEnum, StateSlot.STATE_INTERACT, "InteractionTaskFinished outside STATE_INTERACT");
+
+            GoToState(StateSlot.STATE_FOLLOW_HERO);
+
+            OnFishedOrder.Invoke(this);
         }
 
-        public void GoToPostion(Vector3 newPosition)
+        private void InteractableLeftArea(Interactable interactable)
         {
-            updateTarget(newPosition);
-            StartCoroutine(executeSendOrder());
+            //Debug.Log($"{name} - {nameof(InteractableLeftArea)} - {interactable}");
+
+            if (_currentStateEnum != StateSlot.STATE_INTERACT) return;
+
+            _interactState.InteractableLost(interactable);
         }
 
-        private IEnumerator go()
-        {
-            _isGoingAlready = true;
-            while (isPlayerCharacterOutOfRange())
-            {
-                yield return null;
-            }
-
-            stop();
-            _isGoingAlready = false;
-        }
-
-        private IEnumerator executeSendOrder()
-        {
-            localNavMeshAgent.SetDestination(_newPosition);
-            _isGoingAlready = true;
-
-            while (localNavMeshAgent.pathPending)
-            {
-                yield return null;
-            }
-
-            while (localNavMeshAgent.remainingDistance > STOPPING_DISTANCE)
-            {
-                yield return null;
-            }
-
-            _isGoingAlready = false;
-            OnFishedOrder?.Invoke(this);
-        }
-
-        private bool isPlayerCharacterOutOfRange()
-        {
-            return Vector3.Distance(transform.localPosition, _newPosition) > minDistanceToStartFollowTheCharacterPlayer;
-        }
-
-        private void stop()
-        {
-            setCurrentTargetToLocalPosition();
-            localNavMeshAgent.SetDestination(transform.localPosition);
-        }
-
-        private void setCurrentTargetToLocalPosition()
-        {
-            updateTarget(transform.localPosition);
-        }
-
-        private void updateTarget(Vector3 newPosition)
-        {
-            _newPosition = newPosition;
-        }
     }
 }

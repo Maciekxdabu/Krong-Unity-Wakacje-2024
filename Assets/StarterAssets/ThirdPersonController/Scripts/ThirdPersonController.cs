@@ -162,6 +162,7 @@ namespace StarterAssets
 
         private void Update()
         {
+            // FIXME: inefficient
             _hasAnimator = TryGetComponent(out _animator);
 
             JumpAndGravity();

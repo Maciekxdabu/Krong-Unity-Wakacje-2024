@@ -1,8 +1,9 @@
 using Assets.Scripts.Runtime.Order;
 using StarterAssets;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.Assertions;
 
 namespace Assets.Scripts.Runtime.Character
 {
@@ -10,15 +11,16 @@ namespace Assets.Scripts.Runtime.Character
     {
         [SerializeField] private List<Minion> minions;
         [SerializeField] private ThirdPersonController localThirdPersonController;
-        [SerializeField] private OrderData sendOrderData;
+        public OrderData sendOrderData;
         [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
         [SerializeField] private Transform frontTransform;
 
-        private IOrder _sendOrder;
-        private List<Minion> _minionsThatAreNotExecutingAnOrder;
+        private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
+        private const int MAX_MINIONS = 10;
 
-        public List<Minion> GetMinions { get { return minions; } }
-        public List<Minion> GetNotActiveMinions { get { return _minionsThatAreNotExecutingAnOrder; } }
+        private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
+        private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
+        private Spawner _currentSpawner;
 
         public Transform GetFrontTransform { get { return frontTransform; } }
 
@@ -26,100 +28,142 @@ namespace Assets.Scripts.Runtime.Character
 
         private void Awake()
         {
-            _sendOrder = new SendOrder(sendOrderData);
-            initializeForMinions();
-            _minionsThatAreNotExecutingAnOrder = new List<Minion>(minions);
-            localThirdPersonController.OnStop += enableNavMeshObstacle;
-            localThirdPersonController.OnStartMove += disableNavMeshObstacle;
+            initializeMinionsOnAwake();
+
+            //enableNavMeshObstacle();
+            //localThirdPersonController.OnStop += enableNavMeshObstacle;
+            //localThirdPersonController.OnStartMove += disableNavMeshObstacle;
         }
 
-        internal void ReleaseMinionInFavourOfAnOrder(Minion minion)
-        {
-            stopFollowTheCharacter(minion);
-            removeMinionFromTheListThatAreNotExecutingAnOrder(minion);
-        }
 
         public void OnSendOrder()
         {
-            giveSendOrderToRandomlyMinion();
+            if (!hasFreeMinion()) { return; }
+
+            var minion = getRandomFreeMinion();
+            minion.SendForward();
+            markAsWorking(minion);
+
         }
 
-        private void giveSendOrderToRandomlyMinion()
+        public void OnToMeAllOrder()
         {
-            bool _areThereAnyMinionWithNoOrder = _minionsThatAreNotExecutingAnOrder.Count > 0;
-            if (_areThereAnyMinionWithNoOrder)
-            {
-                var _randomMinion = randomMinion();
-                giveOrder(_randomMinion);
+            // duplicate as minions will be removed during foreach
+            var busyMinions = _minionsThatAreExecutingAnOrder.ToList();
+            foreach (var minion in busyMinions){
+                minion.InterruptCurrentOrder();
             }
         }
 
-        private void initializeForMinions()
+        public void OnInteract()
         {
-            for (int i = minions.Count - 1; i >= 0; i--)
+            if (_currentSpawner != null)
             {
-                localThirdPersonController.OnJumpEnd += minions[i].FollowHero;
-                localThirdPersonController.OnMove += minions[i].FollowHero;
-                minions[i].OnFishedOrder += reactivatePassiveFollowHero;
+                _currentSpawner.Interact(this);
             }
         }
 
-        private void removeMinionFromTheListThatAreNotExecutingAnOrder(Minion minion)
+        public void FixedUpdate()
         {
+            var closestSpawner = getClosestSpawner();
+            if (closestSpawner == _currentSpawner)
+            {
+                return;
+            }
+            else
+            {
+                if (_currentSpawner != null) { _currentSpawner.SetSelected(false); }
+                if (closestSpawner != null) { closestSpawner.SetSelected(true); }
+
+                _currentSpawner = closestSpawner;
+            }
+        }
+
+        private Spawner getClosestSpawner() {
+            // FIXME: inefficient
+            var spawners = FindObjectsByType<Spawner>(FindObjectsSortMode.None);
+            var closestSpawner = spawners
+                .OrderBy(distanceToSpawnerSq)
+                .FirstOrDefault();
+            if (closestSpawner == null)
+            {
+                return null;
+            }
+            if (distanceToSpawnerSq(closestSpawner) > MAX_INTERACTION_DISTANCE_SQUARED)
+            {
+                return null;
+            }
+            return closestSpawner;
+        }
+
+        private float distanceToSpawnerSq(Spawner s)
+        {
+            return (s.transform.position - transform.position).sqrMagnitude;
+        }
+
+        private void initializeMinionsOnAwake()
+        {
+            foreach (var mininon in minions)
+            {
+                addMinion(mininon, alreadyInMinions:true);
+            }
+        }
+
+        public void addMinion(Minion m, bool alreadyInMinions = false)
+        {
+            m.Init(this, localThirdPersonController);
+            m.OnFishedOrder += minionOrderFinished;
+
+            if (!alreadyInMinions){
+                minions.Add(m);
+            }
+            _minionsThatAreNotExecutingAnOrder.Add(m);
+        }
+
+        public bool canGetAnotherMinion(){
+            Debug.Log($"Minions count {minions.Count}");
+            return minions.Count < MAX_MINIONS;
+        }
+
+        private void markAsWorking(Minion minion)
+        {
+            Assert.IsTrue(_minionsThatAreNotExecutingAnOrder.Contains(minion));
+            Assert.IsFalse(_minionsThatAreExecutingAnOrder.Contains(minion));
+
             _minionsThatAreNotExecutingAnOrder.Remove(minion);
+            _minionsThatAreExecutingAnOrder.Add(minion);
         }
 
-        private void stopFollowTheCharacter(Minion minion)
+        private bool hasFreeMinion()
         {
-            localThirdPersonController.OnMove -= minion.FollowHero;
+            return _minionsThatAreNotExecutingAnOrder.Any();
         }
 
-        private void giveOrder(Minion minion)
-        {
-            initializeOrder(minion);
-        }
-
-        private void initializeOrder(Minion minion)
-        {
-            _sendOrder.Initialize(minion, this);
-        }
-
-        private void enableNavMeshObstacle()
-        {
-            navMeshObstacle.enabled = true;
-        }
-
-        private void disableNavMeshObstacle()
-        {
-            navMeshObstacle.enabled = false;
-        }
-
-        private Minion randomMinion()
+        private Minion getRandomFreeMinion()
         {
             var _randomIndex = Random.Range(0, _minionsThatAreNotExecutingAnOrder.Count);
-
             return _minionsThatAreNotExecutingAnOrder[_randomIndex];
         }
 
-        private void reactivatePassiveFollowHero(Minion minion)
+        private void minionOrderFinished(Minion minion)
         {
-            localThirdPersonController.OnMove += minion.FollowHero;
-            sendPostionToMinion();
+            Assert.IsFalse(_minionsThatAreNotExecutingAnOrder.Contains(minion));
+            Assert.IsTrue(_minionsThatAreExecutingAnOrder.Contains(minion));
 
-            if (!_minionsThatAreNotExecutingAnOrder.Contains(minion))
-            {
-                returnMinionThatAreNotExecutingAnOrder(minion);
-            }
-        }
-
-        private void returnMinionThatAreNotExecutingAnOrder(Minion minion)
-        {
             _minionsThatAreNotExecutingAnOrder.Add(minion);
+            _minionsThatAreExecutingAnOrder.Remove(minion);
         }
 
-        private void sendPostionToMinion()
-        {
-            localThirdPersonController.InvokeOnMove();
-        }
+
+        //private void enableNavMeshObstacle()
+        //{
+        //    navMeshObstacle.enabled = true;
+        //}
+
+        //private void disableNavMeshObstacle()
+        //{
+        //    navMeshObstacle.enabled = false;
+        //}
+
     }
 }
