@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: Readme
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: 44a17a5b205fcd349a24700e6f5615bd, type: 3}
-  title: KUPA - Krong Unity Poly Assignment
+  title: Welcome to Starter Assets!
   sections:
-  - heading:
-    text: Summer 2024 Project for Krong Unity in Polygon.
-      Small game based on Pickmin/Overlord core gameplay.
+  - heading: Starter Assets Readme
+    text: 
     linkText: 
     url: 
-  - heading: Starter Assets Readme
+  - heading: 
     text: 'Starter Assets include First and Third Person Character controllers built
       in a modular way as a solid foundation for any game genre. '
     linkText: Starter Assets - First Person Character Controller
