@@ -38,10 +38,7 @@ public class Health : MonoBehaviour
     public void TakeDamage(float value)
     {
         HealthPoints -= value;
-        if(HealthPoints < 0)
-        {
-            HealthPoints = 0;
-        }
+        HealthPoints = Mathf.Clamp(HealthPoints, 0, _maxHealthPoints);
         
         Debug.Log(HealthPoints);
     }
