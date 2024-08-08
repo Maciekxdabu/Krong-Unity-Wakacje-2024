@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamageCube : MonoBehaviour
@@ -17,11 +18,18 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        objectsHealth.Add(other.gameObject.GetComponent<Health>());
+        if (other.gameObject.TryGetComponent<Health>(out var health))
+        {
+            objectsHealth.Add(health);
+        }
     }
     private void OnTriggerExit(Collider other)
     {
-        objectsHealth.Remove(other.gameObject.GetComponent<Health>());
+        if (other.gameObject.TryGetComponent<Health>(out var health))
+        {
+            objectsHealth.Remove(health);
+        }
+        
         
     }
     private void DamageAllInside()
