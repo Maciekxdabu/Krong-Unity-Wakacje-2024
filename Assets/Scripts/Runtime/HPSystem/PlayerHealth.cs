@@ -1,11 +1,9 @@
 using Assets.Scripts.Runtime.Character;
-using StarterAssets;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerHealth : Health
 {
-    [SerializeField] private ThirdPersonController playerThirdPersonController;
     [SerializeField] private Vector3 _respawnPosition;
     [SerializeField] private Hero _hero;
 
@@ -13,7 +11,7 @@ public class PlayerHealth : Health
     {
         if(!isAlive)
         {
-            playerThirdPersonController.enabled = false;
+            _hero.Died();
         }
     }
     
@@ -35,6 +33,7 @@ public class PlayerHealth : Health
     {
         TakeDamage(_maxHealthPoints);
     }
+
     [ContextMenu("Respawn player")]
     private void RespawnPlayer()
     {

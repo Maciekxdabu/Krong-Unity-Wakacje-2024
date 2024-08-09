@@ -12,7 +12,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         private bool _stateActive;
 
         private readonly Minion _minion;
-        private readonly NavMeshAgent _minionNavmeshAgent;
+        private readonly Hero _player;
 
         private Interactable _interactable;
 
@@ -20,12 +20,10 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
 
         public MinionStateInteract(
                 Minion minion,
-                Hero player,
-                ThirdPersonController localThirdPersonController,
-                NavMeshAgent minionNavmeshAgent)
+                Hero player)
         {
             _minion = minion;
-            _minionNavmeshAgent = minionNavmeshAgent;
+            _player = player;
         }
 
         public string GetDebugStateString()
@@ -46,7 +44,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         public void StateEnter()
         {
             _stateActive = true;
-            _minionNavmeshAgent.destination = _interactable.transform.position;
+            _minion.destination = _interactable.transform.position;
             _interactable.StartInteractionWithMinion(_minion);
             _interactable.TaskDoneCallback.AddListener(InteractableTaskFinished);
         }
@@ -70,7 +68,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             Assert.IsTrue(_stateActive, "inactive state updated");
             Assert.IsNotNull(_interactable, "interactable not set");
 
-            _minionNavmeshAgent.isStopped = _minionNavmeshAgent.remainingDistance < STOPPING_DISTANCE;
+            _minion.isStopped = _minion.remainingDistance < STOPPING_DISTANCE;
         }
 
         public void StateEnd()

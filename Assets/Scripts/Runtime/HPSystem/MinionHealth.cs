@@ -1,5 +1,4 @@
 using Assets.Scripts.Runtime.Character;
-using StarterAssets;
 using UnityEngine;
 
 public class MinionHealth : Health
@@ -7,7 +6,6 @@ public class MinionHealth : Health
     private GameObject _player;
     [SerializeField] private Minion _minion;
     private Hero _playerHero;
-    private ThirdPersonController _controller;
 
     private void Awake()
     {
@@ -15,7 +13,6 @@ public class MinionHealth : Health
         HealthPoints = _maxHealthPoints;
         onHealthChange.AddListener(OnDeath);
         _playerHero = _player.GetComponent<Hero>();
-        _controller = _playerHero.GetThirdPersonController;
     }
 
     [ContextMenu("Kill minion")]
@@ -23,12 +20,14 @@ public class MinionHealth : Health
     {
         TakeDamage(_maxHealthPoints);
     }
+
     [ContextMenu("Respawn minion")]
     private void RespawnMinion()
     {
         TakeHealing(_maxHealthPoints);
         Respawning();
     }
+
     protected override void OnDeath()
     {
         if (!isAlive)
@@ -41,8 +40,7 @@ public class MinionHealth : Health
     {
         _playerHero.MinionDied(_minion);
         _minion.Died();
-        
-        
+
         Destroy(gameObject);
     }
 }

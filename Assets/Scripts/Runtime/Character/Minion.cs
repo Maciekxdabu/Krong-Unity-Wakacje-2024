@@ -1,8 +1,6 @@
-using Assets.Scripts.Runtime.Order;
 using Assets.Scripts.Runtime.Order.MinionStates;
 using StarterAssets;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -13,7 +11,7 @@ namespace Assets.Scripts.Runtime.Character
 {
     public class Minion : Creature
     {
-        [SerializeField] private NavMeshAgent localNavMeshAgent;
+        [SerializeField] private NavMeshAgent _localNavMeshAgent;
 
         private static int s_spawned_count = 1;
 
@@ -27,18 +25,30 @@ namespace Assets.Scripts.Runtime.Character
 
         public Action<Minion> OnFishedOrder;
 
+        public Vector3 destination
+        {
+            get { return _localNavMeshAgent.destination; }
+            set { _localNavMeshAgent.destination = value; }
+        }
+        public bool isStopped
+        {
+            get { return _localNavMeshAgent.isStopped; }
+            set { _localNavMeshAgent.isStopped = value; }
+        }
+        public float remainingDistance => _localNavMeshAgent.remainingDistance;
+
         private void Awake()
         {
-            localNavMeshAgent.speed = speed;
+            _localNavMeshAgent.speed = speed;
             name = "Minion_" + s_spawned_count;
             ++s_spawned_count;
         }
 
         internal void Init(Hero hero, ThirdPersonController localThirdPersonController)
         {
-            _followPlayerState = new MinionStateFollowPlayer(this, hero, localThirdPersonController, localNavMeshAgent);
-            _goForwardState = new MinionStateGoForward(this, hero, localThirdPersonController, localNavMeshAgent);
-            _interactState = new MinionStateInteract(this, hero, localThirdPersonController, localNavMeshAgent);
+            _followPlayerState = new MinionStateFollowPlayer(this, hero);
+            _goForwardState = new MinionStateGoForward(this, hero);
+            _interactState = new MinionStateInteract(this, hero);
 
             _allStates[StateSlot.STATE_FOLLOW_HERO] = _followPlayerState;
             _allStates[StateSlot.STATE_MOVE_TO_POINT] = _goForwardState;
@@ -112,7 +122,7 @@ namespace Assets.Scripts.Runtime.Character
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(localNavMeshAgent.destination, 0.3f);
+            Gizmos.DrawSphere(destination, 0.3f);
             Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
         }
 
@@ -153,5 +163,9 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
+        internal void PlayerRespawnedAt(Vector3 position)
+        {
+            gameObject.transform.position = position;
+        }
     }
 }

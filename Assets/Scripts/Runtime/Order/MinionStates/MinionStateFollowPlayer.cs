@@ -1,8 +1,5 @@
 ﻿using Assets.Scripts.Runtime.Character;
-using StarterAssets;
-using System;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Assertions;
 
 namespace Assets.Scripts.Runtime.Order.MinionStates
@@ -11,11 +8,9 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
     {
         private bool _stateActive;
 
-        private readonly Minion _minion;
-        private readonly NavMeshAgent _minionNavmeshAgent;
-        
         private readonly Hero _player;
-        private readonly ThirdPersonController localThirdPersonController;
+        private readonly Minion _minion;
+        
         private Vector3 _lastHeroLocation;
 
         private const float STOPPING_DISTANCE = 1.5f;
@@ -23,18 +18,13 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
 
         public MinionStateFollowPlayer(
                 Minion minion,
-                Hero player,
-                ThirdPersonController localThirdPersonController,
-                NavMeshAgent minionNavmeshAgent)
+                Hero player)
         {
             _minion = minion;
             _player = player;
-            this.localThirdPersonController = localThirdPersonController;
-            _minionNavmeshAgent = minionNavmeshAgent;
 
-
-            localThirdPersonController.OnJumpEnd += UpdateHeroLocation;
-            localThirdPersonController.OnMove += UpdateHeroLocation;
+            _player.OnJumpEnd += UpdateHeroLocation;
+            _player.OnMove += UpdateHeroLocation;
         }
 
         public string GetDebugStateString()
@@ -45,13 +35,13 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         public void StateEnter()
         {
             _stateActive = true;
-            _minionNavmeshAgent.destination = _lastHeroLocation;
+            _minion.destination = _lastHeroLocation;
         }
 
         public void Update()
         {
             Assert.IsTrue(_stateActive, "inactive state updated");
-            _minionNavmeshAgent.isStopped = _minionNavmeshAgent.remainingDistance < STOPPING_DISTANCE;
+            _minion.isStopped = _minion.remainingDistance < STOPPING_DISTANCE;
         }
 
         public void StateEnd()
@@ -63,14 +53,14 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         {
             _lastHeroLocation = heroLocation;
             if (_stateActive) {
-               _minionNavmeshAgent.destination = _lastHeroLocation;
+                _minion.destination = _lastHeroLocation;
             }
         }
 
         public void MinionDied()
         {
-            localThirdPersonController.OnJumpEnd -= UpdateHeroLocation;
-            localThirdPersonController.OnMove -= UpdateHeroLocation;
+            _player.OnJumpEnd -= UpdateHeroLocation;
+            _player.OnMove -= UpdateHeroLocation;
         }
     }
 }
