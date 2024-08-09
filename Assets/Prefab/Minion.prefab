@@ -231,7 +231,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   localNavMeshAgent: {fileID: 2274497106745037625}
-  minDistanceToStartFollowTheCharacterPlayer: 1.5
 --- !u!195 &2274497106745037625
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -290,7 +289,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 137
+    m_Bits: 136
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
