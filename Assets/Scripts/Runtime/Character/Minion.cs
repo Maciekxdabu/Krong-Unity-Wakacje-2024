@@ -1,5 +1,4 @@
 using Assets.Scripts.Runtime.Order.MinionStates;
-using StarterAssets;
 using System;
 using System.Collections.Generic;
 using UnityEditor;

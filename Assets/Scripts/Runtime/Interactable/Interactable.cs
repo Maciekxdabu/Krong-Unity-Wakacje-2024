@@ -23,9 +23,7 @@ public class Interactable : MonoBehaviour
     void FixedUpdate()
     {
         updateTaskPercentage();
-        var pct = _current_progress_seconds / _task_finish_time_seconds;
-        _doneCube.transform.localScale = new Vector3(pct, 0.3f, 0.3f);
-        textLabel.SetText($"{_minions.Count}/{_task_minions_needed}");
+        updateVisuals();
     }
 
     private void updateTaskPercentage()
@@ -42,6 +40,14 @@ public class Interactable : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+    private void updateVisuals()
+    {
+        var pct = _current_progress_seconds / _task_finish_time_seconds;
+        _doneCube.transform.localScale = new Vector3(pct, 0.3f, 0.3f);
+        textLabel.SetText($"{_minions.Count}/{_task_minions_needed}");
+    }
+
 
     public void StartInteractionWithMinion(Minion minion)
     {
