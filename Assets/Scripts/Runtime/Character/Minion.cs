@@ -23,7 +23,7 @@ namespace Assets.Scripts.Runtime.Character
         private MinionStateGoForward _goForwardState;
         private MinionStateInteract _interactState;
 
-        public Action<Minion> OnFishedOrder;
+        public Action<Minion> OnOrderFinished;
 
         public Vector3 destination
         {
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Runtime.Character
             ++s_spawned_count;
         }
 
-        internal void Init(Hero hero, ThirdPersonController localThirdPersonController)
+        internal void Init(Hero hero)
         {
             _followPlayerState = new MinionStateFollowPlayer(this, hero);
             _goForwardState = new MinionStateGoForward(this, hero);
@@ -88,7 +88,7 @@ namespace Assets.Scripts.Runtime.Character
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
 
-            OnFishedOrder.Invoke(this);
+            OnOrderFinished.Invoke(this);
         }
 
         public void InterruptCurrentOrder()
@@ -97,7 +97,7 @@ namespace Assets.Scripts.Runtime.Character
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
 
-            OnFishedOrder.Invoke(this);
+            OnOrderFinished.Invoke(this);
         }
 
 
@@ -143,7 +143,7 @@ namespace Assets.Scripts.Runtime.Character
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
 
-            OnFishedOrder.Invoke(this);
+            OnOrderFinished.Invoke(this);
         }
 
         private void InteractableLeftArea(Interactable interactable)

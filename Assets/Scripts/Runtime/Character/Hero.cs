@@ -128,8 +128,8 @@ namespace Assets.Scripts.Runtime.Character
 
         public void addMinion(Minion m, bool alreadyInMinions = false)
         {
-            m.Init(this, _controller);
-            m.OnFishedOrder += minionOrderFinished;
+            m.Init(this);
+            m.OnOrderFinished += minionOrderFinished;
 
             if (!alreadyInMinions){
                 _minions.Add(m);
