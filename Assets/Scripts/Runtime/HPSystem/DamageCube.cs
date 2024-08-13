@@ -1,16 +1,17 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamageCube : MonoBehaviour
 {
     [SerializeField] private float dmgPerTick;
     [SerializeField] private float timeBetweenTicks;
-    private List<Health> objectsHealth = new List<Health>();
+
+    float _time = 0;
+    private List<Health> _objectsWithHealth = new List<Health>();
 
     void Update()
     {
-        if(objectsHealth.Count > 0)
+        if(_objectsWithHealth.Count > 0)
         {
             DamageAllInside();
         }
@@ -20,40 +21,40 @@ public class DamageCube : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent<Health>(out var health))
         {
-            objectsHealth.Add(health);
+            _objectsWithHealth.Add(health);
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.TryGetComponent<Health>(out var health))
         {
-            objectsHealth.Remove(health);
+            _objectsWithHealth.Remove(health);
         }
-        
-        
     }
+
     private void DamageAllInside()
     {
         DamageOverTime(dmgPerTick, timeBetweenTicks);
     }
-    float time = 0;
+
     private void DamageOverTime(float dmgPerTick, float timeBetweenTicks)
     {
         
-        if(time < timeBetweenTicks)
+        if(_time < timeBetweenTicks)
         {
-            time += Time.deltaTime;
+            _time += Time.deltaTime;
         }
         else
         {
-            foreach (Health health in objectsHealth)
+            foreach (Health health in _objectsWithHealth)
             {
                 if (health != null && health.GetIsAlive())
                 {
                     health.TakeDamage(dmgPerTick);
                 }
             }
-            time = 0;
+            _time = 0;
         }
         
     }

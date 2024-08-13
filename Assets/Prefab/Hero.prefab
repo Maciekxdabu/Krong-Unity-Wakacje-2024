@@ -1037,7 +1037,6 @@ GameObject:
   - component: {fileID: 135756642000475821}
   - component: {fileID: 7799975580376011842}
   - component: {fileID: 4416926081852918493}
-  - component: {fileID: 6125599460643261298}
   - component: {fileID: 9146925144411576384}
   - component: {fileID: 4349362971466610041}
   - component: {fileID: 4117198755359362059}
@@ -1293,22 +1292,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!208 &6125599460643261298
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4416926081852918481}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.2, y: 0.5, z: 0.2}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 0
-  m_Center: {x: 0, y: 0.5, z: 0}
-  m_TimeToStationary: 0.05
 --- !u!114 &9146925144411576384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1322,13 +1305,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
-  minions:
-  - {fileID: 0}
-  - {fileID: 0}
-  localThirdPersonController: {fileID: 7799975580376011842}
-  sendOrderData: {fileID: 11400000, guid: 1004887919341c14abf3f84976913a6a, type: 2}
-  navMeshObstacle: {fileID: 6125599460643261298}
-  frontTransform: {fileID: 5428826364353581863}
+  SendOrderData: {fileID: 11400000, guid: 1004887919341c14abf3f84976913a6a, type: 2}
+  _controller: {fileID: 7799975580376011842}
+  _navMeshObstacle: {fileID: 0}
+  _frontTransform: {fileID: 5428826364353581863}
+  _minions: []
 --- !u!54 &4349362971466610041
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1352,7 +1333,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1372,10 +1353,8 @@ MonoBehaviour:
   onHealthChange:
     m_PersistentCalls:
       m_Calls: []
-  playerThirdPersonController: {fileID: 7799975580376011842}
   _respawnPosition: {x: 0, y: 0, z: 0}
   _hero: {fileID: 9146925144411576384}
-  input: {fileID: 4416926081852918493}
 --- !u!1 &4523139366846529165
 GameObject:
   m_ObjectHideFlags: 0
