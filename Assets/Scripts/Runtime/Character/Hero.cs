@@ -18,7 +18,6 @@ namespace Assets.Scripts.Runtime.Character
         public OrderData SendOrderData;
 
         [SerializeField] private ThirdPersonController _controller;
-        [SerializeField] private NavMeshObstacle _navMeshObstacle;
         [SerializeField] private Transform _frontTransform;
 
         [SerializeField] private List<Minion> _minions;

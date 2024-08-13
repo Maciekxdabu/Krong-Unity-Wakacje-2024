@@ -231,6 +231,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   _localNavMeshAgent: {fileID: 2274497106745037625}
+  debug_velocity: {x: 0, y: 0, z: 0}
+  localRigidbody: {fileID: 3746801476224297282}
 --- !u!195 &2274497106745037625
 NavMeshAgent:
   m_ObjectHideFlags: 0
