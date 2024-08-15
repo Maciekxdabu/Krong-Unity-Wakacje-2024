@@ -174,7 +174,7 @@ namespace Assets.Scripts.Runtime.Character
                 return null;
 
             //get random available minion
-            var _randomIndex = Random.Range(0, availableMinions.Count);
+            var _randomIndex = UnityEngine.Random.Range(0, availableMinions.Count);
             return availableMinions[_randomIndex];
         }
 
