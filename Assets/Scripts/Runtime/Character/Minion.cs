@@ -15,11 +15,11 @@ namespace Assets.Scripts.Runtime.Character
     {
         public enum MinionType
         {
-            none,//mainly used by player for "All", but also for Minions that are (NYI = Not Yet Implemented)
-            skeleton,
-            zombie,//mummy???
-            ghost,
-            vampire
+            none = 0,//mainly used by player for "All", but also for Minions that are (NYI = Not Yet Implemented)
+            skeleton = 1,
+            zombie = 2,//mummy???
+            ghost = 3,
+            vampire = 4
         }
 
         protected MinionType type = MinionType.none;

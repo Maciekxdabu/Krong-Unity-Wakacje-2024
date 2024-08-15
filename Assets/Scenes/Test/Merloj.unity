@@ -824,10 +824,35 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1535355531725555936, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_text
+      value: Press Q to give  "All to me" order
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535355531725555936, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2264318220625779624, guid: 7756e4e35749c074aabad1e1592e27cb,
         type: 3}
       propertyPath: m_Name
       value: InfoCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351565254625325240, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351565254625325240, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351565254625325240, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3911536670554548867, guid: 7756e4e35749c074aabad1e1592e27cb,
         type: 3}
@@ -843,6 +868,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128932401531833558, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_text
+      value: Press E to give "Send" order for randomly minion
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128932401531833558, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5206446782852158271, guid: 7756e4e35749c074aabad1e1592e27cb,
         type: 3}
@@ -944,11 +979,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5745015633751384540, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: controlledMinionText
+      value: 
+      objectReference: {fileID: 862611061}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7756e4e35749c074aabad1e1592e27cb, type: 3}
+--- !u!114 &862611061 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8631200462147921961, guid: 7756e4e35749c074aabad1e1592e27cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 862611060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &874605735
 GameObject:
   m_ObjectHideFlags: 0

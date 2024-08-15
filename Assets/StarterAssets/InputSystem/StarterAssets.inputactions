@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ChooseMinion",
+                    "type": "Button",
+                    "id": "8d28e808-aff6-4fdc-9fcd-1dcd59eb74aa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -249,7 +258,7 @@
                 {
                     "name": "",
                     "id": "c7bc1e24-9daf-4fc8-a629-37a46af3b355",
-                    "path": "<Keyboard>/1",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
@@ -271,11 +280,66 @@
                 {
                     "name": "",
                     "id": "0438c853-7380-445e-b881-309f442ff685",
-                    "path": "<Keyboard>/2",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "ToMeAllOrder",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "75cc96af-3c00-4dbc-b9da-ba7a1372e263",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "Scale(factor=0)",
+                    "groups": "",
+                    "action": "ChooseMinion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "31140567-dc6f-4bbf-83ab-41702fac6a16",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "Scale",
+                    "groups": "",
+                    "action": "ChooseMinion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1bca7c40-b148-4e09-81a2-e4167fbaecd1",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "Scale(factor=2)",
+                    "groups": "",
+                    "action": "ChooseMinion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d73371a6-b4cc-44d2-9b6c-d15cec0cf1d5",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "Scale(factor=3)",
+                    "groups": "",
+                    "action": "ChooseMinion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4b8b2052-0750-4bed-acc8-6665d17be7c8",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "Scale(factor=4)",
+                    "groups": "",
+                    "action": "ChooseMinion",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

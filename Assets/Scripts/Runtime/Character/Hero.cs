@@ -1,9 +1,11 @@
 using Assets.Scripts.Runtime.Order;
+using Assets.Scripts.Runtime.UI;
 using StarterAssets;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Runtime.Character
 {
@@ -62,6 +64,13 @@ namespace Assets.Scripts.Runtime.Character
             {
                 _currentSpawner.Interact(this);
             }
+        }
+
+        private void OnChooseMinion(InputValue val)
+        {
+            controlledType = (Minion.MinionType)val.Get<float>();
+
+            HUD.Instance.UpdateControlledMinion(controlledType.ToString());
         }
 
         public void FixedUpdate()
