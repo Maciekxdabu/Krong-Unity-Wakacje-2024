@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3798291863671886717}
   - component: {fileID: 8119802643727581087}
   - component: {fileID: 7235315785384871444}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 2487872201307760632}
   - component: {fileID: 2274497106745037625}
   - component: {fileID: 4377131243105354893}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Minion Vampire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,11 +271,11 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 136
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
