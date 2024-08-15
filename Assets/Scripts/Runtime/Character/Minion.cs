@@ -11,11 +11,23 @@ using UnityEngine.Assertions;
 
 namespace Assets.Scripts.Runtime.Character
 {
-    public class Minion : Creature
+    public abstract class Minion : Creature
     {
+        public enum MinionType
+        {
+            none,//mainly used by player for "All", but also for Minions that are (NYI = Not Yet Implemented)
+            skeleton,
+            zombie,//mummy???
+            ghost,
+            vampire
+        }
+
+        protected MinionType type = MinionType.none;
+        public MinionType Type { get { return type; } }
+
         [SerializeField] private NavMeshAgent localNavMeshAgent;
 
-        private static int s_spawned_count = 1;
+        protected static int s_spawned_count = 1;
 
         private IMinionState _currentState;
         private StateSlot _currentStateEnum;
@@ -27,7 +39,7 @@ namespace Assets.Scripts.Runtime.Character
 
         public Action<Minion> OnFishedOrder;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             localNavMeshAgent.speed = speed;
             name = "Minion_" + s_spawned_count;
@@ -144,6 +156,5 @@ namespace Assets.Scripts.Runtime.Character
 
             _interactState.InteractableLost(interactable);
         }
-
     }
 }

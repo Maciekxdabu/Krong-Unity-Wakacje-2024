@@ -10,6 +10,7 @@ namespace Assets.Scripts.Runtime.Character
     public class Hero : Creature
     {
         [SerializeField] private List<Minion> minions;
+        [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private ThirdPersonController localThirdPersonController;
         public OrderData sendOrderData;
         [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
@@ -39,6 +40,8 @@ namespace Assets.Scripts.Runtime.Character
             if (!hasFreeMinion()) { return; }
 
             var minion = getRandomFreeMinion();
+            if (minion == null) { return; }
+
             minion.SendForward();
             markAsWorking(minion);
 
@@ -139,8 +142,13 @@ namespace Assets.Scripts.Runtime.Character
 
         private Minion getRandomFreeMinion()
         {
-            var _randomIndex = Random.Range(0, _minionsThatAreNotExecutingAnOrder.Count);
-            return _minionsThatAreNotExecutingAnOrder[_randomIndex];
+            List<Minion> availableMinions = _minionsThatAreNotExecutingAnOrder.FindAll(x => x.Type == controlledType || controlledType == Minion.MinionType.none);
+            if (availableMinions.Count == 0)//check if there is any minion of the given controlled type
+                return null;
+
+            //get random available minion
+            var _randomIndex = Random.Range(0, availableMinions.Count);
+            return availableMinions[_randomIndex];
         }
 
         private void minionOrderFinished(Minion minion)
