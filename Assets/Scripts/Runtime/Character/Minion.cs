@@ -8,11 +8,23 @@ using UnityEngine.Assertions;
 
 namespace Assets.Scripts.Runtime.Character
 {
-    public class Minion : Creature
+    public abstract class Minion : Creature
     {
+        public enum MinionType
+        {
+            none = 0,//mainly used by player for "All", but also for Minions that are (NYI = Not Yet Implemented)
+            skeleton = 1,
+            zombie = 2,//mummy???
+            ghost = 3,
+            vampire = 4
+        }
+
+        protected MinionType type = MinionType.none;
+        public MinionType Type { get { return type; } }
+
         [SerializeField] private NavMeshAgent _localNavMeshAgent;
 
-        private static int s_spawned_count = 1;
+        protected static int s_spawned_count = 1;
 
         private IMinionState _currentState;
         private StateSlot _currentStateEnum;
@@ -36,7 +48,7 @@ namespace Assets.Scripts.Runtime.Character
         }
         public float remainingDistance => _localNavMeshAgent.remainingDistance;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             _localNavMeshAgent.speed = speed;
             name = "Minion_" + s_spawned_count;

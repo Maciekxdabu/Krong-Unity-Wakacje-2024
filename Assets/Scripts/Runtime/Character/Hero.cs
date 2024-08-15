@@ -1,4 +1,5 @@
 using Assets.Scripts.Runtime.Order;
+using Assets.Scripts.Runtime.UI;
 using StarterAssets;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
 namespace Assets.Scripts.Runtime.Character
 {
@@ -20,6 +22,7 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
 
+        [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private List<Minion> _minions;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
@@ -53,6 +56,8 @@ namespace Assets.Scripts.Runtime.Character
             if (!hasFreeMinion()) { return; }
 
             var minion = getRandomFreeMinion();
+            if (minion == null) { return; }
+
             minion.SendForward();
             markAsWorking(minion);
 
@@ -73,6 +78,13 @@ namespace Assets.Scripts.Runtime.Character
             {
                 _currentSpawner.Interact(this);
             }
+        }
+
+        private void OnChooseMinion(InputValue val)
+        {
+            controlledType = (Minion.MinionType)val.Get<float>();
+
+            HUD.Instance.UpdateControlledMinion(controlledType.ToString());
         }
 
         public void FixedUpdate()
@@ -157,8 +169,13 @@ namespace Assets.Scripts.Runtime.Character
 
         private Minion getRandomFreeMinion()
         {
-            var _randomIndex = UnityEngine.Random.Range(0, _minionsThatAreNotExecutingAnOrder.Count);
-            return _minionsThatAreNotExecutingAnOrder[_randomIndex];
+            List<Minion> availableMinions = _minionsThatAreNotExecutingAnOrder.FindAll(x => x.Type == controlledType || controlledType == Minion.MinionType.none);
+            if (availableMinions.Count == 0)//check if there is any minion of the given controlled type
+                return null;
+
+            //get random available minion
+            var _randomIndex = UnityEngine.Random.Range(0, availableMinions.Count);
+            return availableMinions[_randomIndex];
         }
 
         private void minionOrderFinished(Minion minion)
