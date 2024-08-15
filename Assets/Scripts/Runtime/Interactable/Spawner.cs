@@ -1,5 +1,4 @@
 using Assets.Scripts.Runtime.Character;
-using UnityEditor;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour

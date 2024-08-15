@@ -1,9 +1,11 @@
 using Assets.Scripts.Runtime.Order;
 using Assets.Scripts.Runtime.UI;
 using StarterAssets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
@@ -11,21 +13,33 @@ namespace Assets.Scripts.Runtime.Character
 {
     public class Hero : Creature
     {
-        [SerializeField] private List<Minion> minions;
-        [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
-        [SerializeField] private ThirdPersonController localThirdPersonController;
-        public OrderData sendOrderData;
-        [SerializeField] private UnityEngine.AI.NavMeshObstacle navMeshObstacle;
-        [SerializeField] private Transform frontTransform;
-
         private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
         private const int MAX_MINIONS = 10;
 
+        /// <summary> Scriptable Object with order params </summary>
+        public OrderData SendOrderData;
+
+        [SerializeField] private ThirdPersonController _controller;
+        [SerializeField] private Transform _frontTransform;
+
+        [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
+        [SerializeField] private List<Minion> _minions;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
+        
         private Spawner _currentSpawner;
 
-        public Transform GetFrontTransform { get { return frontTransform; } }
+        public event Action<Vector3> OnJumpEnd
+        {
+            add { _controller.OnJumpEnd += value; }
+            remove { _controller.OnJumpEnd -= value; }
+        }
+
+        public event Action<Vector3> OnMove
+        {
+            add { _controller.OnMove += value; }
+            remove { _controller.OnMove -= value; }
+        }
 
         private void Awake()
         {
@@ -111,9 +125,13 @@ namespace Assets.Scripts.Runtime.Character
             return (s.transform.position - transform.position).sqrMagnitude;
         }
 
+        #region Minions
+        // TODO: remove region add class for managing minions set
+
+
         private void initializeMinionsOnAwake()
         {
-            foreach (var mininon in minions)
+            foreach (var mininon in _minions)
             {
                 addMinion(mininon, alreadyInMinions:true);
             }
@@ -121,18 +139,18 @@ namespace Assets.Scripts.Runtime.Character
 
         public void addMinion(Minion m, bool alreadyInMinions = false)
         {
-            m.Init(this, localThirdPersonController);
-            m.OnFishedOrder += minionOrderFinished;
+            m.Init(this);
+            m.OnOrderFinished += minionOrderFinished;
 
             if (!alreadyInMinions){
-                minions.Add(m);
+                _minions.Add(m);
             }
             _minionsThatAreNotExecutingAnOrder.Add(m);
         }
 
         public bool canGetAnotherMinion(){
-            Debug.Log($"Minions count {minions.Count}");
-            return minions.Count < MAX_MINIONS;
+            Debug.Log($"Minions count {_minions.Count}");
+            return _minions.Count < MAX_MINIONS;
         }
 
         private void markAsWorking(Minion minion)
@@ -167,6 +185,63 @@ namespace Assets.Scripts.Runtime.Character
 
             _minionsThatAreNotExecutingAnOrder.Add(minion);
             _minionsThatAreExecutingAnOrder.Remove(minion);
+        }
+
+        internal void MinionDied(Minion minion)
+        {
+            _minions.Remove(minion);
+            _minionsThatAreExecutingAnOrder.Remove(minion);
+            _minionsThatAreNotExecutingAnOrder.Remove(minion);
+        }
+
+        #endregion Minions
+
+        internal void Died()
+        {
+            _controller.enabled = false;
+        }
+
+        internal void Respawn(Vector3 position)
+        {
+            if (!_controller.enabled)
+            {
+                _controller.enabled = true;
+            }
+            foreach (Minion minion in _minions)
+            {
+                minion.PlayerRespawnedAt(position);
+            }
+            
+        }
+
+        public Vector3 CalculateGoOrderDestination()
+        {
+            var MAX_DISTANCE = SendOrderData.MaxDistance;
+            const float MAX_NAVMESH_DISTANCE = 100f;
+
+            var ray = new Ray(_frontTransform.position, _frontTransform.forward);
+            var layerMask = Physics.DefaultRaycastLayers;
+            bool wallDetected = Physics.Raycast(
+                    ray,
+                    out var wallHit,
+                    MAX_DISTANCE,
+                    layerMask,
+                    QueryTriggerInteraction.Ignore
+                );
+
+            if (wallDetected)
+            {
+                NavMesh.SamplePosition(
+                    wallHit.point,
+                    out var navMeshHit,
+                    MAX_NAVMESH_DISTANCE,
+                    NavMesh.AllAreas
+                    );
+
+                return navMeshHit.position;
+            }
+
+            return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
         }
 
 
