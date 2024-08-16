@@ -8,6 +8,7 @@ namespace Assets.Scripts.Runtime.UI
     public class HUD : MonoBehaviour
     {
         [SerializeField] private TMP_Text controlledMinionText;
+        [SerializeField] private TMP_Text heroHpText;
 
         //singleton
         private static HUD _instance;
@@ -25,6 +26,13 @@ namespace Assets.Scripts.Runtime.UI
         public void UpdateControlledMinion(string newTexr)
         {
             controlledMinionText.text = newTexr;
+        }
+
+        public void Update()
+        {
+            var hero = GameManager.Instance.Hero;
+            var heroHealth = hero.gameObject.GetComponent<Health>();
+            heroHpText.text = $"HP {heroHealth.HealthPoints} / {heroHealth.MaxHealthPoints}";
         }
     }
 }
