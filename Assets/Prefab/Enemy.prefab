@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3798291863671886717}
   - component: {fileID: 8119802643727581087}
   - component: {fileID: 7235315785384871444}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 02b7e0f04321ed14fb81acfd6473f1d0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -105,6 +105,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6133596828399740244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 734297089935205171}
+  m_Layer: 8
+  m_Name: DamageSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &734297089935205171
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6133596828399740244}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.301}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6400245607207891253}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7273798849889508753
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +151,7 @@ GameObject:
   - component: {fileID: 2274497106745037625}
   - component: {fileID: 3746801476224297282}
   - component: {fileID: 580391976515276907}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,6 +172,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5015401616556174019}
+  - {fileID: 734297089935205171}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3293782469037911558
@@ -277,3 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14f113e6df544b448a49c392fc5cc5bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _damagePrefab: {fileID: 4939387821172013561, guid: b7e1710ef67c33a49a6271bd1398091b,
+    type: 3}
+  _damageLocation: {fileID: 6133596828399740244}
+  _damageCooldown: 0.75
