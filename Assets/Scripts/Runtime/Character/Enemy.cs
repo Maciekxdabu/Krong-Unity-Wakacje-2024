@@ -1,9 +1,7 @@
 using Assets.Scripts.Runtime;
-using Assets.Scripts.Runtime.Character;
-using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using Assets.Scripts.Extensions;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,20 +10,22 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _damageCooldown = 1.5f;
 
     private NavMeshAgent _agent;
-    private float _current_damage_cooldown;
-    private Vector3 _spawn_position;
+    private float _currentDamageCooldown;
+    private Vector3 _spawnPosition;
 
-    private GameObject _aggro_target;
+    private GameObject _aggroTarget;
 
     public const float AGGRO_RANGE_SQUARED = 4 * 4;
     public const float AGGRO_LOSE_RANGE_SQUARED = 8 * 8;
+    private const float ATTACK_RANGE = 2.0f;
 
     public void Start()
     {
-        _spawn_position = transform.position;
+        _spawnPosition = transform.position;
+
         _agent = gameObject.GetComponent<NavMeshAgent>();
         _agent.stoppingDistance = 1.5f;
-        _current_damage_cooldown = _damageCooldown;
+        _currentDamageCooldown = _damageCooldown;
 
         GameManager.Instance.RegisterEnemy(this);
     }
@@ -40,39 +40,44 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
-        if (_aggro_target != null
-            && (_aggro_target.transform.position - transform.position).sqrMagnitude > AGGRO_LOSE_RANGE_SQUARED)
+        if (_aggroTarget != null && !this.IsInRangeSquared(_aggroTarget, AGGRO_LOSE_RANGE_SQUARED))
         {
-            _aggro_target = null;
+            // aggro lost
+            _aggroTarget = null;
         }
-        _agent.destination = _aggro_target == null ? _spawn_position : _aggro_target.transform.position;
-        if (_aggro_target != null && _agent.remainingDistance < 2.0f)
+
+        if (_aggroTarget == null)
+        {
+            // no aggro, returning to spawn point
+            _agent.destination = _spawnPosition;
+            return;
+        }
+
+        //  has aggro
+        _agent.destination = _aggroTarget.transform.position;
+
+        if (_agent.remainingDistance < ATTACK_RANGE)
         {
             tryDamaging();
         }
         else
         {
-            _current_damage_cooldown = _damageCooldown;
+            _currentDamageCooldown = _damageCooldown;
         }
     }
 
     private void tryDamaging()
     {
-        _current_damage_cooldown -= Time.deltaTime;
-        if (_current_damage_cooldown < 0)
+        _currentDamageCooldown -= Time.deltaTime;
+        if (_currentDamageCooldown < 0)
         {
             Instantiate(_damagePrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
-            _current_damage_cooldown = _damageCooldown;
+            _currentDamageCooldown = _damageCooldown;
         }
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    Handles.Label(transform.position + new Vector3(0, 1, 0), $"{_current_damage_cooldown}");
-    //}
-
-    public void TryAggroOn(GameObject hero)
+    public void TrySettingAggroOn(GameObject heroGameObject)
     {
-        _aggro_target = hero;
+        _aggroTarget = heroGameObject;
     }
 }

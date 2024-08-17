@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Runtime.Character;
+﻿using Assets.Scripts.Extensions;
+using Assets.Scripts.Runtime.Character;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,16 +14,19 @@ namespace Assets.Scripts.Runtime
         public List<Enemy> Enemies = new List<Enemy>();
 
         private static GameManager _instance;
-        public static GameManager Instance { get {
+        public static GameManager Instance {
+            get {
                 if (_instance == null) {
                     var go = new GameObject("GameManager");
                     _instance = go.AddComponent<GameManager>();
                 }
                 return _instance;
-        } }
+            }
+        }
 
 
-        public void RegisterEnemy(Enemy enemy) {
+        public void RegisterEnemy(Enemy enemy)
+        {
             Enemies.Add(enemy);
         }
 
@@ -43,18 +47,18 @@ namespace Assets.Scripts.Runtime
             }
         }
 
-        public void Start() {
+        public void Start()
+        {
             Hero = FindObjectOfType<Hero>();
         }
 
         public void FixedUpdate()
         {
             foreach (var e in Enemies) {
-                if ((Hero.transform.position - e.transform.position).sqrMagnitude < Enemy.AGGRO_RANGE_SQUARED) {
-                    e.TryAggroOn(Hero.gameObject);
+                if ( Hero.IsInRangeSquared(e, Enemy.AGGRO_RANGE_SQUARED) ) {
+                    e.TrySettingAggroOn(Hero.gameObject);
                 }
             }
         }
-
     }
 }
