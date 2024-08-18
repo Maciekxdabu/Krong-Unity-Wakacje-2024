@@ -17,14 +17,15 @@ public class Enemy : MonoBehaviour
 
     public const float AGGRO_RANGE_SQUARED = 4 * 4;
     public const float AGGRO_LOSE_RANGE_SQUARED = 8 * 8;
-    private const float ATTACK_RANGE = 2.0f;
+    public const float ATTACK_RANGE = 2.0f;
+    public const float NAVMESH_AGENT_STOP_DISTANCE = 1.5f;
 
     public void Start()
     {
         _spawnPosition = transform.position;
 
         _agent = gameObject.GetComponent<NavMeshAgent>();
-        _agent.stoppingDistance = 1.5f;
+        _agent.stoppingDistance = NAVMESH_AGENT_STOP_DISTANCE;
         _currentDamageCooldown = _damageCooldown;
 
         GameManager.Instance.RegisterEnemy(this);
