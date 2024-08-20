@@ -80,6 +80,11 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
+        public void OnSlashAttack()
+        {
+            _localAnimator.SetBool("SlashAttack", true);
+        }
+
         private void OnChooseMinion(InputValue val)
         {
             controlledType = (Minion.MinionType)val.Get<float>();
