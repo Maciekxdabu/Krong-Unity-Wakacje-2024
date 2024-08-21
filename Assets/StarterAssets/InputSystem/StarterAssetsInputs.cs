@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -20,10 +21,15 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+        private bool disabledInput;
+
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
-			MoveInput(value.Get<Vector2>());
+			if (!disabledInput)
+			{
+				MoveInput(value.Get<Vector2>());
+			}
 		}
 
 		public void OnLook(InputValue value)
@@ -36,12 +42,18 @@ namespace StarterAssets
 
 		public void OnJump(InputValue value)
 		{
-			JumpInput(value.isPressed);
+			if (!disabledInput)
+			{
+				JumpInput(value.isPressed);
+			}
 		}
 
 		public void OnSprint(InputValue value)
 		{
-			SprintInput(value.isPressed);
+			if (!disabledInput)
+			{
+				SprintInput(value.isPressed);
+			}
 		}
 #endif
 
@@ -58,12 +70,18 @@ namespace StarterAssets
 
 		public void JumpInput(bool newJumpState)
 		{
-			jump = newJumpState;
+			if (!disabledInput)
+			{
+				jump = newJumpState;
+			}
 		}
 
 		public void SprintInput(bool newSprintState)
 		{
-			sprint = newSprintState;
+			if (!disabledInput)
+			{
+				sprint = newSprintState;
+			}
 		}
 
 		private void OnApplicationFocus(bool hasFocus)
@@ -75,6 +93,16 @@ namespace StarterAssets
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
-	}
+
+        internal void DisableInputs()
+        {
+			disabledInput = true;
+        }
+
+        internal void EnableInputs()
+        {
+            disabledInput = false;
+        }
+    }
 	
 }

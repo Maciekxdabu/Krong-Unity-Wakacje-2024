@@ -21,6 +21,7 @@ namespace Assets.Scripts.Runtime.Character
 
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
+        [SerializeField] private StarterAssetsInputs starterAssetsInputs;
 
         [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private List<Minion> _minions;
@@ -44,12 +45,28 @@ namespace Assets.Scripts.Runtime.Character
         private void Awake()
         {
             initializeMinionsOnAwake();
-
-            //enableNavMeshObstacle();
-            //localThirdPersonController.OnStop += enableNavMeshObstacle;
-            //localThirdPersonController.OnStartMove += disableNavMeshObstacle;
         }
 
+        public void FixedUpdate()
+        {
+            var closestSpawner = getClosestSpawner();
+            if (closestSpawner == _currentSpawner)
+            {
+                return;
+            }
+            else
+            {
+                if (_currentSpawner != null) { _currentSpawner.SetSelected(false); }
+                if (closestSpawner != null) { closestSpawner.SetSelected(true); }
+
+                _currentSpawner = closestSpawner;
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+
+        }
 
         public void OnSendOrder()
         {
@@ -83,6 +100,7 @@ namespace Assets.Scripts.Runtime.Character
         public void OnSlashAttack()
         {
             _localAnimator.SetBool("SlashAttack", true);
+            disableThirdPersonController();
         }
 
         private void OnChooseMinion(InputValue val)
@@ -90,22 +108,6 @@ namespace Assets.Scripts.Runtime.Character
             controlledType = (Minion.MinionType)val.Get<float>();
 
             HUD.Instance.UpdateControlledMinion(controlledType.ToString());
-        }
-
-        public void FixedUpdate()
-        {
-            var closestSpawner = getClosestSpawner();
-            if (closestSpawner == _currentSpawner)
-            {
-                return;
-            }
-            else
-            {
-                if (_currentSpawner != null) { _currentSpawner.SetSelected(false); }
-                if (closestSpawner != null) { closestSpawner.SetSelected(true); }
-
-                _currentSpawner = closestSpawner;
-            }
         }
 
         private Spawner getClosestSpawner() {
@@ -249,16 +251,14 @@ namespace Assets.Scripts.Runtime.Character
             return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
         }
 
+        private void disableThirdPersonController()
+        {
+            starterAssetsInputs.DisableInputs();
+        }
 
-        //private void enableNavMeshObstacle()
-        //{
-        //    navMeshObstacle.enabled = true;
-        //}
-
-        //private void disableNavMeshObstacle()
-        //{
-        //    navMeshObstacle.enabled = false;
-        //}
-
+        internal void EnableThirdPersonController()
+        {
+            starterAssetsInputs.EnableInputs();
+        }
     }
 }
