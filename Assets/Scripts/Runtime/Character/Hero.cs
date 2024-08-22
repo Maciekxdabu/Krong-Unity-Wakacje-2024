@@ -146,6 +146,7 @@ namespace Assets.Scripts.Runtime.Character
                 _minions.Add(m);
             }
             _minionsThatAreNotExecutingAnOrder.Add(m);
+            m.destination = transform.position;
         }
 
         public bool canGetAnotherMinion(){
@@ -211,7 +212,6 @@ namespace Assets.Scripts.Runtime.Character
             {
                 minion.PlayerRespawnedAt(position);
             }
-            
         }
 
         public Vector3 CalculateGoOrderDestination()
@@ -243,7 +243,6 @@ namespace Assets.Scripts.Runtime.Character
 
             return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
         }
-
 
         //private void enableNavMeshObstacle()
         //{
