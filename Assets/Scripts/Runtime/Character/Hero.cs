@@ -243,6 +243,5 @@ namespace Assets.Scripts.Runtime.Character
 
             return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
         }
-
     }
 }
