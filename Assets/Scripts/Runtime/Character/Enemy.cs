@@ -1,9 +1,11 @@
+
 using Assets.Scripts.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Runtime.Character;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Creature
 {
     [SerializeField] private GameObject _damagePrefab;
     [SerializeField] private GameObject _damageLocation;
@@ -74,6 +76,19 @@ public class Enemy : MonoBehaviour
         {
             Instantiate(_damagePrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
             _currentDamageCooldown = _damageCooldown;
+        }
+    }
+
+    public void TakeDamage(float value)
+    {
+        _hp -= value;
+
+        UnityEngine.Debug.Log(name+" _hp "+ _hp);
+
+        if (_hp < 0)
+        {
+            Debug.Log(name + " enemy died");
+            Destroy(gameObject);
         }
     }
 
