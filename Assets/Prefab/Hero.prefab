@@ -1306,10 +1306,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   _localAnimator: {fileID: 6982812146204527121}
+  _damageMin: 10
+  _damageMax: 20
+  _hp: 0
   SendOrderData: {fileID: 11400000, guid: 1004887919341c14abf3f84976913a6a, type: 2}
   _controller: {fileID: 7799975580376011842}
   _frontTransform: {fileID: 5428826364353581863}
   starterAssetsInputs: {fileID: 135756642000475821}
+  _weaponCollider: {fileID: 8963910373806422330}
   controlledType: 0
   _minions: []
 --- !u!54 &4349362971466610041

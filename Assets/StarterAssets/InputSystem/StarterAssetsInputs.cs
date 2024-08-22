@@ -57,10 +57,12 @@ namespace StarterAssets
 		}
 #endif
 
-
 		public void MoveInput(Vector2 newMoveDirection)
 		{
-			move = newMoveDirection;
+			if (!disabledInput)
+			{
+				move = newMoveDirection;
+			}
 		} 
 
 		public void LookInput(Vector2 newLookDirection)
@@ -103,6 +105,10 @@ namespace StarterAssets
         {
             disabledInput = false;
         }
+
+        internal void StopCharacterMove()
+        {
+			move = Vector2.zero;
+        }
     }
-	
 }

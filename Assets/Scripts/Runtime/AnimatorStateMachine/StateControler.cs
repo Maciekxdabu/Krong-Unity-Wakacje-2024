@@ -1,18 +1,15 @@
 
 using Assets.Scripts.Runtime.Character;
-using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Runtime.AnimatorStateMachine
 {
     public class StateControler : StateMachineBehaviour
     {
-        [Range(0, 1), SerializeField] private float _aimationPercent;
         [SerializeField] private AnimationState _state;
         [SerializeField] private string _boolConditionToReset;
         [SerializeField] private CharacterType characterType;
 
-        private bool _onAnimationStateExecute;
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
 
         override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -25,21 +22,9 @@ namespace Assets.Scripts.Runtime.AnimatorStateMachine
             }
         }
 
-        // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-        override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        {
-            if (!_onAnimationStateExecute &&
-                stateInfo.normalizedTime > _aimationPercent)
-            {
-                _onAnimationStateExecute = true;
-            }
-        }
-
         // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
         override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            _onAnimationStateExecute = false;
-
             switch (_state)
             {
                 case AnimationState.StateExit:

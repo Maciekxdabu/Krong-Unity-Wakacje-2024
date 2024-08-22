@@ -41,7 +41,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f215c855e079b23489443a5a0b5d14fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _aimationPercent: 0
   _state: 2
   _boolConditionToReset: Jump
   characterType: 1
@@ -268,6 +267,7 @@ AnimatorState:
   - {fileID: 7122721200943242904}
   m_StateMachineBehaviours:
   - {fileID: 931664462625420568}
+  - {fileID: 9161785768905368818}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -352,7 +352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f215c855e079b23489443a5a0b5d14fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _aimationPercent: 0.31
   _state: 2
   _boolConditionToReset: SlashAttack
   characterType: 1
@@ -619,7 +618,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f215c855e079b23489443a5a0b5d14fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _aimationPercent: 0
   _state: 2
   _boolConditionToReset: SlashAttack
   characterType: 1
@@ -785,3 +783,18 @@ BlendTree:
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
+--- !u!114 &9161785768905368818
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48e80b416e729dd4e909786be30fa7b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterType: 1
+  _activatingColliderOfWeaponAnimationPercent: 0.3
+  _deactivatingColliderOfWeaponAnimationPercent: 0.33

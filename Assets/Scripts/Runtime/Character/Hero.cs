@@ -22,6 +22,7 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
         [SerializeField] private StarterAssetsInputs starterAssetsInputs;
+        [SerializeField] private Collider _weaponCollider;
 
         [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private List<Minion> _minions;
@@ -65,7 +66,11 @@ namespace Assets.Scripts.Runtime.Character
 
         private void OnTriggerEnter(Collider other)
         {
-
+            if (other.TryGetComponent(out Enemy enemy))
+            {
+                float damage = UnityEngine.Random.Range(_damageMin, _damageMax);
+                enemy.TakeDamage(damage);
+            }
         }
 
         public void OnSendOrder()
@@ -101,6 +106,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             _localAnimator.SetBool("SlashAttack", true);
             disableThirdPersonController();
+            starterAssetsInputs.StopCharacterMove();
         }
 
         private void OnChooseMinion(InputValue val)
@@ -221,6 +227,21 @@ namespace Assets.Scripts.Runtime.Character
             
         }
 
+        internal void EnableThirdPersonController()
+        {
+            starterAssetsInputs.EnableInputs();
+        }
+
+        internal void EnableColliderOfWeapon()
+        {
+            _weaponCollider.enabled = true;
+        }
+
+        internal void DisableColliderOfWeapon()
+        {
+            _weaponCollider.enabled = false;
+        }
+
         public Vector3 CalculateGoOrderDestination()
         {
             var MAX_DISTANCE = SendOrderData.MaxDistance;
@@ -254,11 +275,6 @@ namespace Assets.Scripts.Runtime.Character
         private void disableThirdPersonController()
         {
             starterAssetsInputs.DisableInputs();
-        }
-
-        internal void EnableThirdPersonController()
-        {
-            starterAssetsInputs.EnableInputs();
         }
     }
 }
