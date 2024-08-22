@@ -141,7 +141,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             //Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
 
-            if (_interactState.SetupInteraction(interactable)) {
+            if (_interactState.SetupInteraction(interactable) && interactable.DoesNeedMoreMinions()) {
                 if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT){
                     GoToState(StateSlot.STATE_INTERACT);
                 }
