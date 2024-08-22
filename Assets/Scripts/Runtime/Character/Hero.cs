@@ -21,9 +21,13 @@ namespace Assets.Scripts.Runtime.Character
 
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
+        [SerializeField] private StarterAssetsInputs starterAssetsInputs;
+        [SerializeField] private Collider _weaponCollider;
 
         [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private List<Minion> _minions;
+        
+        private PlayerHealth _health;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
 
@@ -48,10 +52,7 @@ namespace Assets.Scripts.Runtime.Character
         private void Awake()
         {
             initializeMinionsOnAwake();
-
-            //enableNavMeshObstacle();
-            //localThirdPersonController.OnStop += enableNavMeshObstacle;
-            //localThirdPersonController.OnStartMove += disableNavMeshObstacle;
+            _health = GetComponent<PlayerHealth>();
         }
 
         private void Start()
@@ -59,6 +60,30 @@ namespace Assets.Scripts.Runtime.Character
             HUD.Instance.RefreshHUD(this);
         }
 
+        public void FixedUpdate()
+        {
+            var closestSpawner = getClosestSpawner();
+            if (closestSpawner == _currentSpawner)
+            {
+                return;
+            }
+            else
+            {
+                if (_currentSpawner != null) { _currentSpawner.SetSelected(false); }
+                if (closestSpawner != null) { closestSpawner.SetSelected(true); }
+
+                _currentSpawner = closestSpawner;
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out Enemy enemy))
+            {
+                float damage = UnityEngine.Random.Range(_damageMin, _damageMax);
+                enemy.TakeDamage(damage);
+            }
+        }
 
         public void OnSendOrder()
         {
@@ -89,27 +114,21 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
+        public void OnSlashAttack()
+        {
+            if (_health.GetIsAlive())
+            {
+                _localAnimator.SetBool("SlashAttack", true);
+                disableThirdPersonController();
+                starterAssetsInputs.StopCharacterMove();
+            }
+        }
+
         private void OnChooseMinion(InputValue val)
         {
             controlledType = (Minion.MinionType)val.Get<float>();
 
             HUD.Instance.RefreshHUD(this);
-        }
-
-        public void FixedUpdate()
-        {
-            var closestSpawner = getClosestSpawner();
-            if (closestSpawner == _currentSpawner)
-            {
-                return;
-            }
-            else
-            {
-                if (_currentSpawner != null) { _currentSpawner.SetSelected(false); }
-                if (closestSpawner != null) { closestSpawner.SetSelected(true); }
-
-                _currentSpawner = closestSpawner;
-            }
         }
 
         private Spawner getClosestSpawner() {
@@ -156,6 +175,7 @@ namespace Assets.Scripts.Runtime.Character
                 HUD.Instance.RefreshHUD(this);
             }
             _minionsThatAreNotExecutingAnOrder.Add(m);
+            m.destination = transform.position;
         }
 
         public bool canGetAnotherMinion(){
@@ -225,6 +245,21 @@ namespace Assets.Scripts.Runtime.Character
             
         }
 
+        internal void EnableThirdPersonController()
+        {
+            starterAssetsInputs.EnableInputs();
+        }
+
+        internal void EnableColliderOfWeapon()
+        {
+            _weaponCollider.enabled = true;
+        }
+
+        internal void DisableColliderOfWeapon()
+        {
+            _weaponCollider.enabled = false;
+        }
+
         public Vector3 CalculateGoOrderDestination()
         {
             var MAX_DISTANCE = SendOrderData.MaxDistance;
@@ -255,16 +290,9 @@ namespace Assets.Scripts.Runtime.Character
             return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
         }
 
-
-        //private void enableNavMeshObstacle()
-        //{
-        //    navMeshObstacle.enabled = true;
-        //}
-
-        //private void disableNavMeshObstacle()
-        //{
-        //    navMeshObstacle.enabled = false;
-        //}
-
+        private void disableThirdPersonController()
+        {
+            starterAssetsInputs.DisableInputs();
+        }
     }
 }

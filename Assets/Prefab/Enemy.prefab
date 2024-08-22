@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3798291863671886717}
   - component: {fileID: 8119802643727581087}
   - component: {fileID: 7235315785384871444}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 734297089935205171}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: DamageSpot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 2274497106745037625}
   - component: {fileID: 3746801476224297282}
   - component: {fileID: 580391976515276907}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,6 +309,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14f113e6df544b448a49c392fc5cc5bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  _localAnimator: {fileID: 0}
+  _damageMin: 0
+  _damageMax: 0
+  _hp: 50
   _damagePrefab: {fileID: 4939387821172013561, guid: b7e1710ef67c33a49a6271bd1398091b,
     type: 3}
   _damageLocation: {fileID: 6133596828399740244}
