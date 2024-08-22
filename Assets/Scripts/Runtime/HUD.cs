@@ -8,11 +8,20 @@ namespace Assets.Scripts.Runtime.UI
 {
     public class HUD : MonoBehaviour
     {
+        [System.Serializable]
+        private class CustomText
+        {
+            public string ID;
+            public TMP_Text textField;
+        }
+
         [SerializeField] private TMP_Text controlledMinionText;
         [SerializeField] private TMP_Text maxMinionText;
         [SerializeField] private TMP_Text currentMinionText;
         [SerializeField] private TMP_Text heroHpText;
         [SerializeField] private TMP_Text heroHpMaxText;
+        [Space]
+        [SerializeField] private List<CustomText> customTexts = new List<CustomText>();
 
         private Hero ownerHero;
 
@@ -51,6 +60,17 @@ namespace Assets.Scripts.Runtime.UI
             Health ownerHealth = hero.gameObject.GetComponent<Health>();
             heroHpText.text = ownerHealth.HealthPoints.ToString();
             heroHpMaxText.text = ownerHealth.MaxHealthPoints.ToString();
+        }
+
+        //usage:
+        //HUD.Instance.RefreshCustomHUD("ID", "new test value")'
+        //"ID" must be an existing ID in the list in the Inspector
+        public void RefreshCustomHUD(string ID, string newText)
+        {
+            CustomText foundText = customTexts.Find(x => x.ID == ID);
+
+            if (foundText != null)
+                foundText.textField.text = newText;
         }
     }
 }
