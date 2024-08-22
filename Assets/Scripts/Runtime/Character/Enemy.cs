@@ -3,6 +3,7 @@ using Assets.Scripts.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Runtime.Character;
 
 public class Enemy : Creature
 {
@@ -82,7 +83,13 @@ public class Enemy : Creature
     {
         _hp -= value;
 
-        UnityEngine.Debug.Log("_hp "+ _hp);
+        UnityEngine.Debug.Log(name+" _hp "+ _hp);
+
+        if (_hp < 0)
+        {
+            Debug.Log(name + " enemy died");
+            Destroy(gameObject);
+        }
     }
 
     public void TrySettingAggroOn(GameObject heroGameObject)
