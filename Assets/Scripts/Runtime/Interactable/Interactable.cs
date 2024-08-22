@@ -59,4 +59,10 @@ public class Interactable : MonoBehaviour
         _minions.Remove(minion);
     }
 
+    public bool DoesNeedMoreMinions()
+    {
+        if( _minions.Count >= _task_minions_needed ) return false;
+        return true;
+    }
+
 }
