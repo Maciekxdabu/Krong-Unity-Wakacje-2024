@@ -159,6 +159,7 @@ namespace Assets.Scripts.Runtime.Character
                 _minions.Add(m);
             }
             _minionsThatAreNotExecutingAnOrder.Add(m);
+            m.destination = transform.position;
         }
 
         public bool canGetAnotherMinion(){

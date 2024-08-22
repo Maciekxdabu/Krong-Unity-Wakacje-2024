@@ -176,7 +176,7 @@ namespace Assets.Scripts.Runtime.Character
 
         internal void PlayerRespawnedAt(Vector3 position)
         {
-            gameObject.transform.position = position;
+            gameObject.GetComponent<NavMeshAgent>().Warp(position);
         }
     }
 }
