@@ -14,5 +14,10 @@ namespace Assets.Scripts.Runtime.Character
             type = MinionType.skeleton;
             name = "Skeleton Minion_" + (s_spawned_count-1);
         }
+
+        public void Update() {
+            base.Update();
+            _localAnimator.SetFloat("Speed", _localNavMeshAgent.velocity.magnitude);
+        }
     }
 }
