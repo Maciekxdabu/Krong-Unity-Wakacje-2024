@@ -244,15 +244,5 @@ namespace Assets.Scripts.Runtime.Character
             return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
         }
 
-        //private void enableNavMeshObstacle()
-        //{
-        //    navMeshObstacle.enabled = true;
-        //}
-
-        //private void disableNavMeshObstacle()
-        //{
-        //    navMeshObstacle.enabled = false;
-        //}
-
     }
 }
