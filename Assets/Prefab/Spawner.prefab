@@ -400,8 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8cc1ad547926ce48b6126fb96437db7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minionPrefab: {fileID: 7177764805918592209, guid: 71662b58150001946a1f4fb7b2e44fee,
-    type: 3}
+  minionPrefab: {fileID: 0}
   litMesh: {fileID: 4629627450600968345}
   notLitMaterial: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   litMaterial: {fileID: 2100000, guid: a574afae727ea044dba8d53eddcd4d86, type: 2}
