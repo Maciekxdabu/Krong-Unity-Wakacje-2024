@@ -26,6 +26,8 @@ namespace Assets.Scripts.Runtime.Character
 
         [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private List<Minion> _minions;
+        
+        private PlayerHealth _health;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
         
@@ -46,6 +48,7 @@ namespace Assets.Scripts.Runtime.Character
         private void Awake()
         {
             initializeMinionsOnAwake();
+            _health = GetComponent<PlayerHealth>();
         }
 
         public void FixedUpdate()
@@ -104,9 +107,12 @@ namespace Assets.Scripts.Runtime.Character
 
         public void OnSlashAttack()
         {
-            _localAnimator.SetBool("SlashAttack", true);
-            disableThirdPersonController();
-            starterAssetsInputs.StopCharacterMove();
+            if (_health.GetIsAlive())
+            {
+                _localAnimator.SetBool("SlashAttack", true);
+                disableThirdPersonController();
+                starterAssetsInputs.StopCharacterMove();
+            }
         }
 
         private void OnChooseMinion(InputValue val)
