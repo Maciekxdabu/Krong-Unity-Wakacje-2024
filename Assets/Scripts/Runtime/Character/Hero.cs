@@ -30,7 +30,11 @@ namespace Assets.Scripts.Runtime.Character
         private PlayerHealth _health;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
-        
+
+        //getters
+        public Minion.MinionType ControlledType { get { return controlledType; } }
+        public int MinionCount { get { return _minions.Count; } }
+
         private Spawner _currentSpawner;
 
         public event Action<Vector3> OnJumpEnd
@@ -49,6 +53,11 @@ namespace Assets.Scripts.Runtime.Character
         {
             initializeMinionsOnAwake();
             _health = GetComponent<PlayerHealth>();
+        }
+
+        private void Start()
+        {
+            HUD.Instance.RefreshHUD(this);
         }
 
         public void FixedUpdate()
@@ -119,7 +128,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             controlledType = (Minion.MinionType)val.Get<float>();
 
-            HUD.Instance.UpdateControlledMinion(controlledType.ToString());
+            HUD.Instance.RefreshHUD(this);
         }
 
         private Spawner getClosestSpawner() {
@@ -163,6 +172,7 @@ namespace Assets.Scripts.Runtime.Character
 
             if (!alreadyInMinions){
                 _minions.Add(m);
+                HUD.Instance.RefreshHUD(this);
             }
             _minionsThatAreNotExecutingAnOrder.Add(m);
             m.destination = transform.position;
@@ -211,6 +221,7 @@ namespace Assets.Scripts.Runtime.Character
         internal void MinionDied(Minion minion)
         {
             _minions.Remove(minion);
+            HUD.Instance.RefreshHUD(this);
             _minionsThatAreExecutingAnOrder.Remove(minion);
             _minionsThatAreNotExecutingAnOrder.Remove(minion);
         }

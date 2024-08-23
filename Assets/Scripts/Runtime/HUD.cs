@@ -2,13 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Assets.Scripts.Runtime.Character;
 
 namespace Assets.Scripts.Runtime.UI
 {
     public class HUD : MonoBehaviour
     {
+        [System.Serializable]
+        private class CustomText
+        {
+            public string ID;
+            public TMP_Text textField;
+        }
+
         [SerializeField] private TMP_Text controlledMinionText;
+        [SerializeField] private TMP_Text maxMinionText;
+        [SerializeField] private TMP_Text currentMinionText;
         [SerializeField] private TMP_Text heroHpText;
+        [SerializeField] private TMP_Text heroHpMaxText;
+        [Space]
+        [SerializeField] private List<CustomText> customTexts = new List<CustomText>();
+
+        private Hero ownerHero;
 
         //singleton
         private static HUD _instance;
@@ -23,16 +38,39 @@ namespace Assets.Scripts.Runtime.UI
 
         // ---------- public methods
 
-        public void UpdateControlledMinion(string newTexr)
+        //Refreshes the HUD with the values from the given Hero
+        public void RefreshHUD(Hero hero)
         {
-            controlledMinionText.text = newTexr;
+            if (hero == null)
+            {
+                hero = ownerHero;
+                if (hero == null)
+                {
+                    Debug.LogWarning("WAR: Updating HUD without a Hero reference", gameObject);
+                    return;
+                }
+            }
+            else
+                ownerHero = hero;
+
+            currentMinionText.text = hero.MinionCount.ToString();
+            maxMinionText.text = "10";
+            controlledMinionText.text = hero.ControlledType.ToString();
+
+            Health ownerHealth = hero.gameObject.GetComponent<Health>();
+            heroHpText.text = ownerHealth.HealthPoints.ToString();
+            heroHpMaxText.text = ownerHealth.MaxHealthPoints.ToString();
         }
 
-        public void Update()
+        //usage:
+        //HUD.Instance.RefreshCustomHUD("ID", "new test value")'
+        //"ID" must be an existing ID in the list in the Inspector
+        public void RefreshCustomHUD(string ID, string newText)
         {
-            var hero = GameManager.Instance.Hero;
-            var heroHealth = hero.gameObject.GetComponent<Health>();
-            heroHpText.text = $"HP {heroHealth.HealthPoints} / {heroHealth.MaxHealthPoints}";
+            CustomText foundText = customTexts.Find(x => x.ID == ID);
+
+            if (foundText != null)
+                foundText.textField.text = newText;
         }
     }
 }

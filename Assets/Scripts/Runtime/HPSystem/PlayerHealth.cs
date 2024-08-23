@@ -1,4 +1,5 @@
 using Assets.Scripts.Runtime.Character;
+using Assets.Scripts.Runtime.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +10,9 @@ public class PlayerHealth : Health
 
     protected override void OnDeath()
     {
-        if(!isAlive)
+        HUD.Instance.RefreshHUD(_hero);
+
+        if (!isAlive)
         {
             _hero.Died();
         }
