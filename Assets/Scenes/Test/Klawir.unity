@@ -898,6 +898,9 @@ MonoBehaviour:
   _damageMin: 0
   _damageMax: 0
   _hp: 1000
+  _damagePrefab: {fileID: 0}
+  _damageLocation: {fileID: 0}
+  _damageCooldown: 1.5
 --- !u!136 &1066196692
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1508,7 +1511,8 @@ MonoBehaviour:
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
+  m_fontSharedMaterials:
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:

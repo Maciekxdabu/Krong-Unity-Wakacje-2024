@@ -376,15 +376,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1401c38c9564ff1478f40c48de878c59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _doneCube: {fileID: 6877291963710110291}
-  _task_time_done_seconds: 0
-  _task_time_seconds: 20
-  _minions_needed: 10
-  _actionDoneCallback:
+  _task_finish_time_seconds: 3
+  _task_minions_needed: 10
+  TaskDoneCallback:
     m_PersistentCalls:
       m_Calls: []
+  _doneCube: {fileID: 6877291963710110291}
   textLabel: {fileID: 6602273059262174094}
-  _minions: []
+  _current_progress_seconds: 0
 --- !u!54 &8927232047384032888
 Rigidbody:
   m_ObjectHideFlags: 0
