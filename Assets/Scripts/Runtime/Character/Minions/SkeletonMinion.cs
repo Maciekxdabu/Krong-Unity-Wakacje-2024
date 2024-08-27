@@ -15,9 +15,5 @@ namespace Assets.Scripts.Runtime.Character
             name = "Skeleton Minion_" + (s_spawned_count-1);
         }
 
-        public void Update() {
-            base.Update();
-            _localAnimator.SetFloat("Speed", _localNavMeshAgent.velocity.magnitude);
-        }
     }
 }

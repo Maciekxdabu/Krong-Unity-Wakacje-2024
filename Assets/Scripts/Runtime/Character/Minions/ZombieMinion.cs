@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Character
 {
-    public class ZombieMinion : Minion
+    public class MummyMinion : Minion
     {
         protected override void Awake()
         {
             //calll parent Awake
             base.Awake();
 
-            type = MinionType.zombie;
-            name = "Zombie Minion_" + (s_spawned_count-1);
+            type = MinionType.MUMMY;
+            name = "Mummy Minion_" + (s_spawned_count-1);
         }
     }
 }
