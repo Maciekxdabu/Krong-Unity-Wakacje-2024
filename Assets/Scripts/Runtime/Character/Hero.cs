@@ -28,6 +28,7 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private List<Minion> _minions;
         
         private PlayerHealth _health;
+        [SerializeField] private List<ItemPickCounter> _itemPickCounter;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
 
@@ -82,6 +83,21 @@ namespace Assets.Scripts.Runtime.Character
             {
                 float damage = UnityEngine.Random.Range(_damageMin, _damageMax);
                 enemy.TakeDamage(damage);
+            }
+            else if (other.TryGetComponent(out BonusItem bonusItem))
+            {
+                string bonusItemID = bonusItem.GetId.ToString();
+                for (int i = 0; i < _itemPickCounter.Count; i++)
+                {
+                    if (bonusItemID == _itemPickCounter[i].GetID)
+                    {
+                        _itemPickCounter[i].Add();
+                        HUD.Instance.RefreshCustomHUD(_itemPickCounter[i]);
+                        break;
+                    }
+                }
+
+                bonusItem.Delete();
             }
         }
 
