@@ -64,10 +64,10 @@ namespace Assets.Scripts.Runtime.UI
 
         internal void RefreshCustomHUD(ItemPickCounter itemPickCounter)
         {
-            string ID = itemPickCounter.GetID;
+            string ID = itemPickCounter.GetStringID;
             string newText = itemPickCounter.GetCurrentAmountAsString;
 
-            Debug.Log(itemPickCounter.GetID);
+            Debug.Log(itemPickCounter.GetStringID);
 
             refreshCustomHUD(ID, newText);
         }

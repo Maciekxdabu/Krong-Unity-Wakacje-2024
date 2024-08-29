@@ -54,6 +54,15 @@ namespace Assets.Scripts.Runtime.Character
         {
             initializeMinionsOnAwake();
             _health = GetComponent<PlayerHealth>();
+            initializeItemPickCounter();
+        }
+
+        private void initializeItemPickCounter()
+        {
+            for (int i = 0; i < _itemPickCounter.Count; i++)
+            {
+                _itemPickCounter[i].Initialize();
+            }
         }
 
         private void Start()
@@ -89,7 +98,7 @@ namespace Assets.Scripts.Runtime.Character
                 string bonusItemID = bonusItem.GetId.ToString();
                 for (int i = 0; i < _itemPickCounter.Count; i++)
                 {
-                    if (bonusItemID == _itemPickCounter[i].GetID)
+                    if (bonusItemID == _itemPickCounter[i].GetStringID)
                     {
                         _itemPickCounter[i].Add();
                         HUD.Instance.RefreshCustomHUD(_itemPickCounter[i]);
