@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -62,10 +61,21 @@ namespace Assets.Scripts.Runtime.UI
             heroHpMaxText.text = ownerHealth.MaxHealthPoints.ToString();
         }
 
+
+        internal void RefreshCustomHUD(ItemPickCounter itemPickCounter)
+        {
+            string ID = itemPickCounter.GetStringID;
+            string newText = itemPickCounter.GetCurrentAmountAsString;
+
+            Debug.Log(itemPickCounter.GetStringID);
+
+            refreshCustomHUD(ID, newText);
+        }
+        
         //usage:
         //HUD.Instance.RefreshCustomHUD("ID", "new test value")'
         //"ID" must be an existing ID in the list in the Inspector
-        public void RefreshCustomHUD(string ID, string newText)
+        private void refreshCustomHUD(string ID, string newText)
         {
             CustomText foundText = customTexts.Find(x => x.ID == ID);
 
