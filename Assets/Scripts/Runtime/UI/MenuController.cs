@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
@@ -65,6 +66,11 @@ public class MenuController : MonoBehaviour
     public void OnExitGameBtn()
     {
         Application.Quit();
+    }
+
+    public void OnLevelClickedBtn(string sceneToLoad)
+    {
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     // ---------- private methods
