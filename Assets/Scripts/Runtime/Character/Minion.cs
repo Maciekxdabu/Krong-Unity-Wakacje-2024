@@ -14,7 +14,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             none = 0,//mainly used by player for "All", but also for Minions that are (NYI = Not Yet Implemented)
             skeleton = 1,
-            zombie = 2,//mummy???
+            MUMMY = 2,//mummy???
             ghost = 3,
             vampire = 4
         }
@@ -22,7 +22,7 @@ namespace Assets.Scripts.Runtime.Character
         protected MinionType type = MinionType.none;
         public MinionType Type { get { return type; } }
 
-        [SerializeField] private NavMeshAgent _localNavMeshAgent;
+        [SerializeField] protected NavMeshAgent _localNavMeshAgent;
 
         protected static int s_spawned_count = 1;
 
@@ -70,9 +70,13 @@ namespace Assets.Scripts.Runtime.Character
             _currentState.StateEnter();
         }
 
-        private void Update()
+        public void Update()
         {
             _currentState?.Update();
+            if (_localAnimator != null)
+            {
+                _localAnimator.SetFloat("Speed", _localNavMeshAgent.velocity.magnitude);
+            }
         }
 
         private void GoToState(StateSlot newState) {

@@ -14,5 +14,6 @@ namespace Assets.Scripts.Runtime.Character
             type = MinionType.skeleton;
             name = "Skeleton Minion_" + (s_spawned_count-1);
         }
+
     }
 }
