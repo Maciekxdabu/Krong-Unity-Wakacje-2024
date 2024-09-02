@@ -79,7 +79,7 @@ public class Enemy : Creature
         }
     }
 
-    public void TakeDamage(float value)
+    public override void TakeDamage(float value)
     {
         _hp -= value;
 

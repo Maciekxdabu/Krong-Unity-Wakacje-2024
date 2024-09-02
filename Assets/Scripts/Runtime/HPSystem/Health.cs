@@ -6,19 +6,19 @@ public class Health : MonoBehaviour
 {
     [SerializeField] private protected float _maxHealthPoints;
 
-    private float _healthPoints;
-    protected Boolean isAlive => _healthPoints > 0;
+    private float _hp;
+    protected Boolean isAlive => _hp > 0;
     public UnityEvent onHealthChange = new UnityEvent();
 
     public Boolean GetIsAlive() { return isAlive; }
 
     public float HealthPoints
     {
-        get { return _healthPoints; }
+        get { return _hp; }
         set {
-            if (value != _healthPoints)
+            if (value != _hp)
             {
-                _healthPoints = value;
+                _hp = value;
                 onHealthChange.Invoke();
             } 
         }

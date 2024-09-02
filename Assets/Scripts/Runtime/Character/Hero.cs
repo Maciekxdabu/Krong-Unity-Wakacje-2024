@@ -26,7 +26,8 @@ namespace Assets.Scripts.Runtime.Character
 
         [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private List<Minion> _minions;
-        
+        [SerializeField] private Vector3 _respawnPosition;
+
         private PlayerHealth _health;
         [SerializeField] private List<ItemPickCounter> _itemPickCounter;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
@@ -320,5 +321,42 @@ namespace Assets.Scripts.Runtime.Character
         {
             starterAssetsInputs.DisableInputs();
         }
+
+        protected override void OnDeath()
+        {
+            HUD.Instance.RefreshHUD(this);
+
+            if (!isAlive)
+            {
+                Died();
+            }
+        }
+
+        protected override void Respawning()
+        {
+            transform.position = _respawnPosition;
+            Physics.SyncTransforms();
+            Respawn(_respawnPosition);
+        }
+
+        public void OnRespawn(InputValue inputValue)
+        {
+            TakeHealing(_maxHp);
+            Respawning();
+        }
+
+        [ContextMenu("Kill player")]
+        private void KillPlayer()
+        {
+            TakeDamage(_maxHp);
+        }
+
+        [ContextMenu("Respawn player")]
+        private void RespawnPlayer()
+        {
+            TakeHealing(_maxHp);
+            Respawning();
+        }
+
     }
 }
