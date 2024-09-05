@@ -1,3 +1,4 @@
+using Assets.Scripts.Runtime.Character;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class DamageCube : MonoBehaviour
     [SerializeField] private float timeBetweenTicks;
 
     float _time = 0;
-    private List<Health> _objectsWithHealth = new List<Health>();
+    private List<Creature> _objectsWithHealth = new List<Creature>();
 
     void Update()
     {
@@ -19,7 +20,7 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Health>(out var health))
+        if (other.gameObject.TryGetComponent<Creature>(out var health))
         {
             _objectsWithHealth.Add(health);
         }
@@ -27,7 +28,7 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Health>(out var health))
+        if (other.gameObject.TryGetComponent<Creature>(out var health))
         {
             _objectsWithHealth.Remove(health);
         }
@@ -47,7 +48,7 @@ public class DamageCube : MonoBehaviour
         }
         else
         {
-            foreach (Health health in _objectsWithHealth)
+            foreach (Creature health in _objectsWithHealth)
             {
                 if (health != null && health.GetIsAlive())
                 {

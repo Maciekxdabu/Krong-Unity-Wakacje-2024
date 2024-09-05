@@ -1,4 +1,5 @@
 using Assets.Scripts.Runtime.Character;
+using System;
 using UnityEngine;
 
 public class MinionHealth : Health

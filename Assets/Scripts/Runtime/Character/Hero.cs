@@ -56,6 +56,7 @@ namespace Assets.Scripts.Runtime.Character
             initializeMinionsOnAwake();
             _health = GetComponent<PlayerHealth>();
             initializeItemPickCounter();
+            InitHp();
         }
 
         private void initializeItemPickCounter()

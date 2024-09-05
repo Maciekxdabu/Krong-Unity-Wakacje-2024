@@ -14,7 +14,7 @@ namespace Assets.Scripts.Runtime.Character
         protected float _hp;
 
         //creature health variables and methods
-        protected Boolean isAlive => _hp > 0;
+        protected virtual Boolean isAlive => _hp > 0;
         public UnityEvent onHealthChange = new UnityEvent();
 
         public Boolean GetIsAlive() { return isAlive; }
@@ -35,8 +35,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             get { return _maxHp; }
         }
-
-        private void Awake()
+        protected void InitHp()
         {
             HealthPoints = _maxHp;
             onHealthChange.AddListener(OnDeath);
@@ -47,7 +46,6 @@ namespace Assets.Scripts.Runtime.Character
         {
             HealthPoints -= value;
             HealthPoints = Mathf.Clamp(HealthPoints, 0, _maxHp);
-
             Debug.Log(HealthPoints);
         }
 

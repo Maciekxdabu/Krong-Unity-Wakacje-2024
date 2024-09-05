@@ -53,6 +53,7 @@ namespace Assets.Scripts.Runtime.Character
             _localNavMeshAgent.speed = speed;
             name = "Minion_" + s_spawned_count;
             ++s_spawned_count;
+            InitHp();
         }
 
         internal void Init(Hero hero)
