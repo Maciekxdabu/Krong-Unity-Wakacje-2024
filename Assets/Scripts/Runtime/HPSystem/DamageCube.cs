@@ -1,3 +1,4 @@
+using Assets.Scripts.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Health>(out var health))
+        if (other.TryExtractHealth(out var health))
         {
             _objectsWithHealth.Add(health);
         }
@@ -27,7 +28,7 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Health>(out var health))
+        if (other.TryExtractHealth(out var health))
         {
             _objectsWithHealth.Remove(health);
         }
