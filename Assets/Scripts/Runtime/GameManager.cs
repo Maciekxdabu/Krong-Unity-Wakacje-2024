@@ -10,6 +10,8 @@ namespace Assets.Scripts.Runtime
     /// </summary>
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private WaveController _waveController;
+
         public Hero Hero;
         public List<Enemy> Enemies = new List<Enemy>();
 
@@ -23,7 +25,6 @@ namespace Assets.Scripts.Runtime
                 return _instance;
             }
         }
-
 
         public void RegisterEnemy(Enemy enemy)
         {
@@ -50,6 +51,9 @@ namespace Assets.Scripts.Runtime
         public void Start()
         {
             Hero = FindObjectOfType<Hero>();
+
+            _waveController.SpawnNextStage();
+            _waveController.Send();
         }
 
         public void FixedUpdate()

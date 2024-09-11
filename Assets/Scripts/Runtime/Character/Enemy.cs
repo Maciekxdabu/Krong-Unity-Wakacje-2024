@@ -22,7 +22,7 @@ public class Enemy : Creature
     public const float ATTACK_RANGE = 2.0f;
     public const float NAVMESH_AGENT_STOP_DISTANCE = 1.5f;
 
-    public void Start()
+    public void Awake()
     {
         _spawnPosition = transform.position;
 
@@ -95,5 +95,11 @@ public class Enemy : Creature
     public void TrySettingAggroOn(GameObject heroGameObject)
     {
         _aggroTarget = heroGameObject;
+    }
+
+    internal void UpdateTarget(Vector3 newPosition)
+    {
+        _spawnPosition = newPosition;
+        _agent.destination = newPosition;
     }
 }
