@@ -145,6 +145,16 @@ PrefabInstance:
       objectReference: {fileID: 964123278}
     - target: {fileID: 3317306801375421692, guid: 15a2badd641f4a14b8f402457ce921de,
         type: 3}
+      propertyPath: _waveController._timer._timer
+      value: 
+      objectReference: {fileID: 712908278}
+    - target: {fileID: 3317306801375421692, guid: 15a2badd641f4a14b8f402457ce921de,
+        type: 3}
+      propertyPath: _waveController._timer._parentTimer
+      value: 
+      objectReference: {fileID: 2138109017}
+    - target: {fileID: 3317306801375421692, guid: 15a2badd641f4a14b8f402457ce921de,
+        type: 3}
       propertyPath: _waveController._spawnPoints.Array.data[0]
       value: 
       objectReference: {fileID: 1256896639}
@@ -1032,6 +1042,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Hero
+      objectReference: {fileID: 0}
+    - target: {fileID: 9146925144411576384, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: _damageMax
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2288,6 +2303,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2576799815375935795, guid: 7756e4e35749c074aabad1e1592e27cb,
+        type: 3}
+      propertyPath: m_text
+      value: Next wave in
+      objectReference: {fileID: 0}
     - target: {fileID: 4486904018595644770, guid: 7756e4e35749c074aabad1e1592e27cb,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2836,6 +2856,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 869ce4dff4916b54fad6d875ca379bc4, type: 3}
+--- !u!1 &2138109017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3569797645304531502, guid: 7756e4e35749c074aabad1e1592e27cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1775565589}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2114283753834967212
 GameObject:
   m_ObjectHideFlags: 0

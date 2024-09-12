@@ -8,7 +8,7 @@ namespace Assets.Scripts.Runtime.ScriptableObjects
     {
         [SerializeField] private Enemy[] _enemies;
         [SerializeField] private EventTypeCaller _eventTypeCaller;
-        [SerializeField] private float _timeForKill;
+        [SerializeField] private float _startingTime;
 
         public Enemy[] GetContent
         {
@@ -20,9 +20,9 @@ namespace Assets.Scripts.Runtime.ScriptableObjects
             get { return _eventTypeCaller; }
         }
 
-        public float GetTimeForKill
+        public float GetStartingTime
         {
-            get { return _timeForKill; }
+            get { return _startingTime; }
         }
     }
 }

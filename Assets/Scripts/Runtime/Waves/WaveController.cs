@@ -19,10 +19,25 @@ namespace Assets.Scripts.Runtime.Waves
         {
             initializeStages();
             initializeCounter();
+            initializeAmountOfEnemiesAtStage();
+            initializeTimer();
+        }
 
-            _amountOfEnemiesAtStage = 0;
+        internal void RunStage()
+        {
+            initializeCurrentTimer();
+            runTimer();
+        }
+
+        private void initializeTimer()
+        {
             _timer.OnEnd += spawnStage;
             _timer.OnEnd += countNextStage;
+        }
+
+        private void initializeAmountOfEnemiesAtStage()
+        {
+            _amountOfEnemiesAtStage = 0;
         }
 
         private void initializeStages()
@@ -33,7 +48,7 @@ namespace Assets.Scripts.Runtime.Waves
             {
                 m_stages[i].Content = _stages[i].GetContent;
                 m_stages[i].eventTypeCaller = _stages[i].GetEventTypeCaller;
-                m_stages[i].GetTimeForKill = _stages[i].GetTimeForKill;
+                m_stages[i].GetStartingTime = _stages[i].GetStartingTime;
             }
         }
 
@@ -45,12 +60,6 @@ namespace Assets.Scripts.Runtime.Waves
         private void initializeCurrentTimer()
         {
             _timer.InitializeCurrentTimer(m_stages[_numberOfStage]);
-        }
-
-        internal void RunStage()
-        {
-            initializeCurrentTimer();
-            runTimer();
         }
 
         private void countNextStage()

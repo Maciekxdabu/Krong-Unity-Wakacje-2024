@@ -14,7 +14,7 @@ namespace Assets.Scripts.Runtime.Waves
 
         internal void InitializeCurrentTimer(Stages stage)
         {
-            _currentTimer = stage.GetTimeForKill;
+            _currentTimer = stage.GetStartingTime;
         }
 
         internal void Run()

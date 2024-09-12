@@ -6,6 +6,6 @@ namespace Assets.Scripts.Runtime.Waves
     {
         public Enemy[] Content;
         public Enums.EventTypeCaller eventTypeCaller;
-        public float GetTimeForKill;
+        public float GetStartingTime;
     }
 }
