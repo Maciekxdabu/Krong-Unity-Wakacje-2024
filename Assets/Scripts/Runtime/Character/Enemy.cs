@@ -11,6 +11,8 @@ public class Enemy : Creature
     [SerializeField] private GameObject _damageLocation;
     [SerializeField] private float _damageCooldown = 1.5f;
 
+    internal System.Action OnDeath;
+
     private NavMeshAgent _agent;
     private float _currentDamageCooldown;
     private Vector3 _spawnPosition;
@@ -88,6 +90,7 @@ public class Enemy : Creature
         if (_hp < 0)
         {
             Debug.Log(name + " enemy died");
+            OnDeath?.Invoke();
             Destroy(gameObject);
         }
     }

@@ -49,6 +49,8 @@ MonoBehaviour:
     - {fileID: 0}
     _stages:
     - {fileID: 11400000, guid: 1fc821830a2f1e34cbd934c2158b9360, type: 2}
+    - {fileID: 11400000, guid: 8b6303cf964f4794c99453f8a5bb3c34, type: 2}
     _finalPoint: {fileID: 0}
+    _timer: {fileID: 0}
   Hero: {fileID: 0}
   Enemies: []

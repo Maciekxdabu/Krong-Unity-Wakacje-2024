@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.Character;
+using Assets.Scripts.Runtime.Waves;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +18,8 @@ namespace Assets.Scripts.Runtime
 
         private static GameManager _instance;
         public static GameManager Instance {
-            get {
+            get
+            {
                 if (_instance == null) {
                     var go = new GameObject("GameManager");
                     _instance = go.AddComponent<GameManager>();
@@ -51,9 +53,7 @@ namespace Assets.Scripts.Runtime
         public void Start()
         {
             Hero = FindObjectOfType<Hero>();
-
-            _waveController.SpawnNextStage();
-            _waveController.Send();
+            SpawnEnemyWave();
         }
 
         public void FixedUpdate()
@@ -63,6 +63,12 @@ namespace Assets.Scripts.Runtime
                     e.TrySettingAggroOn(Hero.gameObject);
                 }
             }
+        }
+
+        private void SpawnEnemyWave()
+        {
+            _waveController.Initialize();
+            _waveController.RunStage();
         }
     }
 }
