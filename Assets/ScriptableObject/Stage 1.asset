@@ -15,4 +15,4 @@ MonoBehaviour:
   _enemies:
   - {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693, type: 3}
   _eventTypeCaller: 1
-  _startingTime: 40
+  _startingTime: 5

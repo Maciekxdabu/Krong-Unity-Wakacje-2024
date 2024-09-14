@@ -6,44 +6,44 @@ namespace Assets.Scripts.Runtime.Waves
     [System.Serializable]
     public class Timer
     {
-        [SerializeField] private GameObject _parentTimer;
-        [SerializeField] private TMPro.TMP_Text _timer;
-        private float _currentTimer;
+        [SerializeField] private GameObject _parent;
+        [SerializeField] private TMPro.TMP_Text _value;
+        private float _current;
 
         internal System.Action OnEnd;
 
-        internal void InitializeCurrentTimer(Stages stage)
+        internal void InitializeCurrent(Stage stage)
         {
-            _currentTimer = stage.GetStartingTime;
+            _current = stage.GetStartingTime;
         }
 
         internal void Run()
         {
-            showTimer();
-            _timer.StartCoroutine(runTimerCorutine());
+            show();
+            _value.StartCoroutine(runCorutine());
         }
 
-        private void showTimer()
+        private void show()
         {
-            _parentTimer.SetActive(true);
+            _parent.SetActive(true);
         }
 
-        private void hideTimer()
+        private void turnOff()
         {
-            _parentTimer.SetActive(false);
+            _parent.SetActive(false);
         }
 
-        private IEnumerator runTimerCorutine()
+        private IEnumerator runCorutine()
         {
-            while (_currentTimer >= 0)
+            while (_current >= 0)
             {
-                _currentTimer -= Time.deltaTime;
-                _timer.text = _currentTimer.ToString("f2");
+                _current -= Time.deltaTime;
+                _value.text = _current.ToString("f2");
 
                 yield return null;
             }
 
-            hideTimer();
+            turnOff();
             OnEnd?.Invoke();
         }
     }

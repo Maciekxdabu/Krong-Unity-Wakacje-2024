@@ -11,7 +11,7 @@ namespace Assets.Scripts.Runtime
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private WaveController _waveController;
+        private WaveController _waveController;
 
         public Hero Hero;
         public List<Enemy> Enemies = new List<Enemy>();
@@ -53,7 +53,6 @@ namespace Assets.Scripts.Runtime
         public void Start()
         {
             Hero = FindObjectOfType<Hero>();
-            SpawnEnemyWave();
         }
 
         public void FixedUpdate()
@@ -63,12 +62,6 @@ namespace Assets.Scripts.Runtime
                     e.TrySettingAggroOn(Hero.gameObject);
                 }
             }
-        }
-
-        private void SpawnEnemyWave()
-        {
-            _waveController.Initialize();
-            _waveController.RunStage();
         }
     }
 }

@@ -2,20 +2,17 @@
 
 namespace Assets.Scripts.Runtime.Waves
 {
-    [System.Serializable]
-    public class WaveController
+    public class WaveController : MonoBehaviour
     {
-        [SerializeField] private Transform[] _spawnPoints;
-        [SerializeField] private ScriptableObjects.Stages[] _stages;
-        [SerializeField] private Transform _finalPoint;
+        [SerializeField] private Wawe[] _waves;
         [SerializeField] private Timer _timer;
 
         private Enemy[] _currentlySpawned;
-        private Stages[] m_stages;
+        private Stage[] m_stages;
         private int _numberOfStage;
         private int _amountOfEnemiesAtStage;
 
-        internal void Initialize()
+        private void Awake()
         {
             initializeStages();
             initializeCounter();
@@ -23,7 +20,11 @@ namespace Assets.Scripts.Runtime.Waves
             initializeTimer();
         }
 
-        internal void RunStage()
+        private void Start()
+        {
+            RunStage();
+        }
+        private void RunStage()
         {
             initializeCurrentTimer();
             runTimer();
@@ -42,13 +43,10 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void initializeStages()
         {
-            m_stages = new Stages[_stages.Length];
-
+            m_stages = new Stage[_waves.Length];
             for (int i = 0; i < m_stages.Length; i++)
             {
-                m_stages[i].Content = _stages[i].GetContent;
-                m_stages[i].eventTypeCaller = _stages[i].GetEventTypeCaller;
-                m_stages[i].GetStartingTime = _stages[i].GetStartingTime;
+                m_stages[i].Initialize(_waves[i]);
             }
         }
 
@@ -59,7 +57,7 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void initializeCurrentTimer()
         {
-            _timer.InitializeCurrentTimer(m_stages[_numberOfStage]);
+            _timer.InitializeCurrent(m_stages[_numberOfStage]);
         }
 
         private void countNextStage()
@@ -75,12 +73,12 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void spawnContent()
         {
-            _currentlySpawned = new Enemy[m_stages[_numberOfStage].Content.Length];
-            for (int i = 0; i < _stages[_numberOfStage].GetContent.Length; i++)
+            _currentlySpawned = new Enemy[m_stages[_numberOfStage].GetContent.Length];
+            for (int i = 0; i < _currentlySpawned.Length; i++)
             {
                 _currentlySpawned[i] = Object.Instantiate(
-                    _stages[_numberOfStage].GetContent[i],
-                    Character.NavMeshUtility.SampledPosition(_spawnPoints[0].transform.localPosition),
+                    m_stages[_numberOfStage].GetContent[i],
+                    Character.NavMeshUtility.SampledPosition(m_stages[i].GetSpawnPoint),
                     Quaternion.identity);
 
                 _amountOfEnemiesAtStage++;
@@ -91,7 +89,7 @@ namespace Assets.Scripts.Runtime.Waves
         private void decreaseAmountOfEnemiesAtStage()
         {
             _amountOfEnemiesAtStage--;
-            
+
             if (areAllDead() && isNextStageExists())
             {
                 RunStage();
@@ -117,7 +115,7 @@ namespace Assets.Scripts.Runtime.Waves
         {
             for (int i = 0; i < _currentlySpawned.Length; i++)
             {
-                _currentlySpawned[i].UpdateTarget(_finalPoint.localPosition);
+                _currentlySpawned[i].UpdateTarget(m_stages[_numberOfStage].GetFinalPoint);
             }
         }
     }

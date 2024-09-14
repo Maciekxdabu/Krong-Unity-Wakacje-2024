@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Assets.Scripts.Runtime.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "Stage", menuName = "Stages/new stage", order = 1)]
-    public class Stages : ScriptableObject
+    public class StageData : ScriptableObject
     {
         [SerializeField] private Enemy[] _enemies;
         [SerializeField] private EventTypeCaller _eventTypeCaller;
