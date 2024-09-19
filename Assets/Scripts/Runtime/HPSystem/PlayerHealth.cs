@@ -18,8 +18,9 @@ public class PlayerHealth : Health
         }
     }
 
-    public void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _respawnPosition = transform.position;
     }
 
