@@ -39,6 +39,7 @@ namespace Assets.Scripts.Runtime.UI
         private void Awake()
         {
             _instance = this;
+            refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, $"");
         }
 
         // ---------- public methods
