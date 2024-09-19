@@ -11,6 +11,8 @@ public class Enemy : Creature
     [SerializeField] private GameObject _damageLocation;
     [SerializeField] private float _damageCooldown = 1.5f;
 
+    internal System.Action OnDeath;
+
     private NavMeshAgent _agent;
     private float _currentDamageCooldown;
     private Vector3 _spawnPosition;
@@ -22,7 +24,7 @@ public class Enemy : Creature
     public const float ATTACK_RANGE = 2.0f;
     public const float NAVMESH_AGENT_STOP_DISTANCE = 1.5f;
 
-    public void Start()
+    public void Awake()
     {
         _spawnPosition = transform.position;
 
@@ -88,6 +90,7 @@ public class Enemy : Creature
         if (_hp < 0)
         {
             Debug.Log(name + " enemy died");
+            OnDeath?.Invoke();
             Destroy(gameObject);
         }
     }
@@ -95,5 +98,11 @@ public class Enemy : Creature
     public void TrySettingAggroOn(GameObject heroGameObject)
     {
         _aggroTarget = heroGameObject;
+    }
+
+    internal void UpdateTarget(Vector3 newPosition)
+    {
+        _spawnPosition = newPosition;
+        _agent.destination = newPosition;
     }
 }

@@ -1374,9 +1374,7 @@ MonoBehaviour:
   _minions: []
   _itemPickCounter:
   - _id: 1
-    _amount: 0
   - _id: 2
-    _amount: 0
 --- !u!54 &4349362971466610041
 Rigidbody:
   m_ObjectHideFlags: 0

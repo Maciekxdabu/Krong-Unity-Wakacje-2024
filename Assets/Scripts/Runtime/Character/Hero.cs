@@ -26,7 +26,7 @@ namespace Assets.Scripts.Runtime.Character
 
         [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
         [SerializeField] private List<Minion> _minions;
-        
+
         private PlayerHealth _health;
         [SerializeField] private List<ItemPickCounter> _itemPickCounter;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
@@ -126,7 +126,8 @@ namespace Assets.Scripts.Runtime.Character
         {
             // duplicate as minions will be removed during foreach
             var busyMinions = _minionsThatAreExecutingAnOrder.ToList();
-            foreach (var minion in busyMinions){
+            foreach (var minion in busyMinions)
+            {
                 minion.InterruptCurrentOrder();
             }
         }
@@ -156,7 +157,8 @@ namespace Assets.Scripts.Runtime.Character
             HUD.Instance.RefreshHUD(this);
         }
 
-        private Spawner getClosestSpawner() {
+        private Spawner getClosestSpawner()
+        {
             // FIXME: inefficient
             var spawners = FindObjectsByType<Spawner>(FindObjectsSortMode.None);
             var closestSpawner = spawners
@@ -186,7 +188,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             foreach (var mininon in _minions)
             {
-                addMinion(mininon, alreadyInMinions:true);
+                addMinion(mininon, alreadyInMinions: true);
             }
         }
 
@@ -195,7 +197,8 @@ namespace Assets.Scripts.Runtime.Character
             m.Init(this);
             m.OnOrderFinished += minionOrderFinished;
 
-            if (!alreadyInMinions){
+            if (!alreadyInMinions)
+            {
                 _minions.Add(m);
                 HUD.Instance.RefreshHUD(this);
             }
@@ -204,7 +207,8 @@ namespace Assets.Scripts.Runtime.Character
             m.destination = transform.position;
         }
 
-        public bool canGetAnotherMinion(){
+        public bool canGetAnotherMinion()
+        {
             Debug.Log($"Minions count {_minions.Count}");
             return _minions.Count < MAX_MINIONS;
         }
@@ -268,7 +272,7 @@ namespace Assets.Scripts.Runtime.Character
             {
                 minion.PlayerRespawnedAt(position);
             }
-            
+
         }
 
         internal void EnableThirdPersonController()
@@ -289,7 +293,6 @@ namespace Assets.Scripts.Runtime.Character
         public Vector3 CalculateGoOrderDestination()
         {
             var MAX_DISTANCE = SendOrderData.MaxDistance;
-            const float MAX_NAVMESH_DISTANCE = 100f;
 
             var ray = new Ray(_frontTransform.position, _frontTransform.forward);
             var layerMask = Physics.DefaultRaycastLayers;
@@ -303,14 +306,7 @@ namespace Assets.Scripts.Runtime.Character
 
             if (wallDetected)
             {
-                NavMesh.SamplePosition(
-                    wallHit.point,
-                    out var navMeshHit,
-                    MAX_NAVMESH_DISTANCE,
-                    NavMesh.AllAreas
-                    );
-
-                return navMeshHit.position;
+                return NavMeshUtility.SampledPosition(wallHit.point);
             }
 
             return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
@@ -319,6 +315,24 @@ namespace Assets.Scripts.Runtime.Character
         private void disableThirdPersonController()
         {
             starterAssetsInputs.DisableInputs();
+        }
+    }
+
+    public struct NavMeshUtility
+    {
+        private const int MAX_NAVMESH_DISTANCE = 50;
+        private static NavMeshHit navMeshHit;
+
+        internal static Vector3 SampledPosition(Vector3 point)
+        {
+            NavMesh.SamplePosition(
+                point,
+                out navMeshHit,
+                MAX_NAVMESH_DISTANCE,
+                NavMesh.AllAreas
+                );
+
+            return navMeshHit.position;
         }
     }
 }
