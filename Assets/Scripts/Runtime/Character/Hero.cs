@@ -316,6 +316,11 @@ namespace Assets.Scripts.Runtime.Character
         {
             starterAssetsInputs.DisableInputs();
         }
+
+        internal List<Minion> GetMinions()
+        {
+            return new List<Minion>(_minions);
+        }
     }
 
     public struct NavMeshUtility

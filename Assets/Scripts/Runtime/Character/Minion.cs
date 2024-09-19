@@ -23,6 +23,8 @@ namespace Assets.Scripts.Runtime.Character
         public MinionType Type { get { return type; } }
 
         [SerializeField] protected NavMeshAgent _localNavMeshAgent;
+        [SerializeField] protected LayerMask _attackLayerMask;
+
 
         protected static int s_spawned_count = 1;
 
@@ -33,7 +35,9 @@ namespace Assets.Scripts.Runtime.Character
         private MinionStateFollowPlayer _followPlayerState;
         private MinionStateGoForward _goForwardState;
         private MinionStateInteract _interactState;
+        private MinionStateFight _fightState;
 
+        private bool _isFollowingAnOrder;
         public Action<Minion> OnOrderFinished;
 
         public Vector3 destination
@@ -60,10 +64,12 @@ namespace Assets.Scripts.Runtime.Character
             _followPlayerState = new MinionStateFollowPlayer(this, hero);
             _goForwardState = new MinionStateGoForward(this, hero);
             _interactState = new MinionStateInteract(this, hero);
+            _fightState = new MinionStateFight(this, hero);
 
             _allStates[StateSlot.STATE_FOLLOW_HERO] = _followPlayerState;
             _allStates[StateSlot.STATE_MOVE_TO_POINT] = _goForwardState;
             _allStates[StateSlot.STATE_INTERACT] = _interactState;
+            _allStates[StateSlot.STATE_FIGHT] = _fightState;
 
             _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
             _currentState = _allStates[_currentStateEnum];
@@ -79,6 +85,24 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
+        internal void TryAttacking()
+        {
+            _localAnimator.SetTrigger("Attack");
+        }
+
+        public void AttackFrame()
+        {
+            //Debug.Log("Attack Frame");
+            var hitTargets = Physics.OverlapSphere(transform.position, 1.0f, _attackLayerMask);
+            foreach (var hit in hitTargets)
+            {
+                if (!hit.TryGetComponent<Enemy>(out var e)) {
+                    continue;
+                }
+                e.TakeDamage(10.0f);
+            }
+        }
+
         private void GoToState(StateSlot newState) {
             Assert.AreNotEqual(_currentStateEnum, newState);
 
@@ -86,6 +110,8 @@ namespace Assets.Scripts.Runtime.Character
 
             _currentStateEnum = newState;
             _currentState = _allStates[_currentStateEnum];
+            _localAnimator.ResetTrigger("Attack");
+
             _currentState.StateEnter();
         }
 
@@ -93,7 +119,7 @@ namespace Assets.Scripts.Runtime.Character
         public void SendForward()
         {
             Assert.AreEqual(_currentStateEnum, StateSlot.STATE_FOLLOW_HERO, "SendForward outside STATE_FOLLOW_HERO");
-
+            _isFollowingAnOrder = true;
             GoToState(StateSlot.STATE_MOVE_TO_POINT);
         }
 
@@ -103,7 +129,10 @@ namespace Assets.Scripts.Runtime.Character
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
 
-            OnOrderFinished.Invoke(this);
+            if (_isFollowingAnOrder){
+               OnOrderFinished.Invoke(this);
+                _isFollowingAnOrder = false;
+            }
         }
 
         public void InterruptCurrentOrder()
@@ -112,7 +141,11 @@ namespace Assets.Scripts.Runtime.Character
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
 
-            OnOrderFinished.Invoke(this);
+            if (_isFollowingAnOrder)
+            {
+                OnOrderFinished.Invoke(this);
+                _isFollowingAnOrder = false;
+            }
         }
 
 
@@ -181,6 +214,17 @@ namespace Assets.Scripts.Runtime.Character
         internal void PlayerRespawnedAt(Vector3 position)
         {
             gameObject.GetComponent<NavMeshAgent>().Warp(position);
+        }
+
+        public void EnemyInRange(Enemy e)
+        {
+            if (_fightState.ShouldFightEnemyInRange(e))
+            {
+                if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT || _currentStateEnum == StateSlot.STATE_FOLLOW_HERO)
+                {
+                    GoToState(StateSlot.STATE_FIGHT);
+                }
+            }
         }
     }
 }

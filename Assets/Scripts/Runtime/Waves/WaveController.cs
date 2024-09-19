@@ -24,6 +24,7 @@ namespace Assets.Scripts.Runtime.Waves
         {
             RunStage();
         }
+
         private void RunStage()
         {
             initializeCurrentTimer();

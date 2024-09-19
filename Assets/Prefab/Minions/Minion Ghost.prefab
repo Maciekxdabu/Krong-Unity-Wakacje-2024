@@ -55,6 +55,9 @@ MonoBehaviour:
   _damageMax: 0
   _hp: 0
   _localNavMeshAgent: {fileID: 2274497106745037625}
+  _attackLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!114 &6481982312782445751
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -230,7 +230,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
+  _localAnimator: {fileID: 0}
+  _damageMin: 0
+  _damageMax: 0
+  _hp: 0
   _localNavMeshAgent: {fileID: 2274497106745037625}
+  _attackLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!195 &2274497106745037625
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -57,9 +57,18 @@ namespace Assets.Scripts.Runtime
 
         public void FixedUpdate()
         {
+            var minions = Hero.GetMinions();
             foreach (var e in Enemies) {
                 if ( Hero.IsInRangeSquared(e, Enemy.AGGRO_RANGE_SQUARED) ) {
                     e.TrySettingAggroOn(Hero.gameObject);
+                }
+                foreach (var m in minions)
+                {
+                    if (m.IsInRangeSquared(e, Enemy.AGGRO_RANGE_SQUARED))
+                    {
+                        e.TrySettingAggroOn(m.gameObject);
+                        m.EnemyInRange(e);
+                    }
                 }
             }
         }
