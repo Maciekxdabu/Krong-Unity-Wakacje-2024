@@ -73,7 +73,7 @@ namespace Assets.Scripts.Runtime.UI
             string ID = itemPickCounter.GetStringID;
             string newText = itemPickCounter.GetCurrentAmountAsString;
 
-            Debug.Log(itemPickCounter.GetStringID);
+            Debug.Log($"HUD UPDATE: {itemPickCounter.GetStringID} -> {newText}");
 
             refreshCustomHUD(ID, newText);
         }

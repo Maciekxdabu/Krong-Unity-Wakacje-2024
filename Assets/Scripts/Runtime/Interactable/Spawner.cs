@@ -46,6 +46,21 @@ public class MinionSpawner : MonoBehaviour
         return transform.position + transform.forward * -1.0f;
     }
 
+    private void OnValidate()
+    {
+        var config = _minionsConfiguration.SpawnerConfig.Find(c => c.Type == _minionType);
+        if (config == null)
+        {
+            Debug.LogError("Spawner has invalid minion type", this);
+        }
+        else
+        {
+            Material material = config.notLitMaterial;
+            var materials = new System.Collections.Generic.List<Material>() { material };
+            _litMesh.SetMaterials(materials);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (capsuleMesh == null)
