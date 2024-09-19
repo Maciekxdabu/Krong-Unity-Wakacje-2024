@@ -28,6 +28,7 @@ namespace Assets.Scripts.Runtime.ScriptableObjects
     public class MinionSpawnerConfigEntry
     {
         public MinionType Type;
+        public int Cost;
         public Minion Prefab;
         public Material notLitMaterial;
         public Material litMaterial;

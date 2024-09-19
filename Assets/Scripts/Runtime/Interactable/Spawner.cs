@@ -1,5 +1,6 @@
 using Assets.Scripts.Runtime.Character;
 using Assets.Scripts.Runtime.ScriptableObjects;
+using Assets.Scripts.Runtime.UI;
 using UnityEngine;
 
 public class MinionSpawner : MonoBehaviour
@@ -20,7 +21,14 @@ public class MinionSpawner : MonoBehaviour
 
     public void Interact(Hero h)
     {
-        if (h.canGetAnotherMinion()) {
+        var minionCost = _thisSpawnerConfig.Cost;
+        if (minionCost > h.GetGoldAmount()) {
+            HUD.Instance.ShowNotEnoughCash(minionCost);
+            return;
+        }
+        if (h.canGetAnotherMinion())
+        {
+            h.TryPayGoldAmount(minionCost);
             var m = Instantiate<Minion>(_thisSpawnerConfig.Prefab, getSpawnPosition(), Quaternion.identity);
             h.addMinion(m);
         }

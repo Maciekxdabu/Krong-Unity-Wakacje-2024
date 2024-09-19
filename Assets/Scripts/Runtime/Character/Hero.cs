@@ -36,6 +36,18 @@ namespace Assets.Scripts.Runtime.Character
 
         private MinionSpawner _currentSpawner;
 
+        public int GetGoldAmount()
+        {
+            return _itemPickCounter.Find(i => i.ItemType == BonusItemType.BonusGold)?.Amount ?? 0;
+        }
+
+        public bool TryPayGoldAmount(int cost)
+        {
+            var result = _itemPickCounter.Find(i => i.ItemType == BonusItemType.BonusGold)?.TryPaying(cost) ?? false;
+
+            return result;
+        }
+
         public Transform GetFrontTransform()
         {
             return _frontTransform;
@@ -98,15 +110,9 @@ namespace Assets.Scripts.Runtime.Character
             }
             else if (other.TryGetComponent(out BonusItem bonusItem))
             {
-                string bonusItemID = bonusItem.GetId.ToString();
-                for (int i = 0; i < _itemPickCounter.Count; i++)
-                {
-                    if (bonusItemID == _itemPickCounter[i].GetStringID)
-                    {
-                        _itemPickCounter[i].Add(bonusItem.Amount);
-                        HUD.Instance.RefreshCustomHUD(_itemPickCounter[i]);
-                        break;
-                    }
+                var itemCounter = _itemPickCounter.Find(i => i.ItemType == bonusItem.GetId);
+                if (itemCounter != null) {
+                    itemCounter.Add(bonusItem.Amount);
                 }
 
                 bonusItem.Delete();

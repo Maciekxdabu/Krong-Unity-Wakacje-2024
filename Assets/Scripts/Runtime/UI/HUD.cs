@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Assets.Scripts.Runtime.Character;
+using System;
+using System.Collections;
 
 namespace Assets.Scripts.Runtime.UI
 {
@@ -21,6 +23,10 @@ namespace Assets.Scripts.Runtime.UI
         [SerializeField] private TMP_Text heroHpMaxText;
         [Space]
         [SerializeField] private List<CustomText> customTexts = new List<CustomText>();
+
+        const string CUSTOM_TEXT_GOLD = "BonusGold";
+        const string CUSTOM_TEXT_SOUL_ENERGY = "BonusSoulEnergy";
+        const string CUSTOM_TEXT_GENERIC_MESSAGE = "GenericTextMessage";
 
         private Hero ownerHero;
 
@@ -81,6 +87,18 @@ namespace Assets.Scripts.Runtime.UI
 
             if (foundText != null)
                 foundText.textField.text = newText;
+        }
+
+        internal void ShowNotEnoughCash(int missingCost)
+        {
+            refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, $"Not Enough Gold, Needs: {missingCost}");
+            StartCoroutine(nameof(clearAfterTime));
+        }
+
+        private IEnumerator clearAfterTime()
+        {
+            yield return new WaitForSeconds(3.0f);
+            refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, "");
         }
     }
 }
