@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca59f6c524f3399448395fe71f2888d6, type: 3}
+  m_Name: MinionConfig
+  m_EditorClassIdentifier: 
+  MoveOrderMaxDistance: 8
+  SpawnerConfig:
+  - Type: 1
+    Prefab: {fileID: -6525366314813307942, guid: a5152b51685ac6245a6769fa648a0467,
+      type: 3}
+    notLitMaterial: {fileID: 2100000, guid: b888ce4175ec11144b4eca84b84f081a, type: 2}
+    litMaterial: {fileID: 2100000, guid: a574afae727ea044dba8d53eddcd4d86, type: 2}
+  - Type: 2
+    Prefab: {fileID: 466990573558617479, guid: cf9a2b2ec8247b94a868d460941d010a, type: 3}
+    notLitMaterial: {fileID: 2100000, guid: e9e6ac49ab1d4f84bbf8a34b08d85c0b, type: 2}
+    litMaterial: {fileID: 2100000, guid: a574afae727ea044dba8d53eddcd4d86, type: 2}
+  - Type: 3
+    Prefab: {fileID: 2590153194873035570, guid: 30d0755273dc0b2459d620732b3e4884,
+      type: 3}
+    notLitMaterial: {fileID: 2100000, guid: 1e99df3a5816d634da5b0000596a8707, type: 2}
+    litMaterial: {fileID: 2100000, guid: a574afae727ea044dba8d53eddcd4d86, type: 2}

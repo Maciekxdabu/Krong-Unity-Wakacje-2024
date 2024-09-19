@@ -5,7 +5,7 @@ public class MinionForwardAnimEvents : MonoBehaviour
 {
     private Minion _minionParent;
 
-    public void Start()
+    public void Awake()
     {
         _minionParent = transform.parent.GetComponent<Minion>();
     }

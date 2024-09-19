@@ -1,4 +1,5 @@
 using Assets.Scripts.Runtime.Order.MinionStates;
+using Assets.Scripts.Runtime.ScriptableObjects;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -10,18 +11,10 @@ namespace Assets.Scripts.Runtime.Character
 {
     public abstract class Minion : Creature
     {
-        public enum MinionType
-        {
-            none = 0,//mainly used by player for "All", but also for Minions that are (NYI = Not Yet Implemented)
-            skeleton = 1,
-            MUMMY = 2,//mummy???
-            ghost = 3,
-            vampire = 4
-        }
-
-        protected MinionType type = MinionType.none;
+        protected MinionType type = MinionType.None;
         public MinionType Type { get { return type; } }
 
+        [SerializeField] protected MinonConfigurationData _config;
         [SerializeField] protected NavMeshAgent _localNavMeshAgent;
         [SerializeField] protected LayerMask _attackLayerMask;
 
@@ -225,6 +218,29 @@ namespace Assets.Scripts.Runtime.Character
                     GoToState(StateSlot.STATE_FIGHT);
                 }
             }
+        }
+
+        public Vector3 CalculateGoOrderDestination()
+        {
+            var MAX_DISTANCE = _config.MoveOrderMaxDistance;
+            var heroFront = GameManager.Instance.Hero.GetFrontTransform();
+
+            var ray = new Ray(heroFront.position, heroFront.forward);
+            var layerMask = Physics.DefaultRaycastLayers;
+            bool wallDetected = Physics.Raycast(
+                    ray,
+                    out var wallHit,
+                    MAX_DISTANCE,
+                    layerMask,
+                    QueryTriggerInteraction.Ignore
+                );
+
+            if (wallDetected)
+            {
+                return NavMeshUtility.SampledPosition(wallHit.point);
+            }
+
+            return heroFront.position + (heroFront.forward * MAX_DISTANCE);
         }
     }
 }

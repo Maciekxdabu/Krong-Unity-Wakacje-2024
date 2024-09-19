@@ -104,11 +104,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7be2b26d6ad9c2f488ab6287d0089d56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
+  speed: 5
   _localAnimator: {fileID: 7207103617708358934}
   _damageMin: 0
   _damageMax: 0
   _hp: 0
+  _config: {fileID: 11400000, guid: 18ad12f666835174191df251e7e3e833, type: 2}
   _localNavMeshAgent: {fileID: 2274497106745037625}
   _attackLayerMask:
     serializedVersion: 2
@@ -259,7 +260,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 41f081d5c6d286c47a33bed3f84de79a,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1536721834727943997}
+      addedObject: {fileID: 915117420743641272}
   m_SourcePrefab: {fileID: 100100000, guid: 41f081d5c6d286c47a33bed3f84de79a, type: 3}
 --- !u!4 &3667313671900342124 stripped
 Transform:
@@ -273,7 +274,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3850106161826152583}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1536721834727943997
+--- !u!114 &915117420743641272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

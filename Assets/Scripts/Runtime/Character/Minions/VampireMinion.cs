@@ -1,3 +1,4 @@
+using Assets.Scripts.Runtime.ScriptableObjects;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Assets.Scripts.Runtime.Character
             //calll parent Awake
             base.Awake();
 
-            type = MinionType.vampire;
+            type = MinionType.Vampire;
             name = "Vampire Minion_" + (s_spawned_count-1);
         }
     }

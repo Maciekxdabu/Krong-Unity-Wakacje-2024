@@ -1,4 +1,5 @@
 using Assets.Scripts.Runtime.Order;
+using Assets.Scripts.Runtime.ScriptableObjects;
 using Assets.Scripts.Runtime.UI;
 using StarterAssets;
 using System;
@@ -16,15 +17,12 @@ namespace Assets.Scripts.Runtime.Character
         private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
         private const int MAX_MINIONS = 10;
 
-        /// <summary> Scriptable Object with order params </summary>
-        public OrderData SendOrderData;
-
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
         [SerializeField] private StarterAssetsInputs starterAssetsInputs;
         [SerializeField] private Collider _weaponCollider;
 
-        [SerializeField] private Minion.MinionType controlledType = Minion.MinionType.none;
+        [SerializeField] private MinionType controlledType = MinionType.Any;
         [SerializeField] private List<Minion> _minions;
 
         private PlayerHealth _health;
@@ -33,10 +31,15 @@ namespace Assets.Scripts.Runtime.Character
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
 
         //getters
-        public Minion.MinionType ControlledType { get { return controlledType; } }
+        public MinionType ControlledType { get { return controlledType; } }
         public int MinionCount { get { return _minions.Count; } }
 
-        private Spawner _currentSpawner;
+        private MinionSpawner _currentSpawner;
+
+        public Transform GetFrontTransform()
+        {
+            return _frontTransform;
+        }
 
         public event Action<Vector3> OnJumpEnd
         {
@@ -152,15 +155,15 @@ namespace Assets.Scripts.Runtime.Character
 
         private void OnChooseMinion(InputValue val)
         {
-            controlledType = (Minion.MinionType)val.Get<float>();
+            controlledType = (MinionType)val.Get<float>();
 
             HUD.Instance.RefreshHUD(this);
         }
 
-        private Spawner getClosestSpawner()
+        private MinionSpawner getClosestSpawner()
         {
             // FIXME: inefficient
-            var spawners = FindObjectsByType<Spawner>(FindObjectsSortMode.None);
+            var spawners = FindObjectsByType<MinionSpawner>(FindObjectsSortMode.None);
             var closestSpawner = spawners
                 .OrderBy(distanceToSpawnerSq)
                 .FirstOrDefault();
@@ -175,7 +178,7 @@ namespace Assets.Scripts.Runtime.Character
             return closestSpawner;
         }
 
-        private float distanceToSpawnerSq(Spawner s)
+        private float distanceToSpawnerSq(MinionSpawner s)
         {
             return (s.transform.position - transform.position).sqrMagnitude;
         }
@@ -229,7 +232,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private Minion getRandomFreeMinion()
         {
-            List<Minion> availableMinions = _minionsThatAreNotExecutingAnOrder.FindAll(x => x.Type == controlledType || controlledType == Minion.MinionType.none);
+            List<Minion> availableMinions = _minionsThatAreNotExecutingAnOrder.FindAll(x => x.Type == controlledType || controlledType == MinionType.Any);
             if (availableMinions.Count == 0)//check if there is any minion of the given controlled type
                 return null;
 
@@ -288,28 +291,6 @@ namespace Assets.Scripts.Runtime.Character
         internal void DisableColliderOfWeapon()
         {
             _weaponCollider.enabled = false;
-        }
-
-        public Vector3 CalculateGoOrderDestination()
-        {
-            var MAX_DISTANCE = SendOrderData.MaxDistance;
-
-            var ray = new Ray(_frontTransform.position, _frontTransform.forward);
-            var layerMask = Physics.DefaultRaycastLayers;
-            bool wallDetected = Physics.Raycast(
-                    ray,
-                    out var wallHit,
-                    MAX_DISTANCE,
-                    layerMask,
-                    QueryTriggerInteraction.Ignore
-                );
-
-            if (wallDetected)
-            {
-                return NavMeshUtility.SampledPosition(wallHit.point);
-            }
-
-            return _frontTransform.position + (_frontTransform.forward * MAX_DISTANCE);
         }
 
         private void disableThirdPersonController()

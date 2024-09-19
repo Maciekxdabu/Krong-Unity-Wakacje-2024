@@ -30,7 +30,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
 
         public void StateEnter()
         {
-            _requestedDestination = _player.CalculateGoOrderDestination();
+            _requestedDestination = _minion.CalculateGoOrderDestination();
 
             _stateActive = true;
             _minion.destination = _requestedDestination;
