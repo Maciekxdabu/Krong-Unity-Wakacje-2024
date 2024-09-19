@@ -16,9 +16,9 @@ namespace Assets.Scripts.Runtime
             _amount = 0;
         }
 
-        public void Add()
+        public void Add(int addAmount = 1)
         {
-            _amount++;
+             _amount += addAmount;
         }
     }
 }

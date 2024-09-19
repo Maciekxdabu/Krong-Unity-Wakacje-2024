@@ -103,7 +103,7 @@ namespace Assets.Scripts.Runtime.Character
                 {
                     if (bonusItemID == _itemPickCounter[i].GetStringID)
                     {
-                        _itemPickCounter[i].Add();
+                        _itemPickCounter[i].Add(bonusItem.Amount);
                         HUD.Instance.RefreshCustomHUD(_itemPickCounter[i]);
                         break;
                     }
