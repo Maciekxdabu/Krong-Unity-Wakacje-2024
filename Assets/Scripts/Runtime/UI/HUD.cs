@@ -63,7 +63,7 @@ namespace Assets.Scripts.Runtime.UI
             maxMinionText.text = "10";
             controlledMinionText.text = hero.ControlledType.ToString();
 
-            heroHpText.text = hero.HealthPoints.ToString();
+            heroHpText.text = hero.HealthPoints.ToString("F0");
             heroHpMaxText.text = hero.MaxHealthPoints.ToString();
         }
 

@@ -8,13 +8,12 @@ using System;
 
 public class Enemy : Creature
 {
-    [SerializeField] private GameObject _damagePrefab;
     [SerializeField] private GameObject _damageLocation;
-    [SerializeField] private float _damageCooldown = 1.5f;
+    [SerializeField] private LayerMask _attackLayerMask;
+    [SerializeField] private ParticleSystem _hitParticle;
+
 
     private NavMeshAgent _agent;
-    private ParticleSystem _hitParticle;
-    private float _currentDamageCooldown;
     private Vector3 _spawnPosition;
 
     private GameObject _aggroTarget;
@@ -33,10 +32,8 @@ public class Enemy : Creature
         _spawnPosition = transform.position;
 
         _agent = gameObject.GetComponent<NavMeshAgent>();
-        _hitParticle = gameObject.GetComponent<ParticleSystem>();
 
         _agent.stoppingDistance = NAVMESH_AGENT_STOP_DISTANCE;
-        _currentDamageCooldown = _damageCooldown;
 
         _baseSpeed = _agent.speed;
     }
@@ -102,7 +99,16 @@ public class Enemy : Creature
 
     internal void AttackFrame()
     {
-        Instantiate(_damagePrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
+        var hitTargets = Physics.OverlapSphere(_damageLocation.transform.position, 1.5f, _attackLayerMask);
+        foreach (var hit in hitTargets)
+        {
+            if (!hit.TryGetComponent<IDamageable>(out var e))
+            {
+                continue;
+            }
+            var damage = UnityEngine.Random.Range(_damageMin, _damageMax);
+            e.TakeDamage(damage);
+        }
     }
 
     internal void SetIsDuringAttack(bool isDoingAnAttack)
