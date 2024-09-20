@@ -93,7 +93,7 @@ namespace Assets.Scripts.Runtime.Character
                 if (!hit.TryGetComponent<Enemy>(out var e)) {
                     continue;
                 }
-                e.TakeDamage(10.0f);
+                e.TakeDamage(GetDamageValue());
             }
         }
 

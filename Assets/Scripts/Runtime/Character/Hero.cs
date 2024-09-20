@@ -108,8 +108,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             if (other.TryGetComponent(out Enemy enemy))
             {
-                float damage = UnityEngine.Random.Range(_damageMin, _damageMax);
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(GetDamageValue());
             }
             else if (other.TryGetComponent(out BonusItem bonusItem))
             {

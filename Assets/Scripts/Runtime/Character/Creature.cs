@@ -16,6 +16,9 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] protected float _damageMin;
         [SerializeField] protected float _damageMax;
         [SerializeField] protected float _maxHp;
+
+        [SerializeField] protected ParticleSystem _hitParticle;
+
         protected float _hp;
 
         //creature health variables and methods
@@ -32,6 +35,11 @@ namespace Assets.Scripts.Runtime.Character
         public float MaxHealthPoints
         {
             get { return _maxHp; }
+        }
+
+        public float GetDamageValue()
+        {
+            return UnityEngine.Random.Range(_damageMin, _damageMax);
         }
 
         public virtual void Awake()
@@ -58,6 +66,7 @@ namespace Assets.Scripts.Runtime.Character
 
             if (prevHp != _hp)
             {
+                _hitParticle?.Play();
                 onHealthChange.Invoke();
                 if (_hp <= 0)
                 {

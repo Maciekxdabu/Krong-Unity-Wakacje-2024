@@ -5,12 +5,14 @@ using UnityEngine.AI;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.Character;
 using System;
+using UnityEngine.Rendering;
 
 public class Enemy : Creature
 {
     [SerializeField] private GameObject _damageLocation;
+    [SerializeField] private GameObject _damagePfxPrefab;
     [SerializeField] private LayerMask _attackLayerMask;
-    [SerializeField] private ParticleSystem _hitParticle;
+
 
 
     private NavMeshAgent _agent;
@@ -22,8 +24,7 @@ public class Enemy : Creature
     public const float AGGRO_LOSE_RANGE_SQUARED = 8 * 8;
     public const float ATTACK_RANGE = 2.0f;
     public const float NAVMESH_AGENT_STOP_DISTANCE = 1.5f;
-
-    private float _baseSpeed;
+    public const float DAMAGE_RADIUS = 1.5f;
 
 
     public override void Awake()
@@ -32,10 +33,9 @@ public class Enemy : Creature
         _spawnPosition = transform.position;
 
         _agent = gameObject.GetComponent<NavMeshAgent>();
+        _agent.speed = speed;
 
         _agent.stoppingDistance = NAVMESH_AGENT_STOP_DISTANCE;
-
-        _baseSpeed = _agent.speed;
     }
 
     public void Start()
@@ -80,8 +80,6 @@ public class Enemy : Creature
     public override void TakeDamage(float value)
     {
         base.TakeDamage(value);
-
-        _hitParticle.Play();
     }
 
     public void TrySettingAggroOn(GameObject heroOrMinion)
@@ -99,21 +97,28 @@ public class Enemy : Creature
 
     internal void AttackFrame()
     {
-        var hitTargets = Physics.OverlapSphere(_damageLocation.transform.position, 1.5f, _attackLayerMask);
+        if (_damagePfxPrefab  != null){
+            Instantiate(_damagePfxPrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
+        }
+        var hitTargets = Physics.OverlapSphere(_damageLocation.transform.position, DAMAGE_RADIUS, _attackLayerMask);
         foreach (var hit in hitTargets)
         {
-            if (!hit.TryGetComponent<IDamageable>(out var e))
+            if (!hit.TryExtractHealth(out var e))
             {
                 continue;
             }
-            var damage = UnityEngine.Random.Range(_damageMin, _damageMax);
-            e.TakeDamage(damage);
+            e.TakeDamage(GetDamageValue());
         }
+    }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(_damageLocation.transform.position, DAMAGE_RADIUS);
     }
 
     internal void SetIsDuringAttack(bool isDoingAnAttack)
     {
-        _agent.speed = isDoingAnAttack ? 0.0f : _baseSpeed;
+        _agent.speed = isDoingAnAttack ? 0.0f : speed;
         _localAnimator.ResetTrigger("Attack");
     }
 }
