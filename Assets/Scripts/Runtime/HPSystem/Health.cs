@@ -28,7 +28,7 @@ public class Health : MonoBehaviour
         get { return _maxHealthPoints; }
     }
     
-    private void Awake()
+    protected virtual void Awake()
     {
         HealthPoints = _maxHealthPoints;
         onHealthChange.AddListener(OnDeath);

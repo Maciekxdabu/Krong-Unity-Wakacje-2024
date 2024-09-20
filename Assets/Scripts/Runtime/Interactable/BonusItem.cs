@@ -4,6 +4,7 @@ using UnityEngine;
 public class BonusItem : MonoBehaviour
 {
     [SerializeField] private BonusItemType _id;
+    [SerializeField] public int Amount;
 
     internal BonusItemType GetId
     {

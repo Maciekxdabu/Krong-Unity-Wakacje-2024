@@ -17,7 +17,13 @@ public class PlayerHealth : Health
             _hero.Died();
         }
     }
-    
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _respawnPosition = transform.position;
+    }
+
     protected override void Respawning()
     {
         transform.position = _respawnPosition;

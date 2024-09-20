@@ -14,5 +14,6 @@
         STATE_FOLLOW_HERO,
         STATE_MOVE_TO_POINT,
         STATE_INTERACT,
+        STATE_FIGHT,
     };
 }

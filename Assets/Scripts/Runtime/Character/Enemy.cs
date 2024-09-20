@@ -11,7 +11,10 @@ public class Enemy : Creature
     [SerializeField] private GameObject _damageLocation;
     [SerializeField] private float _damageCooldown = 1.5f;
 
+    internal System.Action OnDeath;
+
     private NavMeshAgent _agent;
+    private ParticleSystem _hitParticle;
     private float _currentDamageCooldown;
     private Vector3 _spawnPosition;
 
@@ -22,14 +25,19 @@ public class Enemy : Creature
     public const float ATTACK_RANGE = 2.0f;
     public const float NAVMESH_AGENT_STOP_DISTANCE = 1.5f;
 
-    public void Start()
+    public void Awake()
     {
         _spawnPosition = transform.position;
 
         _agent = gameObject.GetComponent<NavMeshAgent>();
+        _hitParticle = gameObject.GetComponent<ParticleSystem>();
+
         _agent.stoppingDistance = NAVMESH_AGENT_STOP_DISTANCE;
         _currentDamageCooldown = _damageCooldown;
+    }
 
+    public void Start()
+    { 
         GameManager.Instance.RegisterEnemy(this);
     }
 
@@ -83,17 +91,28 @@ public class Enemy : Creature
     {
         _hp -= value;
 
+        _hitParticle.Play();
+
         UnityEngine.Debug.Log(name+" _hp "+ _hp);
 
         if (_hp < 0)
         {
             Debug.Log(name + " enemy died");
+            OnDeath?.Invoke();
             Destroy(gameObject);
         }
     }
 
-    public void TrySettingAggroOn(GameObject heroGameObject)
+    public void TrySettingAggroOn(GameObject heroOrMinion)
     {
-        _aggroTarget = heroGameObject;
+        if (_aggroTarget == null || _aggroTarget.GetDistanceSquared(this) > heroOrMinion.GetDistanceSquared(this)){
+            _aggroTarget = heroOrMinion;
+        }
+    }
+
+    internal void UpdateTarget(Vector3 newPosition)
+    {
+        _spawnPosition = newPosition;
+        _agent.destination = newPosition;
     }
 }

@@ -1,3 +1,4 @@
+using Assets.Scripts.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -60,7 +61,7 @@ public class EnemyDamageScript : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Health>(out var health))
+        if (other.TryExtractHealth(out var health))
         {
             _objectsWithHealth.Add(health);
         }
@@ -68,7 +69,7 @@ public class EnemyDamageScript : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Health>(out var health))
+        if (other.TryExtractHealth(out var health))
         {
             _objectsWithHealth.Remove(health);
         }
