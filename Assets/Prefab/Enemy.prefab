@@ -315,7 +315,10 @@ MonoBehaviour:
   _localAnimator: {fileID: 0}
   _damageMin: 0
   _damageMax: 0
-  _hp: 50
+  _maxHp: 100
+  onHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
   _damagePrefab: {fileID: 4939387821172013561, guid: b7e1710ef67c33a49a6271bd1398091b,
     type: 3}
   _damageLocation: {fileID: 6133596828399740244}

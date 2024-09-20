@@ -1,6 +1,8 @@
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.Character;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DamageCube : MonoBehaviour
@@ -15,7 +17,7 @@ public class DamageCube : MonoBehaviour
     {
         if(_objectsWithHealth.Count > 0)
         {
-            DamageAllInside();
+            DamageOverTime(dmgPerTick, timeBetweenTicks);
         }
     }
 
@@ -35,28 +37,33 @@ public class DamageCube : MonoBehaviour
         }
     }
 
-    private void DamageAllInside()
+    private void RemoveDestroyed()
     {
-        DamageOverTime(dmgPerTick, timeBetweenTicks);
+        // needed as destroyed objects sometimes skip OnTriggerExit
+        for (int i = _objectsWithHealth.Count-1; i >= 0; --i)
+        {
+            if (_objectsWithHealth[i] as MonoBehaviour == null) // magic check for destroyed objects
+            {
+                _objectsWithHealth.RemoveAt(i);
+            }
+        }
     }
 
     private void DamageOverTime(float dmgPerTick, float timeBetweenTicks)
     {
-        
         if(_time < timeBetweenTicks)
         {
             _time += Time.deltaTime;
+            return;
         }
-        else
+        _time = 0;
+        RemoveDestroyed();
+        foreach (IDamageable health in _objectsWithHealth)
         {
-            foreach (IDamageable health in _objectsWithHealth)
+            if (health != null)
             {
-                if (health != null)
-                {
-                    health.TakeDamage(dmgPerTick);
-                }
+                health.TakeDamage(dmgPerTick);
             }
-            _time = 0;
         }
         
     }

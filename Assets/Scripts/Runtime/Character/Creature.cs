@@ -1,6 +1,6 @@
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 namespace Assets.Scripts.Runtime.Character
 {
@@ -19,43 +19,52 @@ namespace Assets.Scripts.Runtime.Character
         protected float _hp;
 
         //creature health variables and methods
-        protected virtual Boolean isAlive => _hp > 0;
+        protected virtual bool isAlive => _hp > 0;
         public UnityEvent onHealthChange = new UnityEvent();
 
-        public Boolean GetIsAlive() { return isAlive; }
+        internal Action OnDeathEvent;
 
-        public float HealthPoints
-        {
-            get { return _hp; }
-            set
-            {
-                if (value != _hp)
-                {
-                    _hp = value;
-                    if (_hp < 0)
-                    {
-                        _hp = 0;
-                    }
-                    onHealthChange.Invoke();
-                }
-            }
-        }
+
+        public bool GetIsAlive() { return isAlive; }
+
+        public float HealthPoints => _hp;
+
         public float MaxHealthPoints
         {
             get { return _maxHp; }
         }
+
+        public virtual void Awake()
+        {
+            InitHp();
+        }
+
         protected void InitHp()
         {
-            HealthPoints = _maxHp;
-            onHealthChange.AddListener(OnDeath);
+            _hp = _maxHp;
         }
-        protected virtual void OnDeath() { }
-        protected virtual void Respawning() { }
+
+        protected virtual void OnDeath()
+        {
+            Destroy(gameObject);
+        }
+
         public virtual void TakeDamage(float value)
         {
-            HealthPoints -= value;
-            HealthPoints = Mathf.Clamp(HealthPoints, 0, _maxHp);
-            Debug.Log(HealthPoints);
+            var prevHp = HealthPoints;
+            _hp -= value;
+            _hp = Mathf.Clamp(_hp, 0, _maxHp);
+            Debug.Log($"{name}: DAMAGE {value}; hp change {prevHp} -> {_hp}", this);
+
+            if (prevHp != _hp)
+            {
+                onHealthChange.Invoke();
+                if (_hp <= 0)
+                {
+                    OnDeathEvent?.Invoke();
+                    OnDeath();
+                }
+            }
         }
 
         public virtual void TakeHealing(float value)

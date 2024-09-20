@@ -27,7 +27,6 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private Vector3 _respawnPosition;
 
 
-        private PlayerHealth _health;
         [SerializeField] private List<ItemPickCounter> _itemPickCounter;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
@@ -67,12 +66,12 @@ namespace Assets.Scripts.Runtime.Character
             remove { _controller.OnMove -= value; }
         }
 
-        private void Awake()
+        public override void Awake()
         {
+            base.Awake();
             initializeMinionsOnAwake();
-            _health = GetComponent<PlayerHealth>();
             initializeItemPickCounter();
-            //InitHp();
+            _respawnPosition = transform.position;
         }
 
         private void initializeItemPickCounter()
@@ -86,7 +85,7 @@ namespace Assets.Scripts.Runtime.Character
         private void Start()
         {
             HUD.Instance.RefreshHUD(this);
-            InitHp();
+            onHealthChange.AddListener(() => { HUD.Instance.RefreshHUD(this); });
         }
 
         public void FixedUpdate()
@@ -155,7 +154,7 @@ namespace Assets.Scripts.Runtime.Character
 
         public void OnSlashAttack()
         {
-            if (_health.GetIsAlive())
+            if (GetIsAlive())
             {
                 _localAnimator.SetBool("SlashAttack", true);
                 disableThirdPersonController();
@@ -270,10 +269,6 @@ namespace Assets.Scripts.Runtime.Character
 
         #endregion Minions
 
-        internal void Died()
-        {
-            _controller.enabled = false;
-        }
 
         internal void Respawn(Vector3 position)
         {
@@ -313,22 +308,12 @@ namespace Assets.Scripts.Runtime.Character
             return new List<Minion>(_minions);
         }
 
-        private void disableThirdPersonController()
-        {
-            starterAssetsInputs.DisableInputs();
-        }
-
         protected override void OnDeath()
         {
-            HUD.Instance.RefreshHUD(this);
-
-            if (!isAlive)
-            {
-                Died();
-            }
+            _controller.enabled = false;
         }
 
-        protected override void Respawning()
+        protected void Respawning()
         {
             transform.position = _respawnPosition;
             Physics.SyncTransforms();

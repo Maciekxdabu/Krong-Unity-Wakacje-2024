@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.Character;
+using System;
 
 public class Enemy : Creature
 {
     [SerializeField] private GameObject _damagePrefab;
     [SerializeField] private GameObject _damageLocation;
     [SerializeField] private float _damageCooldown = 1.5f;
-
-    internal System.Action OnDeath;
 
     private NavMeshAgent _agent;
     private ParticleSystem _hitParticle;
@@ -25,8 +24,9 @@ public class Enemy : Creature
     public const float ATTACK_RANGE = 2.0f;
     public const float NAVMESH_AGENT_STOP_DISTANCE = 1.5f;
 
-    public void Awake()
+    public override void Awake()
     {
+        base.Awake();
         _spawnPosition = transform.position;
 
         _agent = gameObject.GetComponent<NavMeshAgent>();
@@ -89,18 +89,9 @@ public class Enemy : Creature
 
     public override void TakeDamage(float value)
     {
-        _hp -= value;
+        base.TakeDamage(value);
 
         _hitParticle.Play();
-
-        UnityEngine.Debug.Log(name+" _hp "+ _hp);
-
-        if (_hp < 0)
-        {
-            Debug.Log(name + " enemy died");
-            OnDeath?.Invoke();
-            Destroy(gameObject);
-        }
     }
 
     public void TrySettingAggroOn(GameObject heroOrMinion)

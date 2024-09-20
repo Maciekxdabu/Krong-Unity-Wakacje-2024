@@ -120,7 +120,6 @@ GameObject:
   - component: {fileID: 2487872201307760632}
   - component: {fileID: 2274497106745037625}
   - component: {fileID: 4377131243105354893}
-  - component: {fileID: 6740796748639643672}
   m_Layer: 7
   m_Name: Minion Vampire
   m_TagString: Untagged
@@ -233,7 +232,12 @@ MonoBehaviour:
   _localAnimator: {fileID: 0}
   _damageMin: 0
   _damageMax: 0
+  _maxHp: 150
   _hp: 0
+  onHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
+  _config: {fileID: 0}
   _localNavMeshAgent: {fileID: 2274497106745037625}
   _attackLayerMask:
     serializedVersion: 2
@@ -287,20 +291,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6740796748639643672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7273798849889508753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7f98e7ab291b8c479243e84986dc61a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealthPoints: 50
-  onHealthChange:
-    m_PersistentCalls:
-      m_Calls: []
-  _minion: {fileID: 2487872201307760632}
