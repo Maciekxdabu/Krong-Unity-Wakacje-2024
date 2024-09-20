@@ -24,6 +24,9 @@ public class Enemy : Creature
     public const float ATTACK_RANGE = 2.0f;
     public const float NAVMESH_AGENT_STOP_DISTANCE = 1.5f;
 
+    private float _baseSpeed;
+
+
     public override void Awake()
     {
         base.Awake();
@@ -34,6 +37,8 @@ public class Enemy : Creature
 
         _agent.stoppingDistance = NAVMESH_AGENT_STOP_DISTANCE;
         _currentDamageCooldown = _damageCooldown;
+
+        _baseSpeed = _agent.speed;
     }
 
     public void Start()
@@ -51,6 +56,8 @@ public class Enemy : Creature
 
     public void Update()
     {
+        _localAnimator?.SetFloat("Speed", _agent.velocity.magnitude);
+
         if (_aggroTarget != null && !this.IsInRangeSquared(_aggroTarget, AGGRO_LOSE_RANGE_SQUARED))
         {
             // aggro lost
@@ -69,21 +76,7 @@ public class Enemy : Creature
 
         if (_agent.remainingDistance < ATTACK_RANGE)
         {
-            tryDamaging();
-        }
-        else
-        {
-            _currentDamageCooldown = _damageCooldown;
-        }
-    }
-
-    private void tryDamaging()
-    {
-        _currentDamageCooldown -= Time.deltaTime;
-        if (_currentDamageCooldown < 0)
-        {
-            Instantiate(_damagePrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
-            _currentDamageCooldown = _damageCooldown;
+            _localAnimator?.SetTrigger("Attack");
         }
     }
 
@@ -105,5 +98,16 @@ public class Enemy : Creature
     {
         _spawnPosition = newPosition;
         _agent.destination = newPosition;
+    }
+
+    internal void AttackFrame()
+    {
+        Instantiate(_damagePrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
+    }
+
+    internal void SetIsDuringAttack(bool isDoingAnAttack)
+    {
+        _agent.speed = isDoingAnAttack ? 0.0f : _baseSpeed;
+        _localAnimator.ResetTrigger("Attack");
     }
 }
