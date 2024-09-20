@@ -12,7 +12,8 @@ public class Enemy : Creature
     [SerializeField] private GameObject _damageLocation;
     [SerializeField] private GameObject _damagePfxPrefab;
     [SerializeField] private LayerMask _attackLayerMask;
-
+    [SerializeField] private BonusItem _goldDropPrefab;
+    [SerializeField] private int _goldDropValue;
 
 
     private NavMeshAgent _agent;
@@ -48,6 +49,11 @@ public class Enemy : Creature
         if (gameObject.scene.isLoaded)
         {
             GameManager.Instance.UnregisterEnemy(this);
+            if (_goldDropPrefab  != null)
+            {
+                var gold = Instantiate(_goldDropPrefab, transform.position, transform.rotation, null);
+                gold.SetAmount(_goldDropValue);
+            }
         }
     }
 

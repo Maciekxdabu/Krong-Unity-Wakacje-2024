@@ -1,4 +1,5 @@
 using Assets.Scripts.Runtime;
+using System;
 using UnityEngine;
 
 public class BonusItem : MonoBehaviour
@@ -14,5 +15,10 @@ public class BonusItem : MonoBehaviour
     internal void Delete()
     {
         Destroy(gameObject);
+    }
+
+    internal void SetAmount(int goldDropValue)
+    {
+        Amount = goldDropValue;
     }
 }
