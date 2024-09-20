@@ -1,4 +1,5 @@
 using Assets.Scripts.Extensions;
+using Assets.Scripts.Runtime.Character;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class EnemyDamageScript : MonoBehaviour
     private ParticleSystem _pfx;
     private float _timer;
     private bool _fired;
-    private List<Health> _objectsWithHealth = new List<Health>();
+    private List<IDamageable> _objectsWithHealth = new List<IDamageable>();
     const float ANTICIPATION_ANIM_TIME = 0.3f;
 
     void Start()

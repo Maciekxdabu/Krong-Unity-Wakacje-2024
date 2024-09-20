@@ -45,8 +45,9 @@ namespace Assets.Scripts.Runtime.Character
         }
         public float remainingDistance => _localNavMeshAgent.remainingDistance;
 
-        protected virtual void Awake()
+        public override void Awake()
         {
+            base.Awake();
             _localNavMeshAgent.speed = speed;
             name = "Minion_" + s_spawned_count;
             ++s_spawned_count;
@@ -96,7 +97,8 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
-        private void GoToState(StateSlot newState) {
+        private void GoToState(StateSlot newState)
+        {
             Assert.AreNotEqual(_currentStateEnum, newState);
 
             _currentState.StateEnd();
@@ -196,12 +198,14 @@ namespace Assets.Scripts.Runtime.Character
             _interactState.InteractableLost(interactable);
         }
 
-        internal void Died()
+        protected override void OnDeath()
         {
             foreach(var (_,state) in _allStates)
             {
                 state.MinionDied();
             }
+            GameManager.Instance.Hero.MinionDied(this);
+            base.OnDeath();
         }
 
         internal void PlayerRespawnedAt(Vector3 position)

@@ -24,8 +24,9 @@ namespace Assets.Scripts.Runtime.Character
 
         [SerializeField] private MinionType controlledType = MinionType.Any;
         [SerializeField] private List<Minion> _minions;
+        [SerializeField] private Vector3 _respawnPosition;
 
-        private PlayerHealth _health;
+
         [SerializeField] private List<ItemPickCounter> _itemPickCounter;
         private List<Minion> _minionsThatAreExecutingAnOrder = new List<Minion>();
         private List<Minion> _minionsThatAreNotExecutingAnOrder = new List<Minion>();
@@ -65,11 +66,12 @@ namespace Assets.Scripts.Runtime.Character
             remove { _controller.OnMove -= value; }
         }
 
-        private void Awake()
+        public override void Awake()
         {
+            base.Awake();
             initializeMinionsOnAwake();
-            _health = GetComponent<PlayerHealth>();
             initializeItemPickCounter();
+            _respawnPosition = transform.position;
         }
 
         private void initializeItemPickCounter()
@@ -83,6 +85,7 @@ namespace Assets.Scripts.Runtime.Character
         private void Start()
         {
             HUD.Instance.RefreshHUD(this);
+            onHealthChange.AddListener(() => { HUD.Instance.RefreshHUD(this); });
         }
 
         public void FixedUpdate()
@@ -151,7 +154,7 @@ namespace Assets.Scripts.Runtime.Character
 
         public void OnSlashAttack()
         {
-            if (_health.GetIsAlive())
+            if (GetIsAlive())
             {
                 _localAnimator.SetBool("SlashAttack", true);
                 disableThirdPersonController();
@@ -266,10 +269,6 @@ namespace Assets.Scripts.Runtime.Character
 
         #endregion Minions
 
-        internal void Died()
-        {
-            _controller.enabled = false;
-        }
 
         internal void Respawn(Vector3 position)
         {
@@ -307,6 +306,37 @@ namespace Assets.Scripts.Runtime.Character
         internal List<Minion> GetMinions()
         {
             return new List<Minion>(_minions);
+        }
+
+        protected override void OnDeath()
+        {
+            _controller.enabled = false;
+        }
+
+        protected void Respawning()
+        {
+            transform.position = _respawnPosition;
+            Physics.SyncTransforms();
+            Respawn(_respawnPosition);
+        }
+
+        public void OnRespawn(InputValue inputValue)
+        {
+            TakeHealing(_maxHp);
+            Respawning();
+        }
+
+        [ContextMenu("Kill player")]
+        private void KillPlayer()
+        {
+            TakeDamage(_maxHp);
+        }
+
+        [ContextMenu("Respawn player")]
+        private void RespawnPlayer()
+        {
+            TakeHealing(_maxHp);
+            Respawning();
         }
     }
 

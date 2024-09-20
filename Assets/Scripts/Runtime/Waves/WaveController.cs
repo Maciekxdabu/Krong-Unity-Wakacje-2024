@@ -83,7 +83,7 @@ namespace Assets.Scripts.Runtime.Waves
                     Quaternion.identity);
 
                 _amountOfEnemiesAtStage++;
-                _currentlySpawned[i].OnDeath += decreaseAmountOfEnemiesAtStage;
+                _currentlySpawned[i].OnDeathEvent += decreaseAmountOfEnemiesAtStage;
             }
         }
 

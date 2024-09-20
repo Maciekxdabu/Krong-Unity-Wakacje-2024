@@ -65,7 +65,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6400245607207891253}
   - component: {fileID: 466990573558617479}
-  - component: {fileID: 1253229549233946421}
   - component: {fileID: 2274497106745037625}
   - component: {fileID: 281689381760451395}
   m_Layer: 7
@@ -108,29 +107,16 @@ MonoBehaviour:
   _localAnimator: {fileID: 2000573884758760335}
   _damageMin: 0
   _damageMax: 0
+  _maxHp: 100
   _hp: 0
+  onHealthChange:
+    m_PersistentCalls:
+      m_Calls: []
   _config: {fileID: 11400000, guid: 18ad12f666835174191df251e7e3e833, type: 2}
   _localNavMeshAgent: {fileID: 2274497106745037625}
   _attackLayerMask:
     serializedVersion: 2
     m_Bits: 512
---- !u!114 &1253229549233946421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7273798849889508753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7f98e7ab291b8c479243e84986dc61a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealthPoints: 70
-  onHealthChange:
-    m_PersistentCalls:
-      m_Calls: []
-  _minion: {fileID: 466990573558617479}
 --- !u!195 &2274497106745037625
 NavMeshAgent:
   m_ObjectHideFlags: 0

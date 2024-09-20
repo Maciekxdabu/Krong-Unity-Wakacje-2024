@@ -7,7 +7,7 @@ namespace Assets.Scripts.Runtime.Character
 {
     public class SkeletonMinion : Minion
     {
-        protected override void Awake()
+        public override void Awake()
         {
             //calll parent Awake
             base.Awake();
