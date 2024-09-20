@@ -56,7 +56,7 @@ namespace Assets.Scripts.Runtime.Character
             initializeMinionsOnAwake();
             _health = GetComponent<PlayerHealth>();
             initializeItemPickCounter();
-            InitHp();
+            //InitHp();
         }
 
         private void initializeItemPickCounter()
@@ -70,6 +70,7 @@ namespace Assets.Scripts.Runtime.Character
         private void Start()
         {
             HUD.Instance.RefreshHUD(this);
+            InitHp();
         }
 
         public void FixedUpdate()

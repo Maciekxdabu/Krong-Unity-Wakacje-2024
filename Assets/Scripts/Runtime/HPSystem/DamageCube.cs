@@ -8,7 +8,7 @@ public class DamageCube : MonoBehaviour
     [SerializeField] private float timeBetweenTicks;
 
     float _time = 0;
-    private List<Creature> _objectsWithHealth = new List<Creature>();
+    private List<IDamageable> _objectsWithHealth = new List<IDamageable>();
 
     void Update()
     {
@@ -20,7 +20,7 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Creature>(out var health))
+        if (other.gameObject.TryGetComponent<IDamageable>(out var health))
         {
             _objectsWithHealth.Add(health);
         }
@@ -28,7 +28,7 @@ public class DamageCube : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Creature>(out var health))
+        if (other.gameObject.TryGetComponent<IDamageable>(out var health))
         {
             _objectsWithHealth.Remove(health);
         }
@@ -48,9 +48,9 @@ public class DamageCube : MonoBehaviour
         }
         else
         {
-            foreach (Creature health in _objectsWithHealth)
+            foreach (IDamageable health in _objectsWithHealth)
             {
-                if (health != null && health.GetIsAlive())
+                if (health != null)
                 {
                     health.TakeDamage(dmgPerTick);
                 }

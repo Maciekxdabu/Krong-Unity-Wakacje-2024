@@ -4,7 +4,12 @@ using UnityEngine.Events;
 
 namespace Assets.Scripts.Runtime.Character
 {
-    public abstract class Creature : MonoBehaviour
+    public interface IDamageable
+    {
+        void TakeDamage(float damage);
+    }
+
+    public abstract class Creature : MonoBehaviour, IDamageable
     {
         [SerializeField] protected float speed;
         [SerializeField] protected Animator _localAnimator;
@@ -27,6 +32,10 @@ namespace Assets.Scripts.Runtime.Character
                 if (value != _hp)
                 {
                     _hp = value;
+                    if (_hp < 0)
+                    {
+                        _hp = 0;
+                    }
                     onHealthChange.Invoke();
                 }
             }
