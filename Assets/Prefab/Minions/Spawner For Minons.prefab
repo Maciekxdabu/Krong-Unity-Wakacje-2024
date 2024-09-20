@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 6563024542325141365}
   - component: {fileID: 8713236789825418377}
   m_Layer: 0
-  m_Name: Minion Spawner
+  m_Name: Spawner For Minons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
