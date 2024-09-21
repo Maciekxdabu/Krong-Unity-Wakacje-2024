@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Runtime.Character
 {
@@ -343,6 +344,12 @@ namespace Assets.Scripts.Runtime.Character
         {
             TakeHealing(_maxHp);
             Respawning();
+        }
+
+
+        public void OnEscape(InputValue _)
+        {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 
