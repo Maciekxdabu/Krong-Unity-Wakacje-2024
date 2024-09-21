@@ -165,6 +165,7 @@ namespace Assets.Scripts.Runtime.Character
         private void OnChooseMinion(InputValue val)
         {
             controlledType = (MinionType)val.Get<float>();
+            if (controlledType == MinionType.Vampire) { controlledType = MinionType.Any; }
 
             HUD.Instance.RefreshHUD(this);
         }

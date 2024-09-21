@@ -1,5 +1,5 @@
 {
-    "name": "StarterAssets",
+    "name": "InputMapping",
     "maps": [
         {
             "name": "Player",
@@ -275,39 +275,6 @@
                 },
                 {
                     "name": "",
-                    "id": "c7bc1e24-9daf-4fc8-a629-37a46af3b355",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardMouse",
-                    "action": "SendOrder",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cd881309-73f6-4b30-addd-0ba1150943ad",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardMouse",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0438c853-7380-445e-b881-309f442ff685",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "KeyboardMouse",
-                    "action": "ToMeAllOrder",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "75cc96af-3c00-4dbc-b9da-ba7a1372e263",
                     "path": "<Keyboard>/backquote",
                     "interactions": "",
@@ -374,12 +341,45 @@
                 },
                 {
                     "name": "",
-                    "id": "e97325ca-9005-4b13-b640-a41465dbbad1",
-                    "path": "<Keyboard>/m",
+                    "id": "0438c853-7380-445e-b881-309f442ff685",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "SlashAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cd881309-73f6-4b30-addd-0ba1150943ad",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "SendOrder",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c7bc1e24-9daf-4fc8-a629-37a46af3b355",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ccf2ca68-ff82-481f-990d-638dec6cc943",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "ToMeAllOrder",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
