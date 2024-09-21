@@ -33,6 +33,10 @@ namespace Assets.Scripts.Runtime.Character
         private bool _isFollowingAnOrder;
         public Action<Minion> OnOrderFinished;
 
+        private float _lastInterruptTimestamp;
+        private float INTERRUPT_IGNORE_FIGHTS_WINDOW = 1;
+
+
         public Vector3 destination
         {
             get { return _localNavMeshAgent.destination; }
@@ -108,12 +112,19 @@ namespace Assets.Scripts.Runtime.Character
             _localAnimator.ResetTrigger("Attack");
 
             _currentState.StateEnter();
+
+            if (newState == StateSlot.STATE_FOLLOW_HERO && _isFollowingAnOrder)
+            {
+                OnOrderFinished.Invoke(this);
+                _isFollowingAnOrder = false;
+            }
         }
 
 
         public void SendForward()
         {
             Assert.AreEqual(_currentStateEnum, StateSlot.STATE_FOLLOW_HERO, "SendForward outside STATE_FOLLOW_HERO");
+            _lastInterruptTimestamp = 0; // can immediately fight
             _isFollowingAnOrder = true;
             GoToState(StateSlot.STATE_MOVE_TO_POINT);
         }
@@ -124,23 +135,16 @@ namespace Assets.Scripts.Runtime.Character
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
 
-            if (_isFollowingAnOrder){
-               OnOrderFinished.Invoke(this);
-                _isFollowingAnOrder = false;
-            }
         }
 
-        public void InterruptCurrentOrder()
+        public void InterruptCurrentOrder(bool playerOrdered = false)
         {
+            if (playerOrdered) {
+                _lastInterruptTimestamp = Time.time;
+            }
             if (_currentStateEnum == StateSlot.STATE_FOLLOW_HERO) return; // nothing to interrupt
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
-
-            if (_isFollowingAnOrder)
-            {
-                OnOrderFinished.Invoke(this);
-                _isFollowingAnOrder = false;
-            }
         }
 
 
@@ -185,8 +189,6 @@ namespace Assets.Scripts.Runtime.Character
             Assert.AreEqual(_currentStateEnum, StateSlot.STATE_INTERACT, "InteractionTaskFinished outside STATE_INTERACT");
 
             GoToState(StateSlot.STATE_FOLLOW_HERO);
-
-            OnOrderFinished.Invoke(this);
         }
 
         private void InteractableLeftArea(Interactable interactable)
@@ -215,10 +217,18 @@ namespace Assets.Scripts.Runtime.Character
 
         public void EnemyInRange(Enemy e)
         {
+            if (Time.time - _lastInterruptTimestamp < INTERRUPT_IGNORE_FIGHTS_WINDOW) {
+                return;
+            }
             if (_fightState.ShouldFightEnemyInRange(e))
             {
                 if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT || _currentStateEnum == StateSlot.STATE_FOLLOW_HERO)
                 {
+                    if (_currentStateEnum == StateSlot.STATE_FOLLOW_HERO)
+                    {
+                        GameManager.Instance.Hero.MinionStartedFighting(this);
+                        _isFollowingAnOrder = true;
+                    }
                     GoToState(StateSlot.STATE_FIGHT);
                 }
             }

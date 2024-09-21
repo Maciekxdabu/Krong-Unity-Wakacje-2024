@@ -61,6 +61,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         public void StateEnd()
         {
             _stateActive = false;
+            _currentEnemy = null;
         }
 
         public void MinionDied()

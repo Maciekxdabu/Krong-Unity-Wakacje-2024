@@ -139,7 +139,7 @@ namespace Assets.Scripts.Runtime.Character
             var busyMinions = _minionsThatAreExecutingAnOrder.ToList();
             foreach (var minion in busyMinions)
             {
-                minion.InterruptCurrentOrder();
+                minion.InterruptCurrentOrder(true);
             }
         }
 
@@ -256,6 +256,11 @@ namespace Assets.Scripts.Runtime.Character
 
             _minionsThatAreNotExecutingAnOrder.Add(minion);
             _minionsThatAreExecutingAnOrder.Remove(minion);
+        }
+
+        internal void MinionStartedFighting(Minion minion)
+        {
+            markAsWorking(minion);
         }
 
         internal void MinionDied(Minion minion)
