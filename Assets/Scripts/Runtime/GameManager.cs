@@ -28,16 +28,6 @@ namespace Assets.Scripts.Runtime
             }
         }
 
-        public void RegisterEnemy(Enemy enemy)
-        {
-            Enemies.Add(enemy);
-        }
-
-        public void UnregisterEnemy(Enemy enemy)
-        {
-            Enemies.Remove(enemy);
-        }
-
         public void Awake()
         {
             if (_instance != null && _instance != this)
@@ -53,6 +43,16 @@ namespace Assets.Scripts.Runtime
         public void Start()
         {
             Hero = FindObjectOfType<Hero>();
+        }
+
+        public void RegisterEnemy(Enemy enemy)
+        {
+            Enemies.Add(enemy);
+        }
+
+        public void UnregisterEnemy(Enemy enemy)
+        {
+            Enemies.Remove(enemy);
         }
 
         public void FixedUpdate()

@@ -103,6 +103,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private void GoToState(StateSlot newState)
         {
+            Debug.Log($"{name} change state {_currentStateEnum} -> {newState}", this);
             Assert.AreNotEqual(_currentStateEnum, newState);
 
             _currentState.StateEnd();
@@ -237,7 +238,7 @@ namespace Assets.Scripts.Runtime.Character
         public Vector3 CalculateGoOrderDestination()
         {
             var MAX_DISTANCE = _config.MoveOrderMaxDistance;
-            var heroFront = GameManager.Instance.Hero.GetFrontTransform();
+            var heroFront = GameManager.Instance.Hero?.GetFrontTransform() ?? transform;
 
             var ray = new Ray(heroFront.position, heroFront.forward);
             var layerMask = Physics.DefaultRaycastLayers;

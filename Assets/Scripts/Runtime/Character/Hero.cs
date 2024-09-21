@@ -84,6 +84,7 @@ namespace Assets.Scripts.Runtime.Character
 
         private void Start()
         {
+            GameManager.Instance.Hero = this; // make sure to init GameManager
             HUD.Instance.RefreshHUD(this);
             onHealthChange.AddListener(() => { HUD.Instance.RefreshHUD(this); });
         }
