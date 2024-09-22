@@ -12,9 +12,9 @@ namespace Assets.Scripts.Runtime.Waves
 
         internal System.Action OnEnd;
 
-        internal void InitializeCurrent(Stage stage)
+        internal void InitializeCurrent(Wave wave)
         {
-            _current = stage.GetStartingTime;
+            _current = wave.GetStartingTime;
         }
 
         internal void Run()
@@ -43,8 +43,8 @@ namespace Assets.Scripts.Runtime.Waves
                 yield return null;
             }
 
-            turnOff();
             OnEnd?.Invoke();
+            turnOff();
         }
     }
 }

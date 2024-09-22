@@ -11,7 +11,7 @@ namespace Assets.Scripts.Runtime
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        private WaveController _waveController;
+        private WaveControler _waveController;
 
         public Hero Hero;
         public List<Enemy> Enemies = new List<Enemy>();
