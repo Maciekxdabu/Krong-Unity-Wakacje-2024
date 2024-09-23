@@ -20,7 +20,7 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void OnTriggerEnter(Collider other)
         {
-            foreach (var item in _events)
+            foreach (var item in _events)//dev note: which event?
             {
                 if (item.Intersects(other))
                 {
@@ -29,5 +29,7 @@ namespace Assets.Scripts.Runtime.Waves
                 }
             }
         }
+
+        //dev note run event
     }
 }

@@ -7,6 +7,7 @@ namespace Assets.Scripts.Runtime.Waves
     public class WaveEvent
     {
         [SerializeField] private Wave[] _waves;
+        [SerializeField] private GameObject[] _passages;
         [SerializeField] private Timer _timer;
         [SerializeField] private Collider _trigger;
 
@@ -32,6 +33,22 @@ namespace Assets.Scripts.Runtime.Waves
             _trigger.gameObject.SetActive(false);
         }
 
+        private void blockPassages()
+        {
+            for (int i = 0; i < _passages.Length; i++)
+            {
+                _passages[i].SetActive(true);
+            }
+        }
+
+        private void freePassages()
+        {
+            for (int i = 0; i < _passages.Length; i++)
+            {
+                _passages[i].SetActive(false);
+            }
+        }
+
         private void runWave()
         {
             Debug.Log("runWave");
@@ -43,6 +60,7 @@ namespace Assets.Scripts.Runtime.Waves
         private void initializeTimer()
         {
             Debug.Log("initializeTimer");
+            _timer.OnStart += blockPassages;
             _timer.OnEnd += spawn;
         }
 
@@ -103,11 +121,15 @@ namespace Assets.Scripts.Runtime.Waves
         {
             _amountOfEnemiesAtStage--;
 
-            if (areAllDead() && isNextStageExists())
+            if (areAllDead())
             {
-                _waves[_numberOfWave - 1].OnEnd?.Invoke();
-                countNextWave();
-                runWave();
+                freePassages();
+                if (isNextStageExists())
+                {
+                    _waves[_numberOfWave - 1].OnEnd?.Invoke();
+                    countNextWave();
+                    runWave();
+                }
             }
         }
 

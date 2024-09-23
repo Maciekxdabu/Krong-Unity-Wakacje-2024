@@ -10,6 +10,7 @@ namespace Assets.Scripts.Runtime.Waves
         [SerializeField] private TMPro.TMP_Text _value;
         private float _current;
 
+        internal System.Action OnStart;
         internal System.Action OnEnd;
 
         internal void InitializeCurrent(Wave wave)
@@ -19,6 +20,7 @@ namespace Assets.Scripts.Runtime.Waves
 
         internal void Run()
         {
+            OnStart?.Invoke();
             show();
             _value.StartCoroutine(runCorutine());
         }
