@@ -2,7 +2,6 @@ using Assets.Scripts.Runtime.Order.MinionStates;
 using Assets.Scripts.Runtime.ScriptableObjects;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
@@ -171,7 +170,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(destination, 0.3f);
-            Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
+            //Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
         }
 
         private void InteractableEncountered(Interactable interactable)
