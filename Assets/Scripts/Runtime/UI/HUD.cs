@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using Assets.Scripts.Runtime.Character;
-using System;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 
 namespace Assets.Scripts.Runtime.UI
 {
@@ -16,6 +15,7 @@ namespace Assets.Scripts.Runtime.UI
             public TMP_Text textField;
         }
 
+        [SerializeField] private GameObject _parentStartingTimeToWave;
         [SerializeField] private TMP_Text controlledMinionText;
         [SerializeField] private TMP_Text maxMinionText;
         [SerializeField] private TMP_Text currentMinionText;
@@ -27,6 +27,7 @@ namespace Assets.Scripts.Runtime.UI
         const string CUSTOM_TEXT_GOLD = "BonusGold";
         const string CUSTOM_TEXT_SOUL_ENERGY = "BonusSoulEnergy";
         const string CUSTOM_TEXT_GENERIC_MESSAGE = "GenericTextMessage";
+        const string CUSTOM_TEXT_ENEMY_WAVE = "EnemyWave";
 
         private Hero ownerHero;
 
@@ -77,7 +78,12 @@ namespace Assets.Scripts.Runtime.UI
 
             refreshCustomHUD(ID, newText);
         }
-        
+
+        internal void UpdateStartingTimeToWave(float time)
+        {
+            refreshCustomHUD(CUSTOM_TEXT_ENEMY_WAVE, time.ToString("f2"));
+        }
+
         //usage:
         //HUD.Instance.RefreshCustomHUD("ID", "new test value")'
         //"ID" must be an existing ID in the list in the Inspector
@@ -99,6 +105,16 @@ namespace Assets.Scripts.Runtime.UI
         {
             yield return new WaitForSeconds(3.0f);
             refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, "");
+        }
+
+        internal void ShowStartingTimeToWave()
+        {
+            _parentStartingTimeToWave.SetActive(true);
+        }
+
+        internal void TurnOffStartingTimeToWave()
+        {
+            _parentStartingTimeToWave.SetActive(false);
         }
     }
 }

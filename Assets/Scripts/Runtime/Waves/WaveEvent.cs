@@ -33,6 +33,28 @@ namespace Assets.Scripts.Runtime.Waves
             _trigger.gameObject.SetActive(false);
         }
 
+        private void initializeTimer()
+        {
+            _timer = new Timer();
+            _timer.OnStart += blockPassages;
+            _timer.OnEnd += spawn;
+        }
+
+        private void initializeAmountOfEnemiesAtStage()
+        {
+            _amountOfEnemiesAtStage = 0;
+        }
+
+        private void initializeCounter()
+        {
+            _numberOfWave = 1;
+        }
+
+        private void initializeCurrentTimer()
+        {
+            _timer.InitializeCurrent(_waves[_numberOfWave - 1]);
+        }
+
         private void blockPassages()
         {
             for (int i = 0; i < _passages.Length; i++)
@@ -55,28 +77,6 @@ namespace Assets.Scripts.Runtime.Waves
 
             initializeCurrentTimer();
             runTimer();
-        }
-
-        private void initializeTimer()
-        {
-            Debug.Log("initializeTimer");
-            _timer.OnStart += blockPassages;
-            _timer.OnEnd += spawn;
-        }
-
-        private void initializeAmountOfEnemiesAtStage()
-        {
-            _amountOfEnemiesAtStage = 0;
-        }
-
-        private void initializeCounter()
-        {
-            _numberOfWave = 1;
-        }
-
-        private void initializeCurrentTimer()
-        {
-            _timer.InitializeCurrent(_waves[_numberOfWave - 1]);
         }
 
         private void runTimer()

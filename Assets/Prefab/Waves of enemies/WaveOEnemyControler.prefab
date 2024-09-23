@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5149701466342542015}
   - component: {fileID: 2390486816317535057}
-  - component: {fileID: 6461256691123650810}
+  - component: {fileID: 8624498536372681432}
   m_Layer: 0
   m_Name: WaveOEnemyControler
   m_TagString: Untagged
@@ -93,48 +93,22 @@ MonoBehaviour:
           _amount: 2
         _spawnPoint: {fileID: 0}
         _finalPoint: {fileID: 0}
-      _startingTime: 9
-    - _spawns:
-      - _content:
-          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
-            type: 3}
-          _amount: 2
-        _spawnPoint: {fileID: 0}
-        _finalPoint: {fileID: 0}
-      - _content:
-          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
-            type: 3}
-          _amount: 1
-        _spawnPoint: {fileID: 0}
-        _finalPoint: {fileID: 0}
       _startingTime: 10
     - _spawns:
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 3
         _spawnPoint: {fileID: 0}
         _finalPoint: {fileID: 0}
-      - _content:
-          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
-            type: 3}
-          _amount: 2
-        _spawnPoint: {fileID: 0}
-        _finalPoint: {fileID: 0}
-      - _content:
-          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
-            type: 3}
-          _amount: 2
-        _spawnPoint: {fileID: 0}
-        _finalPoint: {fileID: 0}
-      _startingTime: 11
+      _startingTime: 10
     _passages:
     - {fileID: 0}
     _timer:
       _parent: {fileID: 0}
       _value: {fileID: 0}
     _trigger: {fileID: 3447306060132048038}
---- !u!54 &6461256691123650810
+--- !u!54 &8624498536372681432
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -257,7 +231,7 @@ PrefabInstance:
     - target: {fileID: 6439976993265343092, guid: 0b82fcd00f76a28498d74e26ea66c7b2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15.54
+      value: 14.94
       objectReference: {fileID: 0}
     - target: {fileID: 6439976993265343092, guid: 0b82fcd00f76a28498d74e26ea66c7b2,
         type: 3}
@@ -267,7 +241,7 @@ PrefabInstance:
     - target: {fileID: 6439976993265343092, guid: 0b82fcd00f76a28498d74e26ea66c7b2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 24.7
+      value: 19.04
       objectReference: {fileID: 0}
     - target: {fileID: 6439976993265343092, guid: 0b82fcd00f76a28498d74e26ea66c7b2,
         type: 3}
