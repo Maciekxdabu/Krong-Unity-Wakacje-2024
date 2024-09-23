@@ -7,14 +7,12 @@ namespace Assets.Scripts.Runtime.Waves
     public class Timer
     {
         private float _current;
-        private MonoBehaviour _hud;
 
         internal System.Action OnStart;
         internal System.Action OnEnd;
 
         internal void InitializeCurrent(Wave wave)
         {
-            _hud = HUD.Instance;
             _current = wave.GetStartingTime;
         }
 
@@ -22,7 +20,7 @@ namespace Assets.Scripts.Runtime.Waves
         {
             OnStart?.Invoke();
             show();
-            _hud.StartCoroutine(runCorutine());
+            HUD.Instance.StartCoroutine(runCorutine());
         }
 
         private void show()
@@ -37,10 +35,11 @@ namespace Assets.Scripts.Runtime.Waves
 
         private IEnumerator runCorutine()
         {
+            HUD _hud = HUD.Instance;
             while (_current >= 0)
             {
                 _current -= Time.deltaTime;
-                HUD.Instance.UpdateStartingTimeToWave(_current);
+                _hud.UpdateStartingTimeToWave(_current);
 
                 yield return null;
             }

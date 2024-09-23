@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Runtime.UI;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Waves
@@ -110,27 +111,41 @@ namespace Assets.Scripts.Runtime.Waves
                     Quaternion.identity);
 
                     _amountOfEnemiesAtStage++;
-                    spawnedEnemy.OnDeathEvent += decreaseAmountOfEnemiesAtStage;
+                    spawnedEnemy.OnDeathEvent += tryToFinishCurrentWave;
                     spawnedEnemy.UpdateTarget(_waves[_numberOfWave - 1].Spawns[i].GetFinalPoint);
 
                     _currentlySpawned.Add(spawnedEnemy);
                 }
             }
         }
-        private void decreaseAmountOfEnemiesAtStage()
+        private void tryToFinishCurrentWave()
         {
-            _amountOfEnemiesAtStage--;
+            decreaseAmountOfEnemiesAtStage();
 
             if (areAllDead())
             {
                 freePassages();
                 if (isNextStageExists())
                 {
-                    _waves[_numberOfWave - 1].OnEnd?.Invoke();
-                    countNextWave();
-                    runWave();
+                    runNextWave();
+                }
+                else
+                {
+                    HUD.Instance.ShowFinishedWaveOfEnemies();
                 }
             }
+        }
+
+        private void decreaseAmountOfEnemiesAtStage()
+        {
+            _amountOfEnemiesAtStage--;
+        }
+
+        private void runNextWave()
+        {
+            _waves[_numberOfWave - 1].OnEnd?.Invoke();
+            countNextWave();
+            runWave();
         }
 
         private bool areAllDead()

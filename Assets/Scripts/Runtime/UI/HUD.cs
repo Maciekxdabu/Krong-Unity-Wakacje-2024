@@ -16,6 +16,7 @@ namespace Assets.Scripts.Runtime.UI
         }
 
         [SerializeField] private GameObject _parentStartingTimeToWave;
+        [SerializeField] private GameObject _finishedWave;
         [SerializeField] private TMP_Text controlledMinionText;
         [SerializeField] private TMP_Text maxMinionText;
         [SerializeField] private TMP_Text currentMinionText;
@@ -27,7 +28,8 @@ namespace Assets.Scripts.Runtime.UI
         const string CUSTOM_TEXT_GOLD = "BonusGold";
         const string CUSTOM_TEXT_SOUL_ENERGY = "BonusSoulEnergy";
         const string CUSTOM_TEXT_GENERIC_MESSAGE = "GenericTextMessage";
-        const string CUSTOM_TEXT_ENEMY_WAVE = "EnemyWave";
+        const string CUSTOM_TEXT_ENEMY_STARTING_WAVE = "EnemyStartingWave";
+        const string CUSTOM_TEXT_ENEMY_FINISHED_WAVE = "EnemyFinishedWave";
 
         private Hero ownerHero;
 
@@ -81,7 +83,7 @@ namespace Assets.Scripts.Runtime.UI
 
         internal void UpdateStartingTimeToWave(float time)
         {
-            refreshCustomHUD(CUSTOM_TEXT_ENEMY_WAVE, time.ToString("f2"));
+            refreshCustomHUD(CUSTOM_TEXT_ENEMY_STARTING_WAVE, time.ToString("f2"));
         }
 
         //usage:
@@ -107,6 +109,13 @@ namespace Assets.Scripts.Runtime.UI
             refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, "");
         }
 
+        private IEnumerator showFinishedWaveOfEnemies()
+        {
+            _finishedWave.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            TurnOffFinishedWaveOfEnemies();
+        }
+
         internal void ShowStartingTimeToWave()
         {
             _parentStartingTimeToWave.SetActive(true);
@@ -115,6 +124,16 @@ namespace Assets.Scripts.Runtime.UI
         internal void TurnOffStartingTimeToWave()
         {
             _parentStartingTimeToWave.SetActive(false);
+        }
+
+        internal void ShowFinishedWaveOfEnemies()
+        {
+            StartCoroutine(showFinishedWaveOfEnemies());
+        }
+
+        private void TurnOffFinishedWaveOfEnemies()
+        {
+            _finishedWave.SetActive(false);
         }
     }
 }

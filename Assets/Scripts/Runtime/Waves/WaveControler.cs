@@ -6,21 +6,22 @@ namespace Assets.Scripts.Runtime.Waves
     {
         [SerializeField] private WaveEvent[] _events;
 
-        private int _currentEvent;
-
         private void Awake()
         {
             foreach (var item in _events)
             {
                 item.Awake();
             }
-
-            _currentEvent = 0;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            foreach (var item in _events)//dev note: which event?
+            findEvent(other);
+        }
+
+        private void findEvent(Collider other)
+        {
+            foreach (WaveEvent item in _events)
             {
                 if (item.Intersects(other))
                 {
@@ -29,7 +30,5 @@ namespace Assets.Scripts.Runtime.Waves
                 }
             }
         }
-
-        //dev note run event
     }
 }
