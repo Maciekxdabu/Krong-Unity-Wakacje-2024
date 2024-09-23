@@ -29,7 +29,6 @@ namespace Assets.Scripts.Runtime.UI
         const string CUSTOM_TEXT_SOUL_ENERGY = "BonusSoulEnergy";
         const string CUSTOM_TEXT_GENERIC_MESSAGE = "GenericTextMessage";
         const string CUSTOM_TEXT_ENEMY_STARTING_WAVE = "EnemyStartingWave";
-        const string CUSTOM_TEXT_ENEMY_FINISHED_WAVE = "EnemyFinishedWave";
 
         private Hero ownerHero;
 
