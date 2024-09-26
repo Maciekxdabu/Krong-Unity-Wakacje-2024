@@ -50,6 +50,11 @@ namespace Assets.Scripts.Runtime.Character
             return result;
         }
 
+        public bool TryUseKey()
+        {
+            return _itemPickCounter.Find(i => i.ItemType == BonusItemType.BonusKey)?.TryPaying(1) ?? false;
+        }
+
         public Transform GetFrontTransform()
         {
             return _frontTransform;

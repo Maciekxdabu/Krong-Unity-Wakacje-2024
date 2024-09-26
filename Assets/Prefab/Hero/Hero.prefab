@@ -5188,6 +5188,7 @@ MonoBehaviour:
   _itemPickCounter:
   - _id: 1
   - _id: 2
+  - _id: 3
 --- !u!54 &4349362971466610041
 Rigidbody:
   m_ObjectHideFlags: 0
