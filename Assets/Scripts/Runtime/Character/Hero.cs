@@ -50,9 +50,9 @@ namespace Assets.Scripts.Runtime.Character
             return result;
         }
 
-        public bool TryUseKey()
+        public bool TryUseKey(int amount)
         {
-            return _itemPickCounter.Find(i => i.ItemType == BonusItemType.BonusKey)?.TryPaying(1) ?? false;
+            return _itemPickCounter.Find(i => i.ItemType == BonusItemType.BonusKey)?.TryPaying(amount) ?? false;
         }
 
         public Transform GetFrontTransform()
