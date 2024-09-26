@@ -10,16 +10,20 @@ public class Settings : MonoBehaviour
 {
     private Resolution[] _resolutions;
     [SerializeField] private TMP_Dropdown _resolutionDropdown;
+    [SerializeField] private TMP_Dropdown _fullscreenModeDropdown;
 
     private void Start()
     {
         _resolutions = Screen.resolutions;
+        Array.Reverse(_resolutions);
 
         FillResolutionDropdown(_resolutionDropdown, _resolutions);
     }
 
-    public void SetFullscreenMode(int modeIndex)
+    public void SetFullscreenMode()
     {
+        int modeIndex = _fullscreenModeDropdown.value;
+
         switch (modeIndex)
         {
             case 0:
@@ -34,8 +38,9 @@ public class Settings : MonoBehaviour
         }
     }
 
-    public void SetResolution(int resolutionIndex)
+    public void SetResolution()
     {
+        int resolutionIndex = _resolutionDropdown.value;
         Resolution resolution = _resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode);
     }
@@ -44,7 +49,6 @@ public class Settings : MonoBehaviour
     {
         List<string> options = new List<string>();
         int currentResolutionIndex = 0;
-        Array.Reverse(resolutions);
 
         foreach (Resolution resolution in resolutions)
         {
