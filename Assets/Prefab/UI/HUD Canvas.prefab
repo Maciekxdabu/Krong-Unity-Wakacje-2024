@@ -1226,8 +1226,8 @@ MonoBehaviour:
     textField: {fileID: 0}
   - ID: GenericTextMessage
     textField: {fileID: 585588396280040408}
-  - ID: BonusKey
-    textField: {fileID: 7319747616775157939}
+  - ID: EnemyStartingWave
+    textField: {fileID: 587825125035700837}
 --- !u!1 &2304091401392012333
 GameObject:
   m_ObjectHideFlags: 0
