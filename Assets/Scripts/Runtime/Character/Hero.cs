@@ -347,7 +347,7 @@ namespace Assets.Scripts.Runtime.Character
         }
 
 
-        public void OnEscape(InputValue _)
+        public void OnGoBackToMenu(InputValue _)
         {
             SceneManager.LoadScene("MainMenu");
         }

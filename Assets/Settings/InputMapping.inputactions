@@ -96,7 +96,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Escape",
+                    "name": "GoBackToMenu",
                     "type": "Button",
                     "id": "765558f0-2893-44b0-8ac6-f21473ca5eed",
                     "expectedControlType": "Button",
@@ -395,11 +395,11 @@
                 {
                     "name": "",
                     "id": "edc2f61d-0d48-41ff-85df-bfaaaf355785",
-                    "path": "<Keyboard>/escape",
+                    "path": "<Keyboard>/f1",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "Escape",
+                    "action": "GoBackToMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
