@@ -1,20 +1,17 @@
-﻿
-using Assets.Scripts.Runtime.Enums;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Waves
 {
     [System.Serializable]
-    public class Wawe
+    public class Wave
     {
-        [SerializeField] private ScriptableObjects.StageData _stage;
-        [SerializeField] private Transform _spawnPoint;
-        [SerializeField] private Transform _finalPoint;
+        [SerializeField] private Spawn[] _spawns;
+        [SerializeField] private float _startingTime;
 
-        public Enemy[] GetContent { get { return _stage.GetContent; } }
-        public EventTypeCaller GetEventTypeCaller { get { return _stage.GetEventTypeCaller; } }
-        public float GetStartingTime { get { return _stage.GetStartingTime; } }
-        public Vector3 GetSpawnPoint { get { return _spawnPoint.localPosition; } }
-        public Vector3 GetFinalPoint { get { return _finalPoint.localPosition; } }
+        internal System.Action OnStart;
+        internal System.Action OnEnd;
+
+        public Spawn[] Spawns { get { return _spawns; } }
+        public float GetStartingTime { get { return _startingTime; } }
     }
 }

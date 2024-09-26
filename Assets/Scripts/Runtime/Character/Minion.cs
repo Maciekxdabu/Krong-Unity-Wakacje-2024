@@ -2,7 +2,6 @@ using Assets.Scripts.Runtime.Order.MinionStates;
 using Assets.Scripts.Runtime.ScriptableObjects;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
@@ -171,13 +170,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(destination, 0.3f);
-
-#if UNITY_EDITOR
-            // crashes build, and Handles is technically incorrect here,
-            // but there is no draw text in Gzimos.
-            // and this somehow works for debug purposes
-            Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
-#endif
+            //Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
         }
 
         private void InteractableEncountered(Interactable interactable)
