@@ -52,7 +52,8 @@ public class Settings : MonoBehaviour
 
         foreach (Resolution resolution in resolutions)
         {
-            string option = resolution.width + " x " + resolution.height + " (" + Math.Round(resolution.refreshRateRatio.value) + "Hz)";
+            double refreshRate = Math.Round(resolution.refreshRateRatio.value * 100) / 100;
+            string option = resolution.width + " x " + resolution.height + " (" + refreshRate + " Hz)";
             options.Add(option);
 
             if (resolution.width == Screen.currentResolution.width && resolution.height == Screen.currentResolution.height && resolution.refreshRateRatio.value == Screen.currentResolution.refreshRateRatio.value)
