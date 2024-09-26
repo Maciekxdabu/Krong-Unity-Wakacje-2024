@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,10 +48,10 @@ public class Settings : MonoBehaviour
 
         foreach (Resolution resolution in resolutions)
         {
-            string option = resolution.width + " x " + resolution.height;
+            string option = resolution.width + " x " + resolution.height + " (" + Math.Round(resolution.refreshRateRatio.value) + "Hz)";
             options.Add(option);
 
-            if (resolution.width == Screen.currentResolution.width && resolution.height == Screen.currentResolution.height)
+            if (resolution.width == Screen.currentResolution.width && resolution.height == Screen.currentResolution.height && resolution.refreshRateRatio.value == Screen.currentResolution.refreshRateRatio.value)
             {
                 currentResolutionIndex = options.Count - 1;
             }
