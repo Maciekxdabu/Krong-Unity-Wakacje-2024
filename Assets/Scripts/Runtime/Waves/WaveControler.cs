@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Waves
 {
@@ -12,6 +13,11 @@ namespace Assets.Scripts.Runtime.Waves
             {
                 item.Awake();
             }
+        }
+
+        private void Start()
+        {
+            _events.First()?.FirstEventStart();
         }
 
         private void OnTriggerEnter(Collider other)

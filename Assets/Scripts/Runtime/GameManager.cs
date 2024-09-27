@@ -3,6 +3,7 @@ using Assets.Scripts.Runtime.Character;
 using Assets.Scripts.Runtime.Waves;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Runtime
 {
@@ -13,6 +14,7 @@ namespace Assets.Scripts.Runtime
     {
         private WaveControler _waveController;
 
+        public string NextLevelName;
         public Hero Hero;
         public List<Enemy> Enemies = new List<Enemy>();
 
@@ -38,6 +40,11 @@ namespace Assets.Scripts.Runtime
             {
                 _instance = this;
             }
+        }
+
+        public void FinshLevel()
+        {
+            SceneManager.LoadScene(NextLevelName);
         }
 
         public void Start()

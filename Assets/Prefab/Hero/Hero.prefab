@@ -5053,7 +5053,7 @@ MonoBehaviour:
   GroundedRadius: 0.28
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 8192
   CinemachineCameraTarget: {fileID: 8338988566280778634}
   TopClamp: 70
   BottomClamp: -30
@@ -5228,7 +5228,7 @@ GameObject:
   - component: {fileID: 8508709567512367541}
   - component: {fileID: 5805746308484203459}
   - component: {fileID: 5967698065243867630}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5310,7 +5310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1594510603107744530}
   - component: {fileID: 925779104089084549}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: SwordPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

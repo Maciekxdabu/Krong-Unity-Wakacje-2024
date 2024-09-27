@@ -16,6 +16,8 @@ namespace Assets.Scripts.Runtime.Waves
         private int _amountOfEnemiesAtStage;
         private int _numberOfWave;
 
+        private Wave CurrentWave => _waves[_numberOfWave - 1];
+
         internal void Awake()
         {
             initializeAmountOfEnemiesAtStage();
@@ -24,14 +26,24 @@ namespace Assets.Scripts.Runtime.Waves
 
         internal bool Intersects(Collider trigger)
         {
+            if (trigger == null) return false;
             return _trigger.bounds.Intersects(trigger.bounds);
+        }
+
+
+        internal void FirstEventStart()
+        {
+            if (_trigger == null) Start();
         }
 
         internal void Start()
         {
             initializeCounter();
             runWave();
-            _trigger.gameObject.SetActive(false);
+            if (_trigger != null)
+            {
+                _trigger.gameObject.SetActive(false);
+            }
         }
 
         private void initializeTimer()
@@ -53,7 +65,7 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void initializeCurrentTimer()
         {
-            _timer.InitializeCurrent(_waves[_numberOfWave - 1]);
+            _timer.InitializeCurrent(CurrentWave);
         }
 
         private void blockPassages()
@@ -85,7 +97,7 @@ namespace Assets.Scripts.Runtime.Waves
             _timer.Run();
         }
 
-        private void countNextWave()
+        private void moveToNextWave()
         {
             _numberOfWave++;
         }
@@ -97,22 +109,22 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void spawnContent()
         {
-            _waves[_numberOfWave - 1].OnStart?.Invoke();
+            CurrentWave.OnWaveStart?.Invoke();
 
             Enemy spawnedEnemy;
             _currentlySpawned = new List<Enemy>();
-            for (int i = 0; i < _waves[_numberOfWave - 1].Spawns.Length; i++)
+            for (int i = 0; i < CurrentWave.Spawns.Length; i++)
             {
-                for (int j = 0; j < _waves[_numberOfWave - 1].Spawns[i].EnemyAmount; j++)
+                for (int j = 0; j < CurrentWave.Spawns[i].EnemyAmount; j++)
                 {
                     spawnedEnemy = Object.Instantiate(
-                    _waves[_numberOfWave - 1].Spawns[i].GetContent,
-                    Character.NavMeshUtility.SampledPosition(_waves[_numberOfWave - 1].Spawns[i].GetSpawnPoint),
-                    Quaternion.identity);
+                        CurrentWave.Spawns[i].GetContent,
+                        Character.NavMeshUtility.SampledPosition(CurrentWave.Spawns[i].GetSpawnPoint),
+                        Quaternion.identity);
 
                     _amountOfEnemiesAtStage++;
                     spawnedEnemy.OnDeathEvent += tryToFinishCurrentWave;
-                    spawnedEnemy.UpdateTarget(_waves[_numberOfWave - 1].Spawns[i].GetFinalPoint);
+                    spawnedEnemy.UpdateTarget(CurrentWave.Spawns[i].GetFinalPoint);
 
                     _currentlySpawned.Add(spawnedEnemy);
                 }
@@ -125,6 +137,7 @@ namespace Assets.Scripts.Runtime.Waves
             if (areAllDead())
             {
                 freePassages();
+                CurrentWave.OnWaveEnd?.Invoke();
                 if (isNextStageExists())
                 {
                     runNextWave();
@@ -143,8 +156,7 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void runNextWave()
         {
-            _waves[_numberOfWave - 1].OnEnd?.Invoke();
-            countNextWave();
+            moveToNextWave();
             runWave();
         }
 
