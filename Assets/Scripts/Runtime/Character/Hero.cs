@@ -1,4 +1,4 @@
-using Assets.Scripts.Runtime.Order;
+using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.ScriptableObjects;
 using Assets.Scripts.Runtime.UI;
 using StarterAssets;
@@ -17,7 +17,7 @@ namespace Assets.Scripts.Runtime.Character
     {
         private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
         private const int MAX_MINIONS = 10;
-
+        private const float MAX_ORDER_TRACE_DISTANCE = 4.0f + 8.0f;
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
         [SerializeField] private StarterAssetsInputs starterAssetsInputs;
@@ -26,6 +26,9 @@ namespace Assets.Scripts.Runtime.Character
         [SerializeField] private MinionType controlledType = MinionType.Any;
         [SerializeField] private List<Minion> _minions;
         [SerializeField] private Vector3 _respawnPosition;
+
+        [SerializeField] private LayerMask _sendOrderRaycastMask;
+        [SerializeField] private GameObject _sendOrderMarker;
 
 
         [SerializeField] private List<ItemPickCounter> _itemPickCounter;
@@ -111,6 +114,11 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
+        private void OnDrawGizmos()
+        {
+            drawOrderTargetGizmo();
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out Enemy enemy))
@@ -128,6 +136,17 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
+        private void drawOrderTargetGizmo()
+        {
+            Gizmos.color = Color.yellow;
+            var orderTarget = OrderPointer.Calculate(Camera.current.transform, MAX_ORDER_TRACE_DISTANCE, _sendOrderRaycastMask);
+            if (orderTarget.Debug_HitWall){
+                Gizmos.DrawWireSphere(orderTarget.Debug_HitWallPosition, 0.5f);
+            }
+            Gizmos.DrawLine(orderTarget.Debug_Start, orderTarget.Debug_End);
+            Gizmos.DrawWireSphere(orderTarget.NavmeshDestination, 0.5f);
+        }
+
         public void OnSendOrder()
         {
             if (!hasFreeMinion()) { return; }
@@ -135,7 +154,11 @@ namespace Assets.Scripts.Runtime.Character
             var minion = getRandomFreeMinion();
             if (minion == null) { return; }
 
-            minion.SendForward();
+            var destination = OrderPointer.Calculate(Camera.main.transform, MAX_ORDER_TRACE_DISTANCE, _sendOrderRaycastMask);
+            if (!destination.Correct) { return; }
+
+            Instantiate(_sendOrderMarker, destination.NavmeshDestination, Quaternion.identity, null);
+            minion.SendForward(destination.NavmeshDestination);
             markAsWorking(minion);
 
         }
@@ -358,21 +381,47 @@ namespace Assets.Scripts.Runtime.Character
         }
     }
 
-    public struct NavMeshUtility
+    public struct OrderPointer
     {
-        private const int MAX_NAVMESH_DISTANCE = 50;
-        private static NavMeshHit navMeshHit;
+        public Vector3 NavmeshDestination;
+        public bool Correct;
 
-        internal static Vector3 SampledPosition(Vector3 point)
-        {
-            NavMesh.SamplePosition(
-                point,
-                out navMeshHit,
-                MAX_NAVMESH_DISTANCE,
-                NavMesh.AllAreas
-                );
+        public Vector3 Debug_Start;
+        public Vector3 Debug_End;
+        public Vector3 Debug_HitWallPosition;
+        public bool Debug_HitWall;
+        public bool Debug_FoundNavmesh;
 
-            return navMeshHit.position;
+        public static OrderPointer Calculate(Transform camera, float maxDistance, LayerMask wallMask) { 
+            var result = new OrderPointer();
+            result.calculate(camera, maxDistance, wallMask);
+            return result;
         }
+        
+        private void calculate(Transform camera, float maxDistance, LayerMask wallMask)
+        {
+            Debug_Start = camera.position;
+            var forward = camera.forward;
+            Debug_End = Debug_Start + forward * maxDistance;
+
+            var result = Debug_End;
+
+            var ray = new Ray(Debug_Start, forward);
+            Debug_HitWall = Physics.Raycast(
+                ray,
+                out var wallHit,
+                maxDistance,
+                wallMask,
+                QueryTriggerInteraction.Ignore
+            );
+            if (Debug_HitWall)
+            {
+                Debug_HitWallPosition = wallHit.point;
+                result = Debug_HitWallPosition;
+            }
+
+            Correct = NavmeshExtensions.TrySnapToNavmesh(result, out NavmeshDestination);
+        }
+    
     }
 }

@@ -5186,6 +5186,11 @@ MonoBehaviour:
   controlledType: 0
   _minions: []
   _respawnPosition: {x: 0, y: 0, z: 0}
+  _sendOrderRaycastMask:
+    serializedVersion: 2
+    m_Bits: 8705
+  _sendOrderMarker: {fileID: 3144257213877390670, guid: a5402ceb2cd31cb43a554390068521d4,
+    type: 3}
   _itemPickCounter:
   - _id: 1
   - _id: 2

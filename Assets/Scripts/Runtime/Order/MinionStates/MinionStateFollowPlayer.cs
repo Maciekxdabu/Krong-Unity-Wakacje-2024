@@ -32,7 +32,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             return "PlayerFollow";
         }
 
-        public void StateEnter()
+        public void StateEnter(object enterParams)
         {
             _stateActive = true;
             _minion.destination = _lastHeroLocation;

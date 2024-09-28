@@ -30,7 +30,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             return "Fighting";
         }
 
-        public void StateEnter()
+        public void StateEnter(object enterParams)
         {
             _stateActive = true;
             if (_currentEnemy != null)

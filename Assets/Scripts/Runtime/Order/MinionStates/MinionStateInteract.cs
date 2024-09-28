@@ -41,7 +41,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             return true;
         }
 
-        public void StateEnter()
+        public void StateEnter(object enterParams)
         {
             _stateActive = true;
             _minion.destination = _interactable.AssignPosition(_minion);

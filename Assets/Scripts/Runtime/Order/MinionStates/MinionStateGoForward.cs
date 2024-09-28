@@ -28,9 +28,15 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             return "GoForward";
         }
 
-        public void StateEnter()
+        public void StateEnter(object enterParams)
         {
-            _requestedDestination = _minion.CalculateGoOrderDestination();
+            if (! (enterParams is Vector3))
+            {
+                Debug.LogError($"State {nameof(MinionStateGoForward)} - invalid StateEnter enterParams");
+                _stateActive = true;
+                return;
+            }
+            _requestedDestination = (Vector3) enterParams;
 
             _stateActive = true;
             _minion.destination = _requestedDestination;

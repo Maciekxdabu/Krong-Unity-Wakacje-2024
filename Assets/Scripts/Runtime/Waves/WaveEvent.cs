@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Runtime.UI;
+﻿using Assets.Scripts.Extensions;
+using Assets.Scripts.Runtime.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -117,9 +118,11 @@ namespace Assets.Scripts.Runtime.Waves
             {
                 for (int j = 0; j < CurrentWave.Spawns[i].EnemyAmount; j++)
                 {
+                    var correct = NavmeshExtensions.TrySnapToNavmesh(CurrentWave.Spawns[i].GetSpawnPoint, out var navmeshDestination);
+
                     spawnedEnemy = Object.Instantiate(
                         CurrentWave.Spawns[i].GetContent,
-                        Character.NavMeshUtility.SampledPosition(CurrentWave.Spawns[i].GetSpawnPoint),
+                        navmeshDestination,
                         Quaternion.identity);
 
                     _amountOfEnemiesAtStage++;

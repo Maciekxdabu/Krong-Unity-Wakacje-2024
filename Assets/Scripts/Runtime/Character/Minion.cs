@@ -70,7 +70,7 @@ namespace Assets.Scripts.Runtime.Character
 
             _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
             _currentState = _allStates[_currentStateEnum];
-            _currentState.StateEnter();
+            _currentState.StateEnter(null);
         }
 
         public void Update()
@@ -100,7 +100,7 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
-        private void GoToState(StateSlot newState)
+        private void GoToState(StateSlot newState, object enterParams = null)
         {
             Debug.Log($"{name} change state {_currentStateEnum} -> {newState}", this);
             Assert.AreNotEqual(_currentStateEnum, newState);
@@ -111,7 +111,7 @@ namespace Assets.Scripts.Runtime.Character
             _currentState = _allStates[_currentStateEnum];
             _localAnimator.ResetTrigger("Attack");
 
-            _currentState.StateEnter();
+            _currentState.StateEnter(enterParams);
 
             if (newState == StateSlot.STATE_FOLLOW_HERO && _isFollowingAnOrder)
             {
@@ -121,12 +121,12 @@ namespace Assets.Scripts.Runtime.Character
         }
 
 
-        public void SendForward()
+        public void SendForward(Vector3 destinationOnNavmesh)
         {
             Assert.AreEqual(_currentStateEnum, StateSlot.STATE_FOLLOW_HERO, "SendForward outside STATE_FOLLOW_HERO");
             _lastInterruptTimestamp = 0; // can immediately fight
             _isFollowingAnOrder = true;
-            GoToState(StateSlot.STATE_MOVE_TO_POINT);
+            GoToState(StateSlot.STATE_MOVE_TO_POINT, destinationOnNavmesh);
         }
 
         public void DestinationReached()
@@ -232,29 +232,6 @@ namespace Assets.Scripts.Runtime.Character
                     GoToState(StateSlot.STATE_FIGHT);
                 }
             }
-        }
-
-        public Vector3 CalculateGoOrderDestination()
-        {
-            var MAX_DISTANCE = _config.MoveOrderMaxDistance;
-            var heroFront = GameManager.Instance.Hero?.GetFrontTransform() ?? transform;
-
-            var ray = new Ray(heroFront.position, heroFront.forward);
-            var layerMask = Physics.DefaultRaycastLayers;
-            bool wallDetected = Physics.Raycast(
-                    ray,
-                    out var wallHit,
-                    MAX_DISTANCE,
-                    layerMask,
-                    QueryTriggerInteraction.Ignore
-                );
-
-            if (wallDetected)
-            {
-                return NavMeshUtility.SampledPosition(wallHit.point);
-            }
-
-            return heroFront.position + (heroFront.forward * MAX_DISTANCE);
         }
     }
 }
