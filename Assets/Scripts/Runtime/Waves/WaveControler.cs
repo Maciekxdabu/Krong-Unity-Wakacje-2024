@@ -27,10 +27,12 @@ namespace Assets.Scripts.Runtime.Waves
 
         private void findEvent(Collider other)
         {
+            //Debug.Log($"{gameObject} vs {other.gameObject}");
             foreach (WaveEvent item in _events)
             {
                 if (item.Intersects(other))
                 {
+                    Debug.Log($"{gameObject} vs {other.gameObject} - WAVE START");
                     item.Start();
                     break;
                 }

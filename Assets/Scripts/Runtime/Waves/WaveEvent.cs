@@ -25,10 +25,11 @@ namespace Assets.Scripts.Runtime.Waves
             initializeTimer();
         }
 
-        internal bool Intersects(Collider trigger)
+        internal bool Intersects(Collider collider)
         {
-            if (trigger == null) return false;
-            return _trigger.bounds.Intersects(trigger.bounds);
+            if (collider == null) { return false; }
+            if (Physics.GetIgnoreCollision(_trigger, collider)) { return false; }
+            return _trigger.bounds.Intersects(collider.bounds);
         }
 
 
