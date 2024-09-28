@@ -1,29 +1,49 @@
 using Assets.Scripts.Runtime.Character;
+using Assets.Scripts.Runtime.ScriptableObjects;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts.Runtime.UI
 {
+
     public class HUD : MonoBehaviour
     {
-        [System.Serializable]
-        private class CustomText
-        {
-            public string ID;
-            public TMP_Text textField;
-        }
-
+        [SerializeField] private GameObject _deadSplash;
         [SerializeField] private GameObject _parentStartingTimeToWave;
         [SerializeField] private GameObject _finishedWave;
+
         [SerializeField] private TMP_Text controlledMinionText;
         [SerializeField] private TMP_Text maxMinionText;
         [SerializeField] private TMP_Text currentMinionText;
         [SerializeField] private TMP_Text heroHpText;
         [SerializeField] private TMP_Text heroHpMaxText;
+        [SerializeField] private RectTransform heroHpFill;
+        private float heroHpFillMaxWidth;
+
+
+        [Serializable]
+        private class CustomText
+        {
+            public string ID;
+            public TMP_Text textField;
+        }
         [Space]
         [SerializeField] private List<CustomText> customTexts = new List<CustomText>();
+        
+        [Serializable]
+        public class MinionHud
+        {
+            public MinionType MinionType;
+            public TMP_Text count_TMP;
+            public GameObject highlight;
+        }
+        [Space]
+        [SerializeField] private List<MinionHud> minions = new List<MinionHud>();
+
 
         const string CUSTOM_TEXT_GOLD = "BonusGold";
         const string CUSTOM_TEXT_SOUL_ENERGY = "BonusSoulEnergy";
@@ -42,6 +62,7 @@ namespace Assets.Scripts.Runtime.UI
         {
             _instance = this;
             refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, $"");
+            heroHpFillMaxWidth = heroHpFill.rect.width;
         }
 
         // ---------- public methods
@@ -62,11 +83,18 @@ namespace Assets.Scripts.Runtime.UI
                 ownerHero = hero;
 
             currentMinionText.text = hero.MinionCount.ToString();
-            maxMinionText.text = "10";
-            controlledMinionText.text = hero.ControlledType.ToString();
+            maxMinionText.text = Hero.MAX_MINIONS.ToString();
+
+            foreach (var minion in minions)
+            {
+                minion.highlight.SetActive(hero.IsMinionTypeActive(minion.MinionType));
+                minion.count_TMP.text = hero.GetMinionsCount(minion.MinionType).ToString();
+            }
 
             heroHpText.text = hero.HealthPoints.ToString("F0");
             heroHpMaxText.text = hero.MaxHealthPoints.ToString();
+            heroHpFill.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, heroHpFillMaxWidth * hero.HealthPoints / hero.MaxHealthPoints);
+            _deadSplash.SetActive(hero.HealthPoints == 0);
         }
 
 

@@ -16,7 +16,7 @@ namespace Assets.Scripts.Runtime.Character
     public class Hero : Creature
     {
         private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
-        private const int MAX_MINIONS = 10;
+        public const int MAX_MINIONS = 10;
         private const float MAX_ORDER_TRACE_DISTANCE = 4.0f + 8.0f;
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
@@ -378,6 +378,17 @@ namespace Assets.Scripts.Runtime.Character
         public void OnGoBackToMenu(InputValue _)
         {
             SceneManager.LoadScene("MainMenu");
+        }
+
+        public bool IsMinionTypeActive(MinionType minionType)
+        {
+            if (controlledType == MinionType.Any) return true;
+            return controlledType == minionType;
+        }
+        
+        public int GetMinionsCount(MinionType minionType)
+        {
+            return _minions.Count(m => m.Type == minionType);
         }
     }
 
