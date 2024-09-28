@@ -16,9 +16,10 @@ namespace Assets.Scripts.Runtime.UI
         [SerializeField] private GameObject _parentStartingTimeToWave;
         [SerializeField] private GameObject _finishedWave;
 
-        [SerializeField] private TMP_Text controlledMinionText;
         [SerializeField] private TMP_Text maxMinionText;
         [SerializeField] private TMP_Text currentMinionText;
+        [SerializeField] private TMP_Text availableMinionCountText;
+
         [SerializeField] private TMP_Text heroHpText;
         [SerializeField] private TMP_Text heroHpMaxText;
         [SerializeField] private RectTransform heroHpFill;
@@ -84,6 +85,7 @@ namespace Assets.Scripts.Runtime.UI
 
             currentMinionText.text = hero.MinionCount.ToString();
             maxMinionText.text = Hero.MAX_MINIONS.ToString();
+            RefreshAvailableMinions(hero);
 
             foreach (var minion in minions)
             {
@@ -97,6 +99,11 @@ namespace Assets.Scripts.Runtime.UI
             _deadSplash.SetActive(hero.HealthPoints == 0);
         }
 
+        public void RefreshAvailableMinions(Hero hero)
+        {
+            var available = hero.GetAvailableMinionsCount();
+            availableMinionCountText.text = available > 0 ? available.ToString() : "";
+        }
 
         internal void RefreshCustomHUD(ItemPickCounter itemPickCounter)
         {

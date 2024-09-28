@@ -160,7 +160,6 @@ namespace Assets.Scripts.Runtime.Character
             Instantiate(_sendOrderMarker, destination.NavmeshDestination, Quaternion.identity, null);
             minion.SendForward(destination.NavmeshDestination);
             markAsWorking(minion);
-
         }
 
         public void OnToMeAllOrder()
@@ -246,7 +245,7 @@ namespace Assets.Scripts.Runtime.Character
             }
             _minionsThatAreNotExecutingAnOrder.Add(m);
             m.destination = transform.position;
-            m.destination = transform.position;
+            HUD.Instance.RefreshAvailableMinions(this);
         }
 
         public bool canGetAnotherMinion()
@@ -262,6 +261,7 @@ namespace Assets.Scripts.Runtime.Character
 
             _minionsThatAreNotExecutingAnOrder.Remove(minion);
             _minionsThatAreExecutingAnOrder.Add(minion);
+            HUD.Instance.RefreshAvailableMinions(this);
         }
 
         private bool hasFreeMinion()
@@ -287,6 +287,7 @@ namespace Assets.Scripts.Runtime.Character
 
             _minionsThatAreNotExecutingAnOrder.Add(minion);
             _minionsThatAreExecutingAnOrder.Remove(minion);
+            HUD.Instance.RefreshAvailableMinions(this);
         }
 
         internal void MinionStartedFighting(Minion minion)
@@ -297,9 +298,9 @@ namespace Assets.Scripts.Runtime.Character
         internal void MinionDied(Minion minion)
         {
             _minions.Remove(minion);
-            HUD.Instance.RefreshHUD(this);
             _minionsThatAreExecutingAnOrder.Remove(minion);
             _minionsThatAreNotExecutingAnOrder.Remove(minion);
+            HUD.Instance.RefreshHUD(this);
         }
 
         #endregion Minions
@@ -389,6 +390,11 @@ namespace Assets.Scripts.Runtime.Character
         public int GetMinionsCount(MinionType minionType)
         {
             return _minions.Count(m => m.Type == minionType);
+        }
+
+        public int GetAvailableMinionsCount()
+        {
+            return _minionsThatAreNotExecutingAnOrder.Count(x => x.Type == controlledType || controlledType == MinionType.Any);
         }
     }
 
