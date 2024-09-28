@@ -198,6 +198,34 @@ namespace Assets.Scripts.Runtime.Character
             HUD.Instance.RefreshHUD(this);
         }
 
+        private void OnClearChosenMinion(InputValue val)
+        {
+            controlledType = MinionType.Any;
+            HUD.Instance.RefreshHUD(this);
+
+        }
+
+        private void OnMoveChosenMinionSelectionUp(InputValue val)
+        {
+            if (val.Get<float>() <= 0.1) return;
+            var controlledAsInt = (int)controlledType;
+            controlledAsInt += 1;
+            controlledAsInt %= 4;
+            controlledType = (MinionType) controlledAsInt;
+            HUD.Instance.RefreshHUD(this);
+        }
+
+        private void OnMoveChosenMinionSelectionDown(InputValue val)
+        {
+            if (val.Get<float>() <= 0.1) return;
+            var controlledAsInt = (int)controlledType;
+            controlledAsInt -= 1;
+            controlledAsInt %= 4;
+            controlledType = (MinionType)controlledAsInt;
+            HUD.Instance.RefreshHUD(this);
+        }
+
+
         private MinionSpawner getClosestSpawner()
         {
             // FIXME: inefficient

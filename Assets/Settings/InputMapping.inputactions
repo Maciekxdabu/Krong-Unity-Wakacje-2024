@@ -103,6 +103,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ClearChosenMinion",
+                    "type": "Button",
+                    "id": "ead71f7f-d456-4be9-9366-e7c435297287",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveChosenMinionSelectionUp",
+                    "type": "PassThrough",
+                    "id": "162e2074-b25a-4cce-a019-08381aba837e",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveChosenMinionSelectionDown",
+                    "type": "Button",
+                    "id": "fe022ab6-2da2-44f5-9215-d794e5f4ddbb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -328,17 +355,6 @@
                 },
                 {
                     "name": "",
-                    "id": "4b8b2052-0750-4bed-acc8-6665d17be7c8",
-                    "path": "<Keyboard>/4",
-                    "interactions": "",
-                    "processors": "Scale(factor=4)",
-                    "groups": "",
-                    "action": "ChooseMinion",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "49b32774-015b-45da-be9c-898414a28b7d",
                     "path": "<Keyboard>/r",
                     "interactions": "",
@@ -400,6 +416,39 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "GoBackToMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8af21773-18e8-4ba4-aa02-5a9a18a1ffd7",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "ClearChosenMinion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c89ca21b-6b39-4c1e-95e5-20def1d25cbf",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "MoveChosenMinionSelectionUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0fcade91-62fe-440b-a9a9-9ea4915bee13",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "MoveChosenMinionSelectionDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
