@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -6,6 +7,9 @@ public class AudioManager : MonoBehaviour
 
     [Header("Tracks")]
     [SerializeField] private AudioClip BGM;
+
+    [Header("Common SFX")]
+    [SerializeField] private AudioClip Fail;
 
     [Header("Sources")]
     [SerializeField] private AudioSource musicSource;
@@ -25,5 +29,18 @@ public class AudioManager : MonoBehaviour
     {
         musicSource.clip = BGM;
         musicSource.Play();
+    }
+
+    public void PlayFailSound()
+    {
+        PlayCustomSFX(Fail);
+    }
+
+    internal void PlayCustomSFX(AudioClip customSFX)
+    {
+        if (customSFX == null) { return; }
+        sfxSource.Stop();
+        sfxSource.clip = customSFX;
+        sfxSource.Play();
     }
 }

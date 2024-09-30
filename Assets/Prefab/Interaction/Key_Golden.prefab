@@ -102,6 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 3
   Amount: 1
+  CollectSFX: {fileID: 8300000, guid: 209de4147018b084e9e4c85bf55dc645, type: 3}
 --- !u!95 &5918621771151098657
 Animator:
   serializedVersion: 5

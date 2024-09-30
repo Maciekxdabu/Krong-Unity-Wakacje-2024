@@ -6,6 +6,7 @@ public class BonusItem : MonoBehaviour
 {
     [SerializeField] private BonusItemType _id;
     [SerializeField] public int Amount;
+    public AudioClip CollectSFX;
 
     internal BonusItemType GetId
     {

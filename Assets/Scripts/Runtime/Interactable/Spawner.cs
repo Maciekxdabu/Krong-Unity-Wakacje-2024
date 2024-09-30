@@ -24,6 +24,7 @@ public class MinionSpawner : MonoBehaviour
         var minionCost = _thisSpawnerConfig.Cost;
         if (minionCost > h.GetGoldAmount()) {
             HUD.Instance.ShowNotEnoughCash(minionCost);
+            AudioManager.Instance.PlayFailSound();
             return;
         }
         if (h.canGetAnotherMinion())

@@ -303,5 +303,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BGM: {fileID: 8300000, guid: dd6d4dd486251e7469e1f50e8a1846d1, type: 3}
+  Fail: {fileID: 8300000, guid: d5993aa391b79594289f531f23db27ca, type: 3}
   musicSource: {fileID: 604694344034983926}
   sfxSource: {fileID: 6022925997770010559}

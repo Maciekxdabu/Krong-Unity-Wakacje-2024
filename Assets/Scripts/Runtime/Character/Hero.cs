@@ -131,7 +131,7 @@ namespace Assets.Scripts.Runtime.Character
                 if (itemCounter != null) {
                     itemCounter.Add(bonusItem.Amount);
                 }
-
+                AudioManager.Instance.PlayCustomSFX(bonusItem.CollectSFX);
                 bonusItem.Delete();
             }
             else if (other.TryGetComponent(out Checkpoint _))
@@ -153,13 +153,24 @@ namespace Assets.Scripts.Runtime.Character
 
         public void OnSendOrder()
         {
-            if (!hasFreeMinion()) { return; }
+            if (!hasFreeMinion()) {
+                AudioManager.Instance.PlayFailSound();
+                return; 
+            }
 
             var minion = getRandomFreeMinion();
-            if (minion == null) { return; }
+            if (minion == null)
+            {
+                AudioManager.Instance.PlayFailSound();
+                return;
+            }
 
             var destination = OrderPointer.Calculate(Camera.main.transform, MAX_ORDER_TRACE_DISTANCE, _sendOrderRaycastMask);
-            if (!destination.Correct) { return; }
+            if (!destination.Correct)
+            {
+                AudioManager.Instance.PlayFailSound();
+                return;
+            }
 
             Instantiate(_sendOrderMarker, destination.NavmeshDestination, Quaternion.identity, null);
             minion.SendForward(destination.NavmeshDestination);
