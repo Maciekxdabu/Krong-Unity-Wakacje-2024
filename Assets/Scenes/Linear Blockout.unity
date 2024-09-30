@@ -10192,7 +10192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d4f13446beb594fbf93e58d13bb692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NextLevelName: MainMenu
+  NextLevelName: YouWin
   Hero: {fileID: 0}
   Enemies: []
 --- !u!1001 &1497259998
