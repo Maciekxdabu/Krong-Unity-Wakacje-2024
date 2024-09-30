@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Runtime.Character;
+﻿using Assets.Scripts.Extensions;
+using Assets.Scripts.Runtime.Character;
 using System;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -33,6 +34,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         public void StateEnter(object enterParams)
         {
             _stateActive = true;
+            _minion.stoppingDistance = STOPPING_DISTANCE;
             if (_currentEnemy != null)
             {
                 _minion.destination = _currentEnemy.transform.position;
@@ -42,20 +44,17 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         public void Update()
         {
             Assert.IsTrue(_stateActive, "inactive state updated");
-            if (_currentEnemy != null)
-            {
-                _minion.destination = _currentEnemy.transform.position;
-                var enemyInRange = _minion.remainingDistance < STOPPING_DISTANCE;
-                _minion.isStopped = enemyInRange;
-                if (enemyInRange) {
-                    _minion.TryAttacking();
-                }
-
-            }
-            else
+            if (_currentEnemy == null)
             {
                 _minion.InterruptCurrentOrder();
+                return;
             }
+            _minion.destination = _currentEnemy.transform.position;
+            var enemyInRange = _minion.remainingDistance < STOPPING_DISTANCE;
+            if (_minion.remainingDistance <= STOPPING_DISTANCE)
+            {
+                _minion.TryAttacking();
+            }            
         }
 
         public void StateEnd()
@@ -70,7 +69,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
 
         public bool ShouldFightEnemyInRange(Enemy e)
         {
-            if (_currentEnemy == null)
+            if (_currentEnemy == null || e.GetDistanceSquared(_minion) < _currentEnemy.GetDistanceSquared(_minion))
             {
                 _currentEnemy = e;
                 return true;

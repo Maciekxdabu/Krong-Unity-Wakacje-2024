@@ -2,6 +2,7 @@ using Assets.Scripts.Runtime.Order.MinionStates;
 using Assets.Scripts.Runtime.ScriptableObjects;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
@@ -40,6 +41,11 @@ namespace Assets.Scripts.Runtime.Character
         {
             get { return _localNavMeshAgent.destination; }
             set { _localNavMeshAgent.destination = value; }
+        }
+        public float stoppingDistance
+        {
+            get { return _localNavMeshAgent.stoppingDistance; }
+            set { _localNavMeshAgent.stoppingDistance = value; }
         }
         public bool isStopped
         {
@@ -170,18 +176,33 @@ namespace Assets.Scripts.Runtime.Character
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(destination, 0.3f);
-            //Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
+#if UNITY_EDITOR
+            // crashes build, and Handles is technically incorrect here,
+            // but there is no draw text in Gzimos.
+            // and this somehow works for debug purposes
+            Handles.Label(transform.position + new Vector3(0, 1, 0), _currentState?.GetDebugStateString() ?? "");
+#endif        
         }
 
         private void InteractableEncountered(Interactable interactable)
         {
-            //Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
-
-            if (_interactState.SetupInteraction(interactable) && interactable.DoesNeedMoreMinions()) {
-                if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT){
-                    GoToState(StateSlot.STATE_INTERACT);
-                }
+            Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
+            if (_currentStateEnum != StateSlot.STATE_MOVE_TO_POINT)
+            {
+                Debug.Log($"BAD STATE");
+                return;
             }
+            if (!interactable.DoesNeedMoreMinions()) {
+                Debug.Log($"FULL");
+                return;
+            } 
+            if (!_interactState.SetupInteraction(interactable))
+            {
+                Debug.Log($"SETUP FAILED");
+                return;
+            }
+            Debug.Log($"STATE ENTER");
+            GoToState(StateSlot.STATE_INTERACT, interactable);
         }
 
         public void InteractionTaskFinished()

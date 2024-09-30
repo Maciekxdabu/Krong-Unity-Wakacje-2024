@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
@@ -15,8 +16,8 @@ public class Interactable : MonoBehaviour
     private List<bool> _positions_taken = new List<bool>();
 
     // Interface visuals
-    [SerializeField] private GameObject _doneCube;
-    [SerializeField] private TextMeshPro textLabel;
+    [SerializeField] private Image _progressCircle;
+    [SerializeField] private TextMeshProUGUI _textLabel;
 
     // Current state
     [SerializeField] private float _current_progress_seconds = 0.0f;
@@ -54,8 +55,8 @@ public class Interactable : MonoBehaviour
     private void updateVisuals()
     {
         var pct = _current_progress_seconds / _task_finish_time_seconds;
-        _doneCube.transform.localScale = new Vector3(pct, 0.3f, 0.3f);
-        textLabel.SetText($"{_minions.Count}/{_task_minions_needed}");
+        _progressCircle.fillAmount = pct;
+        _textLabel.SetText($"{_minions.Count}/{_task_minions_needed}");
     }
 
 

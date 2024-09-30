@@ -36,12 +36,12 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
         {
             _stateActive = true;
             _minion.destination = _lastHeroLocation;
+            _minion.stoppingDistance = STOPPING_DISTANCE;
         }
 
         public void Update()
         {
             Assert.IsTrue(_stateActive, "inactive state updated");
-            _minion.isStopped = _minion.remainingDistance < STOPPING_DISTANCE;
         }
 
         public void StateEnd()

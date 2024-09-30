@@ -37,12 +37,13 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             if (_stateActive && _interactable != null) {
                 return false;
             }
-            _interactable = interactable;
             return true;
         }
 
         public void StateEnter(object enterParams)
         {
+            _interactable = enterParams as Interactable;
+
             _stateActive = true;
             _minion.destination = _interactable.AssignPosition(_minion);
             _interactable.StartInteractionWithMinion(_minion);
