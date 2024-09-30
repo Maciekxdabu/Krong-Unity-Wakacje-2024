@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,12 @@ public class MenuController : MonoBehaviour
 {
     [Tooltip("Canvas Group which is enabled first and added to the stack")]
     [SerializeField] private CanvasGroup startingGroup;
+
     [Tooltip("Only used for setting up the groups on Start")]
     [SerializeField] private CanvasGroup[] registeredGroups;
+
+    [Tooltip("Deactivates objects on platforms like Web where exit doesn't make sense")]
+    [SerializeField] private GameObject[] hideIfCantExit;
 
     private List<CanvasGroup> canvasGroups = new List<CanvasGroup>();
 
@@ -16,6 +21,7 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
+        processHideIfCantExit();
         //prepare the CanvasGroup's
         foreach (CanvasGroup group in registeredGroups)
         {
@@ -31,6 +37,17 @@ public class MenuController : MonoBehaviour
             EnableCanvasGroup(canvasGroups[0]);
         }
         Debug.Assert(canvasGroups.Count > 0, "No starting Canvas group has been set");
+    }
+
+    private void processHideIfCantExit()
+    {
+        if (Application.platform != RuntimePlatform.WebGLPlayer) {
+            return;
+        }
+
+        foreach (var go in hideIfCantExit) {
+            go.SetActive(false);
+        }
     }
 
     // ---------- public messages (called from Events in Inspector)
