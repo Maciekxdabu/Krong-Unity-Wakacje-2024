@@ -223,7 +223,7 @@ namespace Assets.Scripts.Runtime.Character
         {
             if (val.Get<float>() <= 0.1) return;
             var controlledAsInt = (int)controlledType;
-            controlledAsInt -= 1;
+            controlledAsInt += 4-1;
             controlledAsInt %= 4;
             controlledType = (MinionType)controlledAsInt;
             HUD.Instance.RefreshHUD(this);
