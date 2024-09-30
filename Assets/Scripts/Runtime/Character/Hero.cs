@@ -134,6 +134,10 @@ namespace Assets.Scripts.Runtime.Character
 
                 bonusItem.Delete();
             }
+            else if (other.TryGetComponent(out Checkpoint _))
+            {
+                _respawnPosition = gameObject.transform.position;
+            }
         }
 
         private void drawOrderTargetGizmo()
