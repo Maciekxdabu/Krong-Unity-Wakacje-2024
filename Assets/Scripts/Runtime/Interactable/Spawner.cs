@@ -27,12 +27,15 @@ public class MinionSpawner : MonoBehaviour
             AudioManager.Instance.PlayFailSound();
             return;
         }
-        if (h.canGetAnotherMinion())
+        if (!h.canGetAnotherMinion())
         {
-            h.TryPayGoldAmount(minionCost);
-            var m = Instantiate<Minion>(_thisSpawnerConfig.Prefab, getSpawnPosition(), Quaternion.identity);
-            h.addMinion(m);
+            AudioManager.Instance.PlayFailSound();
+            return;
         }
+        h.TryPayGoldAmount(minionCost);
+        var m = Instantiate<Minion>(_thisSpawnerConfig.Prefab, getSpawnPosition(), Quaternion.identity);
+        h.addMinion(m);
+        AudioManager.Instance.PlayMinionSummoned(m);
     }
 
     internal void SetSelected(bool selected)

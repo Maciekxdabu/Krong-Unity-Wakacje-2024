@@ -44,6 +44,7 @@ namespace Assets.Scripts.Runtime
 
         public void FinshLevel()
         {
+            AudioManager.Instance.PlayFinishLevel();
             SceneManager.LoadScene(NextLevelName);
         }
 

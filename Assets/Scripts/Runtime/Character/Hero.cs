@@ -96,6 +96,7 @@ namespace Assets.Scripts.Runtime.Character
             GameManager.Instance.Hero = this; // make sure to init GameManager
             HUD.Instance.RefreshHUD(this);
             onHealthChange.AddListener(() => { HUD.Instance.RefreshHUD(this); });
+            OnDeathEvent += () => { AudioManager.Instance.PlayHeroDied(); };
         }
 
         public void FixedUpdate()
@@ -369,6 +370,7 @@ namespace Assets.Scripts.Runtime.Character
 
         internal void EnableColliderOfWeapon()
         {
+            AudioManager.Instance.PlayHeroAttack(this);
             _weaponCollider.enabled = true;
         }
 

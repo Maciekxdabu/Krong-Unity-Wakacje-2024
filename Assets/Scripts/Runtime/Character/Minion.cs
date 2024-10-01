@@ -96,6 +96,7 @@ namespace Assets.Scripts.Runtime.Character
         public void AttackFrame()
         {
             //Debug.Log("Attack Frame");
+            AudioManager.Instance.PlayMinionAttack(this);
             var hitTargets = Physics.OverlapSphere(transform.position, 1.0f, _attackLayerMask);
             foreach (var hit in hitTargets)
             {
