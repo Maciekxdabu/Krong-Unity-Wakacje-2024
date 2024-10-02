@@ -21,15 +21,10 @@ namespace StarterAssets
         public bool cursorLocked = true;
         public bool cursorInputForLook = true;
 
-        private bool disabledInput;
-
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
         {
-            if (!disabledInput)
-            {
-                MoveInput(value.Get<Vector2>());
-            }
+            MoveInput(value.Get<Vector2>());
         }
 
         public void OnLook(InputValue value)
@@ -42,27 +37,18 @@ namespace StarterAssets
 
         public void OnJump(InputValue value)
         {
-            if (!disabledInput)
-            {
-                JumpInput(value.isPressed);
-            }
+            JumpInput(value.isPressed);
         }
 
         public void OnSprint(InputValue value)
         {
-            if (!disabledInput)
-            {
-                SprintInput(value.isPressed);
-            }
+            SprintInput(value.isPressed);
         }
 #endif
 
         public void MoveInput(Vector2 newMoveDirection)
         {
-            if (!disabledInput)
-            {
-                move = newMoveDirection;
-            }
+            move = newMoveDirection;
         }
 
         public void LookInput(Vector2 newLookDirection)
@@ -72,18 +58,12 @@ namespace StarterAssets
 
         public void JumpInput(bool newJumpState)
         {
-            if (!disabledInput)
-            {
-                jump = newJumpState;
-            }
+            jump = newJumpState;
         }
 
         public void SprintInput(bool newSprintState)
         {
-            if (!disabledInput)
-            {
-                sprint = newSprintState;
-            }
+            sprint = newSprintState;
         }
 
         private void Start()
@@ -110,19 +90,5 @@ namespace StarterAssets
             Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
-        internal void DisableInputs()
-        {
-            disabledInput = true;
-        }
-
-        internal void EnableInputs()
-        {
-            disabledInput = false;
-        }
-
-        internal void StopCharacterMove()
-        {
-            move = Vector2.zero;
-        }
     }
 }

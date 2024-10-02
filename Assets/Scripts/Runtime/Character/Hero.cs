@@ -20,7 +20,6 @@ namespace Assets.Scripts.Runtime.Character
         private const float MAX_ORDER_TRACE_DISTANCE = 4.0f + 8.0f;
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
-        [SerializeField] private StarterAssetsInputs starterAssetsInputs;
         [SerializeField] private Collider _weaponCollider;
 
         [SerializeField] private MinionType controlledType = MinionType.Any;
@@ -201,8 +200,7 @@ namespace Assets.Scripts.Runtime.Character
             if (GetIsAlive())
             {
                 _localAnimator.SetBool("SlashAttack", true);
-                disableThirdPersonController();
-                starterAssetsInputs.StopCharacterMove();
+                _controller.SetInputLocked(true);
             }
         }
 
@@ -363,11 +361,6 @@ namespace Assets.Scripts.Runtime.Character
 
         }
 
-        internal void EnableThirdPersonController()
-        {
-            starterAssetsInputs.EnableInputs();
-        }
-
         internal void EnableColliderOfWeapon()
         {
             AudioManager.Instance.PlayHeroAttack(this);
@@ -379,10 +372,6 @@ namespace Assets.Scripts.Runtime.Character
             _weaponCollider.enabled = false;
         }
 
-        private void disableThirdPersonController()
-        {
-            starterAssetsInputs.DisableInputs();
-        }
 
         internal List<Minion> GetMinions()
         {
@@ -440,6 +429,11 @@ namespace Assets.Scripts.Runtime.Character
         public int GetAvailableMinionsCount()
         {
             return _minionsThatAreNotExecutingAnOrder.Count(x => x.Type == controlledType || controlledType == MinionType.Any);
+        }
+
+        internal void AttackAnimExit()
+        {
+            _controller.SetInputLocked(false);
         }
     }
 
