@@ -14637,13 +14637,13 @@ MonoBehaviour:
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 2
         _spawnPoint: {fileID: 1327315458}
         _finalPoint: {fileID: 1855339561}
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 2
         _spawnPoint: {fileID: 785155969}
         _finalPoint: {fileID: 1855339561}
       _startingTime: 0
@@ -14684,13 +14684,13 @@ MonoBehaviour:
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 5
         _spawnPoint: {fileID: 1223542539}
         _finalPoint: {fileID: 1386957351}
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 5
         _spawnPoint: {fileID: 1379766907}
         _finalPoint: {fileID: 1386957351}
       _startingTime: 0
@@ -14755,19 +14755,71 @@ MonoBehaviour:
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 5
         _spawnPoint: {fileID: 471640215}
         _finalPoint: {fileID: 1906505439}
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 5
         _spawnPoint: {fileID: 959275663}
         _finalPoint: {fileID: 1906505439}
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 5
+        _spawnPoint: {fileID: 1969469063}
+        _finalPoint: {fileID: 1906505439}
+      _startingTime: 0
+      OnWaveStart:
+        m_PersistentCalls:
+          m_Calls: []
+      OnWaveEnd:
+        m_PersistentCalls:
+          m_Calls: []
+    - _spawns:
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 5
+        _spawnPoint: {fileID: 471640215}
+        _finalPoint: {fileID: 1906505439}
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 5
+        _spawnPoint: {fileID: 959275663}
+        _finalPoint: {fileID: 1906505439}
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 5
+        _spawnPoint: {fileID: 1969469063}
+        _finalPoint: {fileID: 1906505439}
+      _startingTime: 0
+      OnWaveStart:
+        m_PersistentCalls:
+          m_Calls: []
+      OnWaveEnd:
+        m_PersistentCalls:
+          m_Calls: []
+    - _spawns:
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 5
+        _spawnPoint: {fileID: 471640215}
+        _finalPoint: {fileID: 1906505439}
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 5
+        _spawnPoint: {fileID: 959275663}
+        _finalPoint: {fileID: 1906505439}
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 5
         _spawnPoint: {fileID: 1969469063}
         _finalPoint: {fileID: 1906505439}
       _startingTime: 0
@@ -14844,25 +14896,57 @@ MonoBehaviour:
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 6
         _spawnPoint: {fileID: 863143688}
         _finalPoint: {fileID: 1618841826}
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 6
         _spawnPoint: {fileID: 1583315301}
         _finalPoint: {fileID: 1618841826}
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 6
         _spawnPoint: {fileID: 1707419885}
         _finalPoint: {fileID: 1618841826}
       - _content:
           _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
             type: 3}
-          _amount: 1
+          _amount: 6
+        _spawnPoint: {fileID: 1511229600}
+        _finalPoint: {fileID: 1618841826}
+      _startingTime: 0
+      OnWaveStart:
+        m_PersistentCalls:
+          m_Calls: []
+      OnWaveEnd:
+        m_PersistentCalls:
+          m_Calls: []
+    - _spawns:
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 6
+        _spawnPoint: {fileID: 863143688}
+        _finalPoint: {fileID: 1618841826}
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 6
+        _spawnPoint: {fileID: 1583315301}
+        _finalPoint: {fileID: 1618841826}
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 6
+        _spawnPoint: {fileID: 1707419885}
+        _finalPoint: {fileID: 1618841826}
+      - _content:
+          _enemy: {fileID: 580391976515276907, guid: d210a698a24a54e4fbd84c80b100a693,
+            type: 3}
+          _amount: 6
         _spawnPoint: {fileID: 1511229600}
         _finalPoint: {fileID: 1618841826}
       _startingTime: 0
