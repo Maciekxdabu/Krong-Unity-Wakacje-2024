@@ -23,6 +23,8 @@ namespace Assets.Scripts.Runtime.UI
         [SerializeField] private TMP_Text heroHpText;
         [SerializeField] private TMP_Text heroHpMaxText;
         [SerializeField] private RectTransform heroHpFill;
+        [SerializeField] private TMP_Text respawnsText;
+
         private float heroHpFillMaxWidth;
 
 
@@ -97,6 +99,8 @@ namespace Assets.Scripts.Runtime.UI
             heroHpMaxText.text = hero.MaxHealthPoints.ToString();
             heroHpFill.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, heroHpFillMaxWidth * hero.HealthPoints / hero.MaxHealthPoints);
             _deadSplash.SetActive(hero.HealthPoints == 0);
+
+            respawnsText.text = $"Respawns: {hero.RespawnCount}";
         }
 
         public void RefreshAvailableMinions(Hero hero)

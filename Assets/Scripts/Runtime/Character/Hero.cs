@@ -38,6 +38,9 @@ namespace Assets.Scripts.Runtime.Character
         public MinionType ControlledType { get { return controlledType; } }
         public int MinionCount { get { return _minions.Count; } }
 
+        public int RespawnCount { get; protected set; }
+
+
         private MinionSpawner _currentSpawner;
 
         public int GetGoldAmount()
@@ -350,6 +353,7 @@ namespace Assets.Scripts.Runtime.Character
 
         internal void Respawn(Vector3 position)
         {
+            ++RespawnCount;
             if (!_controller.enabled)
             {
                 _controller.enabled = true;
@@ -392,8 +396,9 @@ namespace Assets.Scripts.Runtime.Character
 
         public void OnRespawn(InputValue inputValue)
         {
-            TakeHealing(_maxHp);
             Respawning();
+            TakeHealing(_maxHp);
+            HUD.Instance.RefreshHUD(this);
         }
 
         [ContextMenu("Kill player")]
