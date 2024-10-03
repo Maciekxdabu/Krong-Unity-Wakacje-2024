@@ -45,7 +45,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             _interactable = enterParams as Interactable;
 
             _stateActive = true;
-            _minion.destination = _interactable.AssignPosition(_minion);
+            _minion.destination = _interactable.AssignPosition();
             _interactable.StartInteractionWithMinion(_minion);
             _interactable.TaskDoneCallback.AddListener(InteractableTaskFinished);
         }

@@ -77,7 +77,7 @@ public class Interactable : MonoBehaviour
         return true;
     }
 
-    public Vector3 AssignPosition(Minion minion)
+    public Vector3 AssignPosition()
     {
         if(_minion_positions.Count == 0) return transform.position;
         for(int i = 0;  i < _minion_positions.Count; i++)
