@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
@@ -11,6 +12,7 @@ public class Settings : MonoBehaviour
     private Resolution[] _resolutions;
     [SerializeField] private TMP_Dropdown _resolutionDropdown;
     [SerializeField] private TMP_Dropdown _fullscreenModeDropdown;
+    [SerializeField] private TMP_Dropdown _antialiasingDropdown;
 
     private void Start()
     {
@@ -44,6 +46,24 @@ public class Settings : MonoBehaviour
         Resolution resolution = _resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreenMode);
     }
+
+    // public void SetAntialiasingMode()
+    // {
+    //     int modeIndex = _antialiasingDropdown.value;
+
+    //     switch (modeIndex)
+    //     {
+    //         case 0:
+    //             Rendering.Postprocessing;
+    //             break;
+    //         case 1:
+    //             QualitySettings.antiAliasing = 2;
+    //             break;
+    //         case 2:
+    //             QualitySettings.antiAliasing = 4;
+    //             break;
+    //     }
+    // }
 
     private void FillResolutionDropdown(TMP_Dropdown resolutionDropdown, Resolution[] resolutions)
     {
