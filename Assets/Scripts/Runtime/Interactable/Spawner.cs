@@ -32,6 +32,7 @@ public class MinionSpawner : MonoBehaviour
         }
         if (!h.canGetAnotherMinion())
         {
+            HUD.Instance.ShowMinionsMax(h);
             AudioManager.Instance.PlayFailSound();
             return;
         }

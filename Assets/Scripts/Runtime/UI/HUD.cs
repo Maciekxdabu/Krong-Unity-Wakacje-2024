@@ -141,6 +141,13 @@ namespace Assets.Scripts.Runtime.UI
             StartCoroutine(nameof(clearAfterTime));
         }
 
+        internal void ShowMinionsMax(Hero h)
+        {
+            refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, $"Max minions reached: {Hero.MAX_MINIONS}");
+            StartCoroutine(nameof(clearAfterTime));
+        }
+
+
         private IEnumerator clearAfterTime()
         {
             yield return new WaitForSeconds(3.0f);
@@ -173,5 +180,6 @@ namespace Assets.Scripts.Runtime.UI
         {
             _finishedWave.SetActive(false);
         }
+
     }
 }
