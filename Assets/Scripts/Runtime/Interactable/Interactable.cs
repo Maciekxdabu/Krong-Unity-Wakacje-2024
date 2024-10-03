@@ -37,6 +37,15 @@ public class Interactable : MonoBehaviour
         updateVisuals();
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        foreach (var p in _minion_positions)
+        {
+            Gizmos.DrawWireSphere(p.position, 0.5f);
+        }
+    }
+
     private void updateTaskPercentage()
     {
         if (_minions.Count < _task_minions_needed)
