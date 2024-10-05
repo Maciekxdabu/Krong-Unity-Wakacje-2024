@@ -33,7 +33,7 @@ namespace Assets.Scripts.Runtime.AnimatorStateMachine
                     {
                         case CharacterType.Player:
                             animator.TryGetComponent(out Hero hero);
-                            hero.EnableThirdPersonController();
+                            hero.AttackAnimExit();
                             break;
                         case CharacterType.Minion:
                             break;

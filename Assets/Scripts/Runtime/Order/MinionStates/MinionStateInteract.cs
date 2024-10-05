@@ -37,14 +37,15 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             if (_stateActive && _interactable != null) {
                 return false;
             }
-            _interactable = interactable;
             return true;
         }
 
-        public void StateEnter()
+        public void StateEnter(object enterParams)
         {
+            _interactable = enterParams as Interactable;
+
             _stateActive = true;
-            _minion.destination = _interactable.transform.position;
+            _minion.destination = _interactable.AssignPosition();
             _interactable.StartInteractionWithMinion(_minion);
             _interactable.TaskDoneCallback.AddListener(InteractableTaskFinished);
         }
@@ -68,7 +69,7 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             Assert.IsTrue(_stateActive, "inactive state updated");
             Assert.IsNotNull(_interactable, "interactable not set");
 
-            _minion.isStopped = _minion.remainingDistance < STOPPING_DISTANCE;
+            _minion.isStopped = _minion.transform.position == _minion.destination;
         }
 
         public void StateEnd()

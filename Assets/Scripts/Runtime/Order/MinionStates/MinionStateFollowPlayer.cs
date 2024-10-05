@@ -32,16 +32,16 @@ namespace Assets.Scripts.Runtime.Order.MinionStates
             return "PlayerFollow";
         }
 
-        public void StateEnter()
+        public void StateEnter(object enterParams)
         {
             _stateActive = true;
             _minion.destination = _lastHeroLocation;
+            _minion.stoppingDistance = STOPPING_DISTANCE;
         }
 
         public void Update()
         {
             Assert.IsTrue(_stateActive, "inactive state updated");
-            _minion.isStopped = _minion.remainingDistance < STOPPING_DISTANCE;
         }
 
         public void StateEnd()

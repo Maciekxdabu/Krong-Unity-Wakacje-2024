@@ -42,6 +42,11 @@ namespace Assets.Scripts.Runtime.Character
             get { return _localNavMeshAgent.destination; }
             set { _localNavMeshAgent.destination = value; }
         }
+        public float stoppingDistance
+        {
+            get { return _localNavMeshAgent.stoppingDistance; }
+            set { _localNavMeshAgent.stoppingDistance = value; }
+        }
         public bool isStopped
         {
             get { return _localNavMeshAgent.isStopped; }
@@ -71,7 +76,7 @@ namespace Assets.Scripts.Runtime.Character
 
             _currentStateEnum = StateSlot.STATE_FOLLOW_HERO;
             _currentState = _allStates[_currentStateEnum];
-            _currentState.StateEnter();
+            _currentState.StateEnter(null);
         }
 
         public void Update()
@@ -91,6 +96,7 @@ namespace Assets.Scripts.Runtime.Character
         public void AttackFrame()
         {
             //Debug.Log("Attack Frame");
+            AudioManager.Instance.PlayMinionAttack(this);
             var hitTargets = Physics.OverlapSphere(transform.position, 1.0f, _attackLayerMask);
             foreach (var hit in hitTargets)
             {
@@ -101,7 +107,7 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
-        private void GoToState(StateSlot newState)
+        private void GoToState(StateSlot newState, object enterParams = null)
         {
             Debug.Log($"{name} change state {_currentStateEnum} -> {newState}", this);
             Assert.AreNotEqual(_currentStateEnum, newState);
@@ -112,7 +118,7 @@ namespace Assets.Scripts.Runtime.Character
             _currentState = _allStates[_currentStateEnum];
             _localAnimator.ResetTrigger("Attack");
 
-            _currentState.StateEnter();
+            _currentState.StateEnter(enterParams);
 
             if (newState == StateSlot.STATE_FOLLOW_HERO && _isFollowingAnOrder)
             {
@@ -122,12 +128,12 @@ namespace Assets.Scripts.Runtime.Character
         }
 
 
-        public void SendForward()
+        public void SendForward(Vector3 destinationOnNavmesh)
         {
             Assert.AreEqual(_currentStateEnum, StateSlot.STATE_FOLLOW_HERO, "SendForward outside STATE_FOLLOW_HERO");
             _lastInterruptTimestamp = 0; // can immediately fight
             _isFollowingAnOrder = true;
-            GoToState(StateSlot.STATE_MOVE_TO_POINT);
+            GoToState(StateSlot.STATE_MOVE_TO_POINT, destinationOnNavmesh);
         }
 
         public void DestinationReached()
@@ -171,18 +177,33 @@ namespace Assets.Scripts.Runtime.Character
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(destination, 0.3f);
-            // Handles.Label(transform.position + new Vector3(0,1,0), _currentState?.GetDebugStateString()??"");
+#if UNITY_EDITOR
+            // crashes build, and Handles is technically incorrect here,
+            // but there is no draw text in Gzimos.
+            // and this somehow works for debug purposes
+            Handles.Label(transform.position + new Vector3(0, 1, 0), _currentState?.GetDebugStateString() ?? "");
+#endif        
         }
 
         private void InteractableEncountered(Interactable interactable)
         {
-            //Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
-
-            if (_interactState.SetupInteraction(interactable) && interactable.DoesNeedMoreMinions()) {
-                if (_currentStateEnum == StateSlot.STATE_MOVE_TO_POINT){
-                    GoToState(StateSlot.STATE_INTERACT);
-                }
+            Debug.Log($"{name} - {nameof(InteractableEncountered)} - {interactable}");
+            if (_currentStateEnum != StateSlot.STATE_MOVE_TO_POINT)
+            {
+                Debug.Log($"BAD STATE");
+                return;
             }
+            if (!interactable.DoesNeedMoreMinions()) {
+                Debug.Log($"FULL");
+                return;
+            } 
+            if (!_interactState.SetupInteraction(interactable))
+            {
+                Debug.Log($"SETUP FAILED");
+                return;
+            }
+            Debug.Log($"STATE ENTER");
+            GoToState(StateSlot.STATE_INTERACT, interactable);
         }
 
         public void InteractionTaskFinished()
@@ -233,29 +254,6 @@ namespace Assets.Scripts.Runtime.Character
                     GoToState(StateSlot.STATE_FIGHT);
                 }
             }
-        }
-
-        public Vector3 CalculateGoOrderDestination()
-        {
-            var MAX_DISTANCE = _config.MoveOrderMaxDistance;
-            var heroFront = GameManager.Instance.Hero?.GetFrontTransform() ?? transform;
-
-            var ray = new Ray(heroFront.position, heroFront.forward);
-            var layerMask = Physics.DefaultRaycastLayers;
-            bool wallDetected = Physics.Raycast(
-                    ray,
-                    out var wallHit,
-                    MAX_DISTANCE,
-                    layerMask,
-                    QueryTriggerInteraction.Ignore
-                );
-
-            if (wallDetected)
-            {
-                return NavMeshUtility.SampledPosition(wallHit.point);
-            }
-
-            return heroFront.position + (heroFront.forward * MAX_DISTANCE);
         }
     }
 }

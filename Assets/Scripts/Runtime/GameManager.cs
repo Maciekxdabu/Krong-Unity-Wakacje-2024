@@ -3,6 +3,7 @@ using Assets.Scripts.Runtime.Character;
 using Assets.Scripts.Runtime.Waves;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Runtime
 {
@@ -11,8 +12,9 @@ namespace Assets.Scripts.Runtime
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        private WaveController _waveController;
+        private WaveControler _waveController;
 
+        public string NextLevelName;
         public Hero Hero;
         public List<Enemy> Enemies = new List<Enemy>();
 
@@ -38,6 +40,12 @@ namespace Assets.Scripts.Runtime
             {
                 _instance = this;
             }
+        }
+
+        public void FinshLevel()
+        {
+            AudioManager.Instance.PlayFinishLevel();
+            SceneManager.LoadScene(NextLevelName);
         }
 
         public void Start()

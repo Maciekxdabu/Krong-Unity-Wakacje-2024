@@ -1,32 +1,57 @@
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
 using Assets.Scripts.Runtime.Character;
+using Assets.Scripts.Runtime.ScriptableObjects;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts.Runtime.UI
 {
+
     public class HUD : MonoBehaviour
     {
-        [System.Serializable]
+        [SerializeField] private GameObject _deadSplash;
+        [SerializeField] private GameObject _parentStartingTimeToWave;
+        [SerializeField] private GameObject _finishedWave;
+
+        [SerializeField] private TMP_Text maxMinionText;
+        [SerializeField] private TMP_Text currentMinionText;
+        [SerializeField] private TMP_Text availableMinionCountText;
+
+        [SerializeField] private TMP_Text heroHpText;
+        [SerializeField] private TMP_Text heroHpMaxText;
+        [SerializeField] private RectTransform heroHpFill;
+        [SerializeField] private TMP_Text respawnsText;
+
+        private float heroHpFillMaxWidth;
+
+
+        [Serializable]
         private class CustomText
         {
             public string ID;
             public TMP_Text textField;
         }
-
-        [SerializeField] private TMP_Text controlledMinionText;
-        [SerializeField] private TMP_Text maxMinionText;
-        [SerializeField] private TMP_Text currentMinionText;
-        [SerializeField] private TMP_Text heroHpText;
-        [SerializeField] private TMP_Text heroHpMaxText;
         [Space]
         [SerializeField] private List<CustomText> customTexts = new List<CustomText>();
+        
+        [Serializable]
+        public class MinionHud
+        {
+            public MinionType MinionType;
+            public TMP_Text count_TMP;
+            public GameObject highlight;
+        }
+        [Space]
+        [SerializeField] private List<MinionHud> minions = new List<MinionHud>();
+
 
         const string CUSTOM_TEXT_GOLD = "BonusGold";
         const string CUSTOM_TEXT_SOUL_ENERGY = "BonusSoulEnergy";
         const string CUSTOM_TEXT_GENERIC_MESSAGE = "GenericTextMessage";
+        const string CUSTOM_TEXT_ENEMY_STARTING_WAVE = "EnemyStartingWave";
 
         private Hero ownerHero;
 
@@ -40,6 +65,7 @@ namespace Assets.Scripts.Runtime.UI
         {
             _instance = this;
             refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, $"");
+            heroHpFillMaxWidth = heroHpFill.rect.width;
         }
 
         // ---------- public methods
@@ -60,13 +86,28 @@ namespace Assets.Scripts.Runtime.UI
                 ownerHero = hero;
 
             currentMinionText.text = hero.MinionCount.ToString();
-            maxMinionText.text = "10";
-            controlledMinionText.text = hero.ControlledType.ToString();
+            maxMinionText.text = Hero.MAX_MINIONS.ToString();
+            RefreshAvailableMinions(hero);
+
+            foreach (var minion in minions)
+            {
+                minion.highlight.SetActive(hero.IsMinionTypeActive(minion.MinionType));
+                minion.count_TMP.text = hero.GetMinionsCount(minion.MinionType).ToString();
+            }
 
             heroHpText.text = hero.HealthPoints.ToString("F0");
             heroHpMaxText.text = hero.MaxHealthPoints.ToString();
+            heroHpFill.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, heroHpFillMaxWidth * hero.HealthPoints / hero.MaxHealthPoints);
+            _deadSplash.SetActive(hero.HealthPoints == 0);
+
+            respawnsText.text = $"Respawns: {hero.RespawnCount}";
         }
 
+        public void RefreshAvailableMinions(Hero hero)
+        {
+            var available = hero.GetAvailableMinionsCount();
+            availableMinionCountText.text = available > 0 ? available.ToString() : "";
+        }
 
         internal void RefreshCustomHUD(ItemPickCounter itemPickCounter)
         {
@@ -77,7 +118,12 @@ namespace Assets.Scripts.Runtime.UI
 
             refreshCustomHUD(ID, newText);
         }
-        
+
+        internal void UpdateStartingTimeToWave(float time)
+        {
+            refreshCustomHUD(CUSTOM_TEXT_ENEMY_STARTING_WAVE, time.ToString("f2"));
+        }
+
         //usage:
         //HUD.Instance.RefreshCustomHUD("ID", "new test value")'
         //"ID" must be an existing ID in the list in the Inspector
@@ -95,10 +141,45 @@ namespace Assets.Scripts.Runtime.UI
             StartCoroutine(nameof(clearAfterTime));
         }
 
+        internal void ShowMinionsMax(Hero h)
+        {
+            refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, $"Max minions reached: {Hero.MAX_MINIONS}");
+            StartCoroutine(nameof(clearAfterTime));
+        }
+
+
         private IEnumerator clearAfterTime()
         {
             yield return new WaitForSeconds(3.0f);
             refreshCustomHUD(CUSTOM_TEXT_GENERIC_MESSAGE, "");
         }
+
+        private IEnumerator showFinishedWaveOfEnemies()
+        {
+            _finishedWave.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            TurnOffFinishedWaveOfEnemies();
+        }
+
+        internal void ShowStartingTimeToWave()
+        {
+            _parentStartingTimeToWave.SetActive(true);
+        }
+
+        internal void TurnOffStartingTimeToWave()
+        {
+            _parentStartingTimeToWave.SetActive(false);
+        }
+
+        internal void ShowFinishedWaveOfEnemies()
+        {
+            StartCoroutine(showFinishedWaveOfEnemies());
+        }
+
+        private void TurnOffFinishedWaveOfEnemies()
+        {
+            _finishedWave.SetActive(false);
+        }
+
     }
 }

@@ -114,6 +114,8 @@ namespace StarterAssets
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
 
+        private bool inputLocked;
+
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
@@ -168,6 +170,11 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+        }
+
+        public void SetInputLocked(bool locked)
+        {
+            inputLocked = locked;
         }
 
         private void LateUpdate()
@@ -229,7 +236,7 @@ namespace StarterAssets
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is no input, set the target speed to 0
-            if (_input.move == Vector2.zero)
+            if (inputLocked || _input.move == Vector2.zero)
             {
                 targetSpeed = 0.0f;
                 OnStop?.Invoke();
@@ -240,6 +247,7 @@ namespace StarterAssets
 
             float speedOffset = 0.1f;
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
+            if (inputLocked) inputMagnitude = 0;
 
             // accelerate or decelerate to target speed
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
@@ -266,7 +274,7 @@ namespace StarterAssets
 
             // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is a move input rotate player when the player is moving
-            if (_input.move != Vector2.zero)
+            if (inputLocked == false && _input.move != Vector2.zero)
             {
                 bool _hasCharacterStartedMinimalMove = _input.move.x < 2f;
                 if (_hasCharacterStartedMinimalMove)
@@ -326,7 +334,7 @@ namespace StarterAssets
                 }
 
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                if (inputLocked == false && _input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);

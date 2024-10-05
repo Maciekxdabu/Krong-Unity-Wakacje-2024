@@ -1,11 +1,13 @@
 using Assets.Scripts.Runtime.Character;
 using Assets.Scripts.Runtime.ScriptableObjects;
 using Assets.Scripts.Runtime.UI;
+using TMPro;
 using UnityEngine;
 
 public class MinionSpawner : MonoBehaviour
 {
     [SerializeField] private MeshRenderer   _litMesh;
+    [SerializeField] private TextMeshProUGUI _textLabel;
     [SerializeField] private MinionType _minionType;
     [SerializeField] private MinonConfigurationData _minionsConfiguration;
 
@@ -17,6 +19,7 @@ public class MinionSpawner : MonoBehaviour
     public void Awake()
     {
         _thisSpawnerConfig = _minionsConfiguration.SpawnerConfig.Find(c => c.Type == _minionType);
+        _textLabel.text = _thisSpawnerConfig.Cost.ToString();
     }
 
     public void Interact(Hero h)
@@ -24,14 +27,19 @@ public class MinionSpawner : MonoBehaviour
         var minionCost = _thisSpawnerConfig.Cost;
         if (minionCost > h.GetGoldAmount()) {
             HUD.Instance.ShowNotEnoughCash(minionCost);
+            AudioManager.Instance.PlayFailSound();
             return;
         }
-        if (h.canGetAnotherMinion())
+        if (!h.canGetAnotherMinion())
         {
-            h.TryPayGoldAmount(minionCost);
-            var m = Instantiate<Minion>(_thisSpawnerConfig.Prefab, getSpawnPosition(), Quaternion.identity);
-            h.addMinion(m);
+            HUD.Instance.ShowMinionsMax(h);
+            AudioManager.Instance.PlayFailSound();
+            return;
         }
+        h.TryPayGoldAmount(minionCost);
+        var m = Instantiate<Minion>(_thisSpawnerConfig.Prefab, getSpawnPosition(), Quaternion.identity);
+        h.addMinion(m);
+        AudioManager.Instance.PlayMinionSummoned(m);
     }
 
     internal void SetSelected(bool selected)

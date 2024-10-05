@@ -1,50 +1,51 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Runtime.UI;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Waves
 {
-    [System.Serializable]
     public class Timer
     {
-        [SerializeField] private GameObject _parent;
-        [SerializeField] private TMPro.TMP_Text _value;
         private float _current;
 
+        internal System.Action OnStart;
         internal System.Action OnEnd;
 
-        internal void InitializeCurrent(Stage stage)
+        internal void InitializeCurrent(Wave wave)
         {
-            _current = stage.GetStartingTime;
+            _current = wave.GetStartingTime;
         }
 
         internal void Run()
         {
+            OnStart?.Invoke();
             show();
-            _value.StartCoroutine(runCorutine());
+            HUD.Instance.StartCoroutine(runCorutine());
         }
 
         private void show()
         {
-            _parent.SetActive(true);
+            HUD.Instance.ShowStartingTimeToWave();
         }
 
         private void turnOff()
         {
-            _parent.SetActive(false);
+            HUD.Instance.TurnOffStartingTimeToWave();
         }
 
         private IEnumerator runCorutine()
         {
+            HUD _hud = HUD.Instance;
             while (_current >= 0)
             {
                 _current -= Time.deltaTime;
-                _value.text = _current.ToString("f2");
+                _hud.UpdateStartingTimeToWave(_current);
 
                 yield return null;
             }
 
-            turnOff();
             OnEnd?.Invoke();
+            turnOff();
         }
     }
 }

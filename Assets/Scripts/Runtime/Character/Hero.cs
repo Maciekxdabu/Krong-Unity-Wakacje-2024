@@ -1,4 +1,4 @@
-using Assets.Scripts.Runtime.Order;
+using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.ScriptableObjects;
 using Assets.Scripts.Runtime.UI;
 using StarterAssets;
@@ -16,16 +16,18 @@ namespace Assets.Scripts.Runtime.Character
     public class Hero : Creature
     {
         private const float MAX_INTERACTION_DISTANCE_SQUARED = 3 * 3;
-        private const int MAX_MINIONS = 10;
-
+        public const int MAX_MINIONS = 10;
+        private const float MAX_ORDER_TRACE_DISTANCE = 4.0f + 8.0f;
         [SerializeField] private ThirdPersonController _controller;
         [SerializeField] private Transform _frontTransform;
-        [SerializeField] private StarterAssetsInputs starterAssetsInputs;
         [SerializeField] private Collider _weaponCollider;
 
         [SerializeField] private MinionType controlledType = MinionType.Any;
         [SerializeField] private List<Minion> _minions;
         [SerializeField] private Vector3 _respawnPosition;
+
+        [SerializeField] private LayerMask _sendOrderRaycastMask;
+        [SerializeField] private GameObject _sendOrderMarker;
 
 
         [SerializeField] private List<ItemPickCounter> _itemPickCounter;
@@ -35,6 +37,9 @@ namespace Assets.Scripts.Runtime.Character
         //getters
         public MinionType ControlledType { get { return controlledType; } }
         public int MinionCount { get { return _minions.Count; } }
+
+        public int RespawnCount { get; protected set; }
+
 
         private MinionSpawner _currentSpawner;
 
@@ -48,6 +53,11 @@ namespace Assets.Scripts.Runtime.Character
             var result = _itemPickCounter.Find(i => i.ItemType == BonusItemType.BonusGold)?.TryPaying(cost) ?? false;
 
             return result;
+        }
+
+        public bool TryUseKey(int amount)
+        {
+            return _itemPickCounter.Find(i => i.ItemType == BonusItemType.BonusKey)?.TryPaying(amount) ?? false;
         }
 
         public Transform GetFrontTransform()
@@ -88,6 +98,7 @@ namespace Assets.Scripts.Runtime.Character
             GameManager.Instance.Hero = this; // make sure to init GameManager
             HUD.Instance.RefreshHUD(this);
             onHealthChange.AddListener(() => { HUD.Instance.RefreshHUD(this); });
+            OnDeathEvent += () => { AudioManager.Instance.PlayHeroDied(); };
         }
 
         public void FixedUpdate()
@@ -106,6 +117,11 @@ namespace Assets.Scripts.Runtime.Character
             }
         }
 
+        private void OnDrawGizmos()
+        {
+            drawOrderTargetGizmo();
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out Enemy enemy))
@@ -118,21 +134,50 @@ namespace Assets.Scripts.Runtime.Character
                 if (itemCounter != null) {
                     itemCounter.Add(bonusItem.Amount);
                 }
-
+                AudioManager.Instance.PlayCustomSFX(bonusItem.CollectSFX);
                 bonusItem.Delete();
             }
+            else if (other.TryGetComponent(out Checkpoint _))
+            {
+                _respawnPosition = gameObject.transform.position;
+            }
+        }
+
+        private void drawOrderTargetGizmo()
+        {
+            Gizmos.color = Color.yellow;
+            var orderTarget = OrderPointer.Calculate(Camera.current.transform, MAX_ORDER_TRACE_DISTANCE, _sendOrderRaycastMask);
+            if (orderTarget.Debug_HitWall){
+                Gizmos.DrawWireSphere(orderTarget.Debug_HitWallPosition, 0.5f);
+            }
+            Gizmos.DrawLine(orderTarget.Debug_Start, orderTarget.Debug_End);
+            Gizmos.DrawWireSphere(orderTarget.NavmeshDestination, 0.5f);
         }
 
         public void OnSendOrder()
         {
-            if (!hasFreeMinion()) { return; }
+            if (!hasFreeMinion()) {
+                AudioManager.Instance.PlayFailSound();
+                return; 
+            }
 
             var minion = getRandomFreeMinion();
-            if (minion == null) { return; }
+            if (minion == null)
+            {
+                AudioManager.Instance.PlayFailSound();
+                return;
+            }
 
-            minion.SendForward();
+            var destination = OrderPointer.Calculate(Camera.main.transform, MAX_ORDER_TRACE_DISTANCE, _sendOrderRaycastMask);
+            if (!destination.Correct)
+            {
+                AudioManager.Instance.PlayFailSound();
+                return;
+            }
+
+            Instantiate(_sendOrderMarker, destination.NavmeshDestination, Quaternion.identity, null);
+            minion.SendForward(destination.NavmeshDestination);
             markAsWorking(minion);
-
         }
 
         public void OnToMeAllOrder()
@@ -158,8 +203,7 @@ namespace Assets.Scripts.Runtime.Character
             if (GetIsAlive())
             {
                 _localAnimator.SetBool("SlashAttack", true);
-                disableThirdPersonController();
-                starterAssetsInputs.StopCharacterMove();
+                _controller.SetInputLocked(true);
             }
         }
 
@@ -170,6 +214,34 @@ namespace Assets.Scripts.Runtime.Character
 
             HUD.Instance.RefreshHUD(this);
         }
+
+        private void OnClearChosenMinion(InputValue val)
+        {
+            controlledType = MinionType.Any;
+            HUD.Instance.RefreshHUD(this);
+
+        }
+
+        private void OnMoveChosenMinionSelectionUp(InputValue val)
+        {
+            if (val.Get<float>() <= 0.1) return;
+            var controlledAsInt = (int)controlledType;
+            controlledAsInt += 1;
+            controlledAsInt %= 4;
+            controlledType = (MinionType) controlledAsInt;
+            HUD.Instance.RefreshHUD(this);
+        }
+
+        private void OnMoveChosenMinionSelectionDown(InputValue val)
+        {
+            if (val.Get<float>() <= 0.1) return;
+            var controlledAsInt = (int)controlledType;
+            controlledAsInt += 4-1;
+            controlledAsInt %= 4;
+            controlledType = (MinionType)controlledAsInt;
+            HUD.Instance.RefreshHUD(this);
+        }
+
 
         private MinionSpawner getClosestSpawner()
         {
@@ -218,7 +290,7 @@ namespace Assets.Scripts.Runtime.Character
             }
             _minionsThatAreNotExecutingAnOrder.Add(m);
             m.destination = transform.position;
-            m.destination = transform.position;
+            HUD.Instance.RefreshAvailableMinions(this);
         }
 
         public bool canGetAnotherMinion()
@@ -234,6 +306,7 @@ namespace Assets.Scripts.Runtime.Character
 
             _minionsThatAreNotExecutingAnOrder.Remove(minion);
             _minionsThatAreExecutingAnOrder.Add(minion);
+            HUD.Instance.RefreshAvailableMinions(this);
         }
 
         private bool hasFreeMinion()
@@ -259,6 +332,7 @@ namespace Assets.Scripts.Runtime.Character
 
             _minionsThatAreNotExecutingAnOrder.Add(minion);
             _minionsThatAreExecutingAnOrder.Remove(minion);
+            HUD.Instance.RefreshAvailableMinions(this);
         }
 
         internal void MinionStartedFighting(Minion minion)
@@ -269,9 +343,9 @@ namespace Assets.Scripts.Runtime.Character
         internal void MinionDied(Minion minion)
         {
             _minions.Remove(minion);
-            HUD.Instance.RefreshHUD(this);
             _minionsThatAreExecutingAnOrder.Remove(minion);
             _minionsThatAreNotExecutingAnOrder.Remove(minion);
+            HUD.Instance.RefreshHUD(this);
         }
 
         #endregion Minions
@@ -279,6 +353,7 @@ namespace Assets.Scripts.Runtime.Character
 
         internal void Respawn(Vector3 position)
         {
+            ++RespawnCount;
             if (!_controller.enabled)
             {
                 _controller.enabled = true;
@@ -290,13 +365,9 @@ namespace Assets.Scripts.Runtime.Character
 
         }
 
-        internal void EnableThirdPersonController()
-        {
-            starterAssetsInputs.EnableInputs();
-        }
-
         internal void EnableColliderOfWeapon()
         {
+            AudioManager.Instance.PlayHeroAttack(this);
             _weaponCollider.enabled = true;
         }
 
@@ -305,10 +376,6 @@ namespace Assets.Scripts.Runtime.Character
             _weaponCollider.enabled = false;
         }
 
-        private void disableThirdPersonController()
-        {
-            starterAssetsInputs.DisableInputs();
-        }
 
         internal List<Minion> GetMinions()
         {
@@ -329,8 +396,9 @@ namespace Assets.Scripts.Runtime.Character
 
         public void OnRespawn(InputValue inputValue)
         {
-            TakeHealing(_maxHp);
             Respawning();
+            TakeHealing(_maxHp);
+            HUD.Instance.RefreshHUD(this);
         }
 
         [ContextMenu("Kill player")]
@@ -351,23 +419,70 @@ namespace Assets.Scripts.Runtime.Character
         {
             SceneManager.LoadScene("MainMenu");
         }
+
+        public bool IsMinionTypeActive(MinionType minionType)
+        {
+            if (controlledType == MinionType.Any) return true;
+            return controlledType == minionType;
+        }
+        
+        public int GetMinionsCount(MinionType minionType)
+        {
+            return _minions.Count(m => m.Type == minionType);
+        }
+
+        public int GetAvailableMinionsCount()
+        {
+            return _minionsThatAreNotExecutingAnOrder.Count(x => x.Type == controlledType || controlledType == MinionType.Any);
+        }
+
+        internal void AttackAnimExit()
+        {
+            _controller.SetInputLocked(false);
+        }
     }
 
-    public struct NavMeshUtility
+    public struct OrderPointer
     {
-        private const int MAX_NAVMESH_DISTANCE = 50;
-        private static NavMeshHit navMeshHit;
+        public Vector3 NavmeshDestination;
+        public bool Correct;
 
-        internal static Vector3 SampledPosition(Vector3 point)
-        {
-            NavMesh.SamplePosition(
-                point,
-                out navMeshHit,
-                MAX_NAVMESH_DISTANCE,
-                NavMesh.AllAreas
-                );
+        public Vector3 Debug_Start;
+        public Vector3 Debug_End;
+        public Vector3 Debug_HitWallPosition;
+        public bool Debug_HitWall;
+        public bool Debug_FoundNavmesh;
 
-            return navMeshHit.position;
+        public static OrderPointer Calculate(Transform camera, float maxDistance, LayerMask wallMask) { 
+            var result = new OrderPointer();
+            result.calculate(camera, maxDistance, wallMask);
+            return result;
         }
+        
+        private void calculate(Transform camera, float maxDistance, LayerMask wallMask)
+        {
+            Debug_Start = camera.position;
+            var forward = camera.forward;
+            Debug_End = Debug_Start + forward * maxDistance;
+
+            var result = Debug_End;
+
+            var ray = new Ray(Debug_Start, forward);
+            Debug_HitWall = Physics.Raycast(
+                ray,
+                out var wallHit,
+                maxDistance,
+                wallMask,
+                QueryTriggerInteraction.Ignore
+            );
+            if (Debug_HitWall)
+            {
+                Debug_HitWallPosition = wallHit.point;
+                result = Debug_HitWallPosition;
+            }
+
+            Correct = NavmeshExtensions.TrySnapToNavmesh(result, out NavmeshDestination);
+        }
+    
     }
 }

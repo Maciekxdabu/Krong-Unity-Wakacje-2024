@@ -1734,6 +1734,8 @@ MonoBehaviour:
   - {fileID: 1318664816}
   - {fileID: 2115037394}
   - {fileID: 882451717}
+  hideIfCantExit:
+  - {fileID: 921896747}
 --- !u!4 &171299441
 Transform:
   m_ObjectHideFlags: 0
@@ -3209,7 +3211,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 28573f6518b12424d8d0ec244ebc8c2e, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: d070b08f138ed4449a6b1fffb3b5ffc4, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &570952179
 Terrain:
@@ -3220,7 +3222,7 @@ Terrain:
   m_GameObject: {fileID: 570952177}
   m_Enabled: 1
   serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: 28573f6518b12424d8d0ec244ebc8c2e, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: d070b08f138ed4449a6b1fffb3b5ffc4, type: 2}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5

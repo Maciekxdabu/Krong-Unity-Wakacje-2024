@@ -103,9 +103,11 @@ public class Enemy : Creature
 
     internal void AttackFrame()
     {
-        if (_damagePfxPrefab  != null){
+        if (_damagePfxPrefab  != null)
+        {
             Instantiate(_damagePfxPrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
         }
+        AudioManager.Instance.PlayEnemyAttack(this);
         var hitTargets = Physics.OverlapSphere(_damageLocation.transform.position, DAMAGE_RADIUS, _attackLayerMask);
         foreach (var hit in hitTargets)
         {

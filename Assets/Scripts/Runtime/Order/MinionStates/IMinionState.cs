@@ -4,7 +4,7 @@
     {
         string GetDebugStateString();
 
-        void StateEnter();
+        void StateEnter(object enterParams);
         void Update();
         void StateEnd();
         void MinionDied();
