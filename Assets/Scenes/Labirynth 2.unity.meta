@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes/New Scene.unity.meta
+guid: 8c142207dae79dd4fa42299326e28174
+========
 guid: ff942b9d7b63b0e4d836d320ccf3eda5
+>>>>>>>> main:Assets/Scenes/Labirynth 2.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
