@@ -1,11 +1,8 @@
-
 using Assets.Scripts.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
 using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.Character;
-using System;
-using UnityEngine.Rendering;
 
 public class Enemy : Creature
 {
@@ -15,7 +12,7 @@ public class Enemy : Creature
     [SerializeField] private BonusItem _goldDropPrefab;
     [SerializeField] private int _goldDropValue;
 
-
+    private bool _isAttacking;
     private NavMeshAgent _agent;
     private Vector3 _spawnPosition;
 
@@ -40,7 +37,7 @@ public class Enemy : Creature
     }
 
     public void Start()
-    { 
+    {
         GameManager.Instance.RegisterEnemy(this);
     }
 
@@ -49,7 +46,7 @@ public class Enemy : Creature
         if (gameObject.scene.isLoaded)
         {
             GameManager.Instance.UnregisterEnemy(this);
-            if (_goldDropPrefab  != null)
+            if (_goldDropPrefab != null)
             {
                 var gold = Instantiate(_goldDropPrefab, transform.position, transform.rotation, null);
                 gold.SetAmount(_goldDropValue);
@@ -59,8 +56,7 @@ public class Enemy : Creature
 
     public void Update()
     {
-        _localAnimator?.SetFloat("Speed", _agent.velocity.magnitude);
-
+        _localAnimator.SetFloat("Speed", _agent.velocity.magnitude);
         if (_aggroTarget != null && !this.IsInRangeSquared(_aggroTarget, AGGRO_LOSE_RANGE_SQUARED))
         {
             // aggro lost
@@ -79,8 +75,21 @@ public class Enemy : Creature
 
         if (_agent.remainingDistance < ATTACK_RANGE)
         {
-            _localAnimator?.SetTrigger("Attack");
+            if (!_isAttacking)
+            {
+                rotateToTarget();
+            }
+
+            _localAnimator.SetTrigger("Attack");
         }
+    }
+
+    private void rotateToTarget()
+    {
+        Quaternion result = Quaternion.LookRotation(_aggroTarget.transform.position - transform.position, Vector3.up * Time.deltaTime);
+        result.x = 0f;
+        result.z = 0f;
+        transform.rotation = result;
     }
 
     public override void TakeDamage(float value)
@@ -90,7 +99,8 @@ public class Enemy : Creature
 
     public void TrySettingAggroOn(GameObject heroOrMinion)
     {
-        if (_aggroTarget == null || _aggroTarget.GetDistanceSquared(this) > heroOrMinion.GetDistanceSquared(this)){
+        if (_aggroTarget == null || _aggroTarget.GetDistanceSquared(this) > heroOrMinion.GetDistanceSquared(this))
+        {
             _aggroTarget = heroOrMinion;
         }
     }
@@ -101,12 +111,19 @@ public class Enemy : Creature
         _agent.destination = newPosition;
     }
 
+
+    internal void OnStartAttack()
+    {
+        _isAttacking = true;
+    }
+
     internal void AttackFrame()
     {
-        if (_damagePfxPrefab  != null)
+        if (_damagePfxPrefab != null)
         {
             Instantiate(_damagePfxPrefab, _damageLocation.transform.position, _damageLocation.transform.rotation, null);
         }
+
         AudioManager.Instance.PlayEnemyAttack(this);
         var hitTargets = Physics.OverlapSphere(_damageLocation.transform.position, DAMAGE_RADIUS, _attackLayerMask);
         foreach (var hit in hitTargets)
@@ -117,6 +134,11 @@ public class Enemy : Creature
             }
             e.TakeDamage(GetDamageValue());
         }
+    }
+
+    internal void OnEndAttack()
+    {
+        _isAttacking = false;
     }
 
     public void OnDrawGizmos()
