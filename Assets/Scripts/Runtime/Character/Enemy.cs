@@ -13,6 +13,8 @@ public class Enemy : Creature
     [SerializeField] private int _goldDropValue;
 
     private bool _isAttacking;
+    private bool _hasBeenSpawned;
+
     private NavMeshAgent _agent;
     private Vector3 _spawnPosition;
 
@@ -28,12 +30,11 @@ public class Enemy : Creature
     public override void Awake()
     {
         base.Awake();
-        _spawnPosition = transform.position;
 
         _agent = gameObject.GetComponent<NavMeshAgent>();
         _agent.speed = speed;
-
         _agent.stoppingDistance = NAVMESH_AGENT_STOP_DISTANCE;
+        _spawnPosition = transform.position;
     }
 
     public void Start()
@@ -57,6 +58,12 @@ public class Enemy : Creature
     public void Update()
     {
         _localAnimator.SetFloat("Speed", _agent.velocity.magnitude);
+
+        if (_hasBeenSpawned)
+        {
+            return;
+        }
+
         if (_aggroTarget != null && !this.IsInRangeSquared(_aggroTarget, AGGRO_LOSE_RANGE_SQUARED))
         {
             // aggro lost
@@ -67,13 +74,15 @@ public class Enemy : Creature
         {
             // no aggro, returning to spawn point
             _agent.destination = _spawnPosition;
+            _localAnimator.ResetTrigger("Attack");
+
             return;
         }
 
         //  has aggro
         _agent.destination = _aggroTarget.transform.position;
 
-        if (_agent.remainingDistance < ATTACK_RANGE)
+        if (isTargetInAttackRange())
         {
             if (!_isAttacking)
             {
@@ -84,12 +93,22 @@ public class Enemy : Creature
         }
     }
 
+    private bool isTargetInAttackRange()
+    {
+        return Vector3.Distance(
+            transform.position,
+            _aggroTarget.transform.position) < ATTACK_RANGE;
+    }
+
     private void rotateToTarget()
     {
-        Quaternion result = Quaternion.LookRotation(_aggroTarget.transform.position - transform.position, Vector3.up * Time.deltaTime);
-        result.x = 0f;
-        result.z = 0f;
-        transform.rotation = result;
+        Quaternion rotateToTarget = Quaternion.LookRotation(
+            _aggroTarget.transform.position - transform.position,
+            Vector3.up * Time.deltaTime);
+
+        rotateToTarget.x = 0f;
+        rotateToTarget.z = 0f;
+        transform.rotation = rotateToTarget;
     }
 
     public override void TakeDamage(float value)
@@ -102,15 +121,20 @@ public class Enemy : Creature
         if (_aggroTarget == null || _aggroTarget.GetDistanceSquared(this) > heroOrMinion.GetDistanceSquared(this))
         {
             _aggroTarget = heroOrMinion;
+            _hasBeenSpawned = false;
         }
     }
 
-    internal void UpdateTarget(Vector3 newPosition)
+    internal void OnSpawn(Vector3 newPosition)
     {
-        _spawnPosition = newPosition;
-        _agent.destination = newPosition;
+        updateTarget(newPosition);
+        _hasBeenSpawned = true;
     }
 
+    private void updateTarget(Vector3 newPosition)
+    {
+        _agent.destination = newPosition;
+    }
 
     internal void OnStartAttack()
     {

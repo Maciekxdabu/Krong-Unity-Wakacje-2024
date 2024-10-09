@@ -128,7 +128,7 @@ namespace Assets.Scripts.Runtime.Waves
 
                     _amountOfEnemiesAtStage++;
                     spawnedEnemy.OnDeathEvent += tryToFinishCurrentWave;
-                    spawnedEnemy.UpdateTarget(CurrentWave.Spawns[i].GetFinalPoint);
+                    spawnedEnemy.OnSpawn(CurrentWave.Spawns[i].GetFinalPoint);
 
                     _currentlySpawned.Add(spawnedEnemy);
                 }

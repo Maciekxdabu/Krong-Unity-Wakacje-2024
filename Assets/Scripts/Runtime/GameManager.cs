@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.Extensions;
 using Assets.Scripts.Runtime.Character;
-using Assets.Scripts.Runtime.Waves;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,8 +11,6 @@ namespace Assets.Scripts.Runtime
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        private WaveControler _waveController;
-
         public string NextLevelName;
         public Hero Hero;
         public List<Enemy> Enemies = new List<Enemy>();
