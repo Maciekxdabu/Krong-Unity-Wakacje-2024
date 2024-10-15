@@ -1,12 +1,12 @@
 # Krong-Unity-Wakacje-2024
 
-Educational project made by Krong Unity operating under [KNTG Polygon](https://kntgpolygon.pl/)
+An educational project made by Krong Unity operating under [KNTG Polygon](https://kntgpolygon.pl/)
 
-Game is inspired by Pickmin and similar titles e.g. Overlord.
+The game is inspired by [Pikmin](https://en.wikipedia.org/wiki/Pikmin) and similar titles e.g. [Overlord](https://en.wikipedia.org/wiki/Overlord_(video_game_series)).
 
-Player controls a commander that gives order to minions that do most work.
+The player controls a commander who gives orders to minions that do most of the work.
 
-Project is intended to be finished by the end of summer 2024.
+The project is intended to be finished by the end of summer 2024.
 
 Contact Merloj and krąg-unity for more details.
 
