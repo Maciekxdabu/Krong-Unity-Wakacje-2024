@@ -6,7 +6,9 @@ The game is inspired by [Pikmin](https://en.wikipedia.org/wiki/Pikmin) and simil
 
 The player controls a commander who gives orders to minions that do most of the work.
 
-The project is intended to be finished by the end of summer 2024.
+The project has been finished by the end of summer 2024.
+
+The playable build is available at the itch.io page of the project: [link](https://merloj.itch.io/necropolygon)
 
 Contact Merloj and krąg-unity for more details.
 
